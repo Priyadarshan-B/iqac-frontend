@@ -1,0 +1,33 @@
+.total-app-layout {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.v-nav-and-content {
+    flex: 10;
+    display: flex;
+    flex-direction: row;
+}
+
+.h-navbar {
+    background-color: var(--background-1);
+    height: 8vh;
+    display: flex;
+    align-items: center;
+    color: var(--text-black);
+}
+
+.v-navbar {
+    width: 235px;
+    height: 92vh;
+    background-color: var(--background-1);
+    overflow-y: scroll;
+    overflow-x: hidden;
+}
+
+.content {
+    flex: 5.5;
+    height: 92vh;
+    background-color: var(--background);
+}

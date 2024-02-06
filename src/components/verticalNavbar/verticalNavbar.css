@@ -1,0 +1,41 @@
+.total-v-navbar {
+    height: 100%;
+    width: 200px;
+    padding: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+
+}
+
+.menu-item {
+    color: var(--text-black);
+    font-size: 18px;
+    font-weight: 600;
+    padding: 10px 5px;
+    border-radius: 5px;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    /* justify-content: center; */
+    margin: 5px;
+    transition: all 0.2s;
+}
+
+.menu-item:hover .nav-icons {
+    background-color: var(--button);
+    color: var(--background-2);
+    border-radius: 5px;
+}
+
+.menu-item:hover {
+    background-color: var(--card-2);
+    color: var(--button);
+}
+
+.nav-icons {
+    margin: 0px 15px 0px 5px;
+    padding: 5px;
+    color: var(--button);
+}
