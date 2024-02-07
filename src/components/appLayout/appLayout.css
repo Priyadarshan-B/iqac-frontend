@@ -30,4 +30,11 @@
     flex: 5.5;
     height: 92vh;
     background-color: var(--background);
+    color: var(--text-black);
+}
+
+@media (max-width: 1040px) {
+    .v-navbar {
+        display: none;
+    }
 }

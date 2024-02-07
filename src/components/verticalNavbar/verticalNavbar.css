@@ -11,7 +11,7 @@
 
 .menu-item {
     color: var(--text-black);
-    font-size: 18px;
+    font-size: 15px;
     font-weight: 600;
     padding: 10px 5px;
     border-radius: 5px;
@@ -20,7 +20,7 @@
     align-items: center;
     /* justify-content: center; */
     margin: 5px;
-    transition: all 0.2s;
+    transition: all 0.1s;
 }
 
 .menu-item:hover .nav-icons {
@@ -35,7 +35,7 @@
 }
 
 .nav-icons {
-    margin: 0px 15px 0px 5px;
+    margin: 0px 10px 0px 5px;
     padding: 5px;
     color: var(--button);
 }

@@ -20,18 +20,20 @@ body {
   --background-2: #FFFFFF;
 }
 
+
+/* 
 .dark-theme {
-  --primary-100: #7B4F8E;
-  --primary-200: #563763;
-  --primary-300: #D7C5DF;
-  --accent-100: #B794C0;
-  --accent-200: #895896;
-  --text-100: #FFFFFF;
-  --text-200: #909090;
-  --bg-100: #3B2D4D;
-  --bg-200: #382B49;
-  --bg-300: #4D3B64;
-}
+  --hover: #7B4F8E;
+  --button: #563763;
+  --card: #D7C5DF;
+  --card-1: #B794C0;
+  --card-2: #895896;
+  --text-black: #FFFFFF;
+  --text-grey: #909090;
+  --background: #3B2D4D;
+  --background-1: #382B49;
+  --background-2: #4D3B64;
+} */
 
 ::-webkit-scrollbar {
   width: 5px;

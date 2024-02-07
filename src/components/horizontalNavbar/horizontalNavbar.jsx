@@ -3,21 +3,27 @@ import './horizontalNavbar.css'
 import AccountBoxRoundedIcon from '@mui/icons-material/AccountBoxRounded';
 import SettingsRoundedIcon from '@mui/icons-material/SettingsRounded';
 import CustomizedSwitches from './toggleTheme';
+import AccountCircleRoundedIcon from '@mui/icons-material/AccountCircleRounded';
+import MenuRoundedIcon from '@mui/icons-material/MenuRounded';
 
 function HorizontalNavbar() {
     return (
         <div className='total-h-navbar'>
             <div className='website-name'>
-                <h3>IQAC</h3>
+                <h3 className='iqac-title'>IQAC</h3>
+                <div className='menu-open-icon'>
+                    <MenuRoundedIcon className='h-nav-menu-icon' sx={{ fontSize: 30 }}></MenuRoundedIcon>
+                </div>
             </div>
+
             <div>
                 <nav>
                     <ul className='nav-list-items'>
                         <li>
-                            <CustomizedSwitches></CustomizedSwitches>
+                            <CustomizedSwitches />
                         </li>
-                        <li><AccountBoxRoundedIcon className='h-nav-icons'></AccountBoxRoundedIcon></li>
-                        <li><SettingsRoundedIcon  className='h-nav-icons'></SettingsRoundedIcon></li>
+                        <li><AccountCircleRoundedIcon className='h-nav-icons' sx={{ fontSize: 32 }}></AccountCircleRoundedIcon></li>
+                        <li><SettingsRoundedIcon className='h-nav-icons' sx={{ fontSize: 32 }}></SettingsRoundedIcon></li>
                     </ul>
                 </nav>
             </div>
