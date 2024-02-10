@@ -1,7 +1,6 @@
 .website-name {
     display: flex;
     align-items: center;
-    width: 180px;
     padding: 10px;
     padding-left: 20px;
     margin-left: 10px;
@@ -16,6 +15,7 @@
     width: 100%;
     display: flex;
     justify-content: space-between;
+
     /* margin: 0px 10px; */
 
 }
@@ -71,6 +71,10 @@
     .website-name {
         padding-left: 10px;
     }
+
+    .total-v-navbar {
+        margin-top: 0px;
+    }
 }
 
 
@@ -112,5 +116,3 @@
     height: 34px;
     padding: 7px;
     margin: 8px;
-
-} */

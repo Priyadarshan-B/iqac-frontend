@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { styled, createTheme, ThemeProvider } from '@mui/material/styles';
 import FormGroup from '@mui/material/FormGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
@@ -7,24 +7,28 @@ import Switch from '@mui/material/Switch';
 // Define the theme
 const theme = createTheme({
     palette: {
-        mode: 'light', // or 'dark' based on your initial mode
+        mode: 'light', // Initially set to light mode
     },
 });
 
 // Define custom properties for light and dark modes
 const darkModeProperties = {
     '--thumb-color': '#fff',
-    '--background': '#252525fa',
-    '--hover': '#7B4F8E',
-    '--button': '#FFFFFF',
+    '--background': '#2c2239',
+    '--hover': '#8B5FBF',
+    '--button': '#9b5ae6',
     '--card': '#D7C5DF',
     '--card-1': '#563763',
-    '--card-2': '#7B4F8E',
+    '--card-2': '#c491ff80',
     '--text-black': '#FFFFFF',
     '--text-grey': '#909090',
-    '--background-1': '#222222',
-    '--background-2': '#4D3B64',
-
+    '--background-1': '#251d30',
+    '--background-2': '#FFFFFF',
+    '--text-box': '#D7C5DF',
+    '--button-text-color': '#FFFFFF',
+    '--menu-text-hover': '#FFFFFF',
+    '--card-text': '#FFFFFF',
+    '--icon-hover-backgrd':'#251d30'
 };
 const lightModeProperties = {
     '--thumb-color': '#61398F',
@@ -38,6 +42,11 @@ const lightModeProperties = {
     '--text-grey': '#878787',
     '--background-1': '#E9E4ED',
     '--background-2': '#FFFFFF',
+    '--text-box': '#FFFFFF',
+    '--button-text-color': '#FFFFFF',
+    '--menu-text-hover': '#61398F',
+    '--card-text': '#FFFFFF',
+    '--icon-hover-backgrd':'#61398F'
 };
 
 // Set custom properties based on theme mode
@@ -98,9 +107,15 @@ const MaterialUISwitch = styled(Switch)(({ theme }) => ({
 export default function CustomizedSwitches() {
     const [darkMode, setDarkMode] = useState(false);
 
+    useEffect(() => {
+        // Set initial mode to light and update custom properties
+        setCustomProperties('light');
+    }, []); // Run only on initial render
+
     const toggleDarkMode = () => {
-        setDarkMode(!darkMode);
-        const mode = darkMode ? 'light' : 'dark';
+        const newMode = !darkMode;
+        setDarkMode(newMode);
+        const mode = newMode ? 'dark' : 'light';
         setCustomProperties(mode); // Update custom properties based on theme mode
     };
 

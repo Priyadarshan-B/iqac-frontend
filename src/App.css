@@ -8,8 +8,8 @@ body {
 }
 
 :root {
-  --hover: #8B5FBF;
-  --button: #61398F;
+  --hover: #4a2a6e;
+  --button: #c491ff85;
   --card: #D6C6E1;
   --card-1: #9A73B5;
   --card-2: #c7a9dc;
@@ -21,19 +21,19 @@ body {
 }
 
 
-/* 
+
 .dark-theme {
   --hover: #7B4F8E;
-  --button: #563763;
+  --button: #c491ff80;
   --card: #D7C5DF;
   --card-1: #B794C0;
-  --card-2: #895896;
+  --card-2: #c491ff27;
   --text-black: #FFFFFF;
   --text-grey: #909090;
-  --background: #3B2D4D;
-  --background-1: #382B49;
+  --background: #2c2239;
+  --background-1: #4a3a5f9f;
   --background-2: #4D3B64;
-} */
+}
 
 ::-webkit-scrollbar {
   width: 5px;
@@ -45,7 +45,7 @@ body {
 }
 
 ::-webkit-scrollbar-track {
-  background-color: var(--background-2);
+  background-color: var(--background);
 }
 
 ::-webkit-scrollbar-horizontal {

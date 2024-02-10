@@ -21,6 +21,8 @@
 .v-navbar {
     width: 235px;
     height: 92vh;
+    /* display: flex;
+    flex: 1; */
     background-color: var(--background-1);
     overflow-y: scroll;
     overflow-x: hidden;
@@ -33,8 +35,28 @@
     color: var(--text-black);
 }
 
-@media (max-width: 1040px) {
+
+
+@media (max-width: 999px) {
     .v-navbar {
         display: none;
     }
+
+    .v-navbar.open {
+        display: block;
+        position: absolute;
+        margin-top: 0px;
+    }
 }
+
+
+.content-with-margin {
+    /* width: 95.6%;
+    height: 96.5%; */
+    width: 100%;
+    height: 100%;
+    overflow-y: hidden;
+}
+
+
+@media (max-width: 999px) {}
