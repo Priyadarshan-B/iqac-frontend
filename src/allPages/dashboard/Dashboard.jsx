@@ -3,35 +3,39 @@ import './Dashboard.css'
 import InputBox from '../../components/InputBox/inputbox'
 import Button from '../../components/Button/Button'
 import Card from '../../components/card/Card'
+import ResponsiveForm from '../../components/form/Form'
 
 function Dashboard() {
+
+    const handleSubmit = (formData) => {
+        // Handle form submission, e.g., send data to server
+        console.log(formData);
+      };
     return (
         <div className='dashboard-container'>
             Dashboard...
             <InputBox placeholder='Enter your name...' />
-            <Button label='Button' />
+            <Button label='click' />
             <Card
-                title="Sample Card"
-                image="https://img.freepik.com/free-photo/painting-mountain-lake-with-mountain-background_188544-9126.jpg"
-                description="This is a sample card description.Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed ultricies urna id tincidunt ultricies. Fusce vehicula elit vel nunc varius scelerisque. Nullam eget magna id nisi pharetra ultricies. Donec nec orci non enim convallis porta vitae id ex. Nullam sollicitudin, justo id pretium condimentum, libero lorem ultricies ex, sit amet efficitur sapien metus sit amet odio. Phasellus sit amet lobortis nibh. Vivamus tempor auctor orci, sit amet vestibulum mauris. Ut consequat sapien a nisl fermentum, eget mattis justo volutpat. Aenean nec nisl eu arcu gravida tempus nec id purus. Duis consectetur tortor sit amet lacus lobortis, sit amet consectetur nunc sodales. Nulla eleifend nulla id metus consequat, nec ultricies lorem sollicitudin. Quisque finibus metus nec tortor hendrerit, nec aliquet purus convallis.
-                "
+                title="Display the title of the card over here"
+                image="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTEX9pl8af7Y7nzBN_8gY3XmGZKCzkUOqRcod9oXuBf4g&s"
+                description="sample card description."
             />
             <InputBox placeholder='Enter your name...' />
             <Button label='Button' />
             <Card
-                title="Sample Card"
+                title="Display the title of the card over here"
                 image="https://img.freepik.com/free-photo/painting-mountain-lake-with-mountain-background_188544-9126.jpg"
-                description="This is a sample card description.Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed ultricies urna id tincidunt ultricies. Fusce vehicula elit vel nunc varius scelerisque. Nullam eget magna id nisi pharetra ultricies. Donec nec orci non enim convallis porta vitae id ex. Nullam sollicitudin, justo id pretium condimentum, libero lorem ultricies ex, sit amet efficitur sapien metus sit amet odio. Phasellus sit amet lobortis nibh. Vivamus tempor auctor orci, sit amet vestibulum mauris. Ut consequat sapien a nisl fermentum, eget mattis justo volutpat. Aenean nec nisl eu arcu gravida tempus nec id purus. Duis consectetur tortor sit amet lacus lobortis, sit amet consectetur nunc sodales. Nulla eleifend nulla id metus consequat, nec ultricies lorem sollicitudin. Quisque finibus metus nec tortor hendrerit, nec aliquet purus convallis.
-                "
+                description="sample card description."
             />
             <InputBox placeholder='Enter your name...' />
             <Button label='Button' />
             <Card
-                title="Sample Card"
-                image="https://img.freepik.com/free-photo/painting-mountain-lake-with-mountain-background_188544-9126.jpg"
-                description="This is a sample card description.Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed ultricies urna id tincidunt ultricies. Fusce vehicula elit vel nunc varius scelerisque. Nullam eget magna id nisi pharetra ultricies. Donec nec orci non enim convallis porta vitae id ex. Nullam sollicitudin, justo id pretium condimentum, libero lorem ultricies ex, sit amet efficitur sapien metus sit amet odio. Phasellus sit amet lobortis nibh. Vivamus tempor auctor orci, sit amet vestibulum mauris. Ut consequat sapien a nisl fermentum, eget mattis justo volutpat. Aenean nec nisl eu arcu gravida tempus nec id purus. Duis consectetur tortor sit amet lacus lobortis, sit amet consectetur nunc sodales. Nulla eleifend nulla id metus consequat, nec ultricies lorem sollicitudin. Quisque finibus metus nec tortor hendrerit, nec aliquet purus convallis.
-                "
+                title="Display the title of the card over here"
+                image="https://cdn.pixabay.com/photo/2015/04/19/08/32/marguerite-729510_640.jpg"
+                description="sample card description."
             />
+            <ResponsiveForm onSubmit={handleSubmit}/>
         </div>
     )
 }

@@ -37,7 +37,7 @@
 
 
 
-@media (max-width: 999px) {
+@media (max-width: 1040px) {
     .v-navbar {
         display: none;
     }
@@ -58,5 +58,3 @@
     overflow-y: hidden;
 }
 
-
-@media (max-width: 999px) {}

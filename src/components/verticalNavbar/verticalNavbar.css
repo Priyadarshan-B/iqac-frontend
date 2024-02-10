@@ -19,6 +19,7 @@
     /* justify-content: center; */
     transition: all 0.2s;
     cursor: pointer;
+    margin: 2px;
 }
 
 .menu-item:hover .nav-icons {
@@ -44,16 +45,26 @@
     width: 100%;
     align-items: center;
     color: var(--text-black);
-    padding: 10px;
-    margin: 1px;
-
+    padding: 8px;
+    
 }
 
 .menu-item:hover .link-style {
     color: var(--menu-text-hover);
-    font-weight: 800;
+    font-weight: 600;
 }
 
 .link-style:hover {
     color: var(--button);
+}
+
+.menu-item.active {
+    background-color: var(--card-2);
+    color: var(--button);
+}
+
+.menu-item.active .nav-icons {
+    background-color: var(--icon-hover-backgrd);
+    color: var(--background-2);
+    border-radius: 5px;
 }

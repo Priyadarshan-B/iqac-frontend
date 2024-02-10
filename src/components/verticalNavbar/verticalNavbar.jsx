@@ -1,64 +1,31 @@
-import React from 'react';
+import React, { useState } from 'react'; // Import useState
 import './verticalNavbar.css';
 import { Link } from 'react-router-dom';
 import DashboardRoundedIcon from '@mui/icons-material/DashboardRounded';
-import ManageAccountsRoundedIcon from '@mui/icons-material/ManageAccountsRounded';
-import SwitchAccountRoundedIcon from '@mui/icons-material/SwitchAccountRounded';
-import ManageHistoryRoundedIcon from '@mui/icons-material/ManageHistoryRounded';
+import CollectionsBookmarkIcon from '@mui/icons-material/CollectionsBookmark';
 
-function VerticalNavbar() {
+function VerticalNavbar({ onClose }) {
+    const [activeLink, setActiveLink] = useState(null);
+    const handleLinkClick = (pathname) => {
+        onClose();
+        setActiveLink(pathname);
+    };
     return (
         <div className='total-v-navbar'>
-            <div className="menu-item">
+            <div className={`menu-item ${activeLink === '/' ? 'active' : ''}`} onClick={() => handleLinkClick('/')}>
                 <Link to="/" className="link-style"><DashboardRoundedIcon className='nav-icons' />Dashboard</Link>
             </div>
-            <div className="menu-item">
-                <Link to="/page1" className="link-style"><DashboardRoundedIcon className='nav-icons' />Page1</Link>
+            <div className={`menu-item ${activeLink === '/nptel' ? 'active' : ''}`} onClick={() => handleLinkClick('/nptel')}>
+                <Link to="/nptel" className="link-style"><CollectionsBookmarkIcon className='nav-icons' />NPTEL Courses</Link>
             </div>
-            <div className="menu-item">
-                <Link to="/" className="link-style"><DashboardRoundedIcon className='nav-icons' />Dashboard</Link>
+            <div className={`menu-item ${activeLink === '/onecredit' ? 'active' : ''}`} onClick={() => handleLinkClick('/onecredit')}>
+                <Link to="/onecredit" className="link-style"><DashboardRoundedIcon className='nav-icons' />One Credit</Link>
             </div>
-            <div className="menu-item">
-                <Link to="/page1" className="link-style"><DashboardRoundedIcon className='nav-icons' />Page1</Link>
-            </div>
-            <div className="menu-item">
-                <Link to="/" className="link-style"><DashboardRoundedIcon className='nav-icons' />Dashboard</Link>
-            </div>
-            <div className="menu-item">
-                <Link to="/page1" className="link-style"><DashboardRoundedIcon className='nav-icons' />Page1</Link>
-            </div>
-            <div className="menu-item">
-                <Link to="/" className="link-style"><DashboardRoundedIcon className='nav-icons' />Dashboard</Link>
-            </div>
-            <div className="menu-item">
-                <Link to="/page1" className="link-style"><DashboardRoundedIcon className='nav-icons' />Page1</Link>
-            </div>
-            <div className="menu-item">
-                <Link to="/" className="link-style"><DashboardRoundedIcon className='nav-icons' />Dashboard</Link>
-            </div>
-            <div className="menu-item">
-                <Link to="/page1" className="link-style"><DashboardRoundedIcon className='nav-icons' />Page1</Link>
-            </div>
-            <div className="menu-item">
-                <Link to="/" className="link-style"><DashboardRoundedIcon className='nav-icons' />Dashboard</Link>
-            </div>
-            <div className="menu-item">
-                <Link to="/page1" className="link-style"><DashboardRoundedIcon className='nav-icons' />Page1</Link>
-            </div>
-            <div className="menu-item">
-                <Link to="/" className="link-style"><DashboardRoundedIcon className='nav-icons' />Dashboard</Link>
-            </div>
-            <div className="menu-item">
-                <Link to="/page1" className="link-style"><DashboardRoundedIcon className='nav-icons' />Page1</Link>
-            </div>
-            <div className="menu-item">
-                <Link to="/" className="link-style"><DashboardRoundedIcon className='nav-icons' />Dashboard</Link>
-            </div>
-            <div className="menu-item">
-                <Link to="/page1" className="link-style"><DashboardRoundedIcon className='nav-icons' />Page1</Link>
-            </div>
+            
+            
         </div>
     );
 }
 
 export default VerticalNavbar;
+
