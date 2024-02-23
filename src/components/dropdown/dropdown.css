@@ -1,4 +1,4 @@
 .dropdown{
-    /* min-width: 10%; */
-    display: flex;
+    min-width: 50px;
+    /* display: flex; */
 }

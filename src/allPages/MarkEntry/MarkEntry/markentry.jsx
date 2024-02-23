@@ -3,7 +3,7 @@ import "./markentry.css";
 import apiHost from "../../../utils/api";
 import Dropdown from "../../../components/dropdown/dropdown";
 import InputBox from "../../../components/InputBox/inputbox";
-import Button from "../../../components/Button/Button";
+import Button from "../../../components/Button/button";
 
 function Markentry() {
   const [academicyearOptions, setAcademicyearOptions] = useState([]);

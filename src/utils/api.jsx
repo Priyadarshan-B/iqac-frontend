@@ -1,3 +1,3 @@
-const apiHost = "http://localhost:5000";
+const apiHost = "http://localhost:5000/api/";
 
 export default apiHost;

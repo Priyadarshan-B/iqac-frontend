@@ -1,6 +1,6 @@
 import React from 'react'
 import './Dashboard.css'
-import Button from '../../components/Button/Button'
+import Button from '../../components/Button/button'
 import Card from '../../components/card/Card'
 import InputBox from '../../components/InputBox/inputbox'
 
