@@ -8,6 +8,9 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Dashboard from "../../allPages/dashboard/Dashboard";
 import Nptel from "../../allPages/NPTEL/Nptel";
 import OneCredit from "../../allPages/oneCredit/OneCredit";
+import Facultymap from "../../allPages/MarkEntry/SubjectAllocation/facultymap";
+import Markentry from "../../allPages/MarkEntry/MarkEntry/markentry";
+
 
 function AppLayout() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -36,6 +39,9 @@ function AppLayout() {
                 <Route path="/" element={<Dashboard />} />
                 <Route path="/nptel" element={<Nptel />} />
                 <Route path="/onecredit" element={<OneCredit />} />
+                <Route path="/facultymap" element={<Facultymap />} />
+                <Route path="/markentry" element= {<Markentry/>}/>
+
               </Routes>
             </div>
           </div>

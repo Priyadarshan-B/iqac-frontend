@@ -1,0 +1,107 @@
+.content-container {
+  margin: 10px;
+  width: calc(100% - 20px);
+  height: calc(100% - 20px);
+  overflow-y: scroll;
+  border-radius: 10px;
+  overflow-x: hidden;
+}
+
+.flex-for-facultymap {
+  display: flex;
+  flex-direction: row;
+  /* justify-content: center;
+  align-items: center; */
+  height: 100%;
+}
+
+/* @media (max-width:1180px) {
+  .flex-for-facultymap {
+      flex-direction: column;
+
+  }
+} */
+
+.drop-and-faculty {
+  flex: 1;
+  border-radius: 5px;
+  display: flex;
+}
+
+.label {
+  margin-bottom: 5px;
+}
+
+@media (max-width:580px) {
+  .drop-and-faculty {
+      flex-direction: column;
+  }
+}
+
+/* @media(max-width:1390px) {
+
+  .flex-for-facultymap {
+      flex-direction: row;
+  }
+} */
+
+.content-with-button {
+  background-color: var(--background-1);
+  padding: 15px;
+  flex: 1.3;
+  margin: 10px;
+  border-radius: 5px;
+  display: flex;
+  flex-direction: column;
+  /* min-width: 450px; */
+  height: 120%;
+}
+
+.faculty-table {
+  flex: 1.3;
+  margin: 10px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+}
+
+.table-faculty {
+  background-color: var(--background-1);
+  padding: 30px;
+  border-radius: 5px;
+  width: 100%;
+  height: 314px;
+  overflow-y: scroll;
+}
+
+.drop-flex {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  flex: 1;
+}
+
+.dropdown {
+  margin: 5px;
+}
+
+.assign-button {
+  float: right;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th,
+td {
+  padding: 8px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+}
+
+tr:hover {
+  background-color: #f2f2f2;
+}
