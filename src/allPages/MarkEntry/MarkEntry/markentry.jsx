@@ -100,6 +100,21 @@ function Markentry() {
     setSelectedCount(selectedCount.value);
   };
 
+  const [marks, setMarks] = useState(Array.from({ length: 1 }, () => ""));
+
+  const handleMarkChange = (index, value) => {
+    const newMarks = [...marks];
+    newMarks[index] = value;
+    setMarks(newMarks);
+  };
+
+  const calculateMax = () => {
+    const filledMarks = marks
+      .filter((mark) => mark !== "")
+      .map((mark) => parseInt(mark, 10));
+    return filledMarks.length > 0 ? Math.max(...filledMarks) : 100;
+  };
+
   return (
     <div className="container">
       <div className="dropdown-container">
@@ -149,10 +164,16 @@ function Markentry() {
         {[...Array(selectedCount)].map((_, index) => (
           <div key={index} className="white-container">
             <div className="mark-and-button">
-              <label>Course Outcome {index + 1} </label>
+              <label>Course Outcome {index + 1}</label>
               <div className="mark">
                 <label>Mark:</label>
-                <InputBox type="number" name={`mark-${index}`} />
+                <InputBox
+                  type="number"
+                  name={`mark-${index}`}
+                  value={marks[index]}
+                  onChange={(e) => handleMarkChange(index, e.target.value)}
+                  max={calculateMax()}
+                />
               </div>
               <div className="button">
                 <Button label="Update" />
@@ -179,9 +200,9 @@ function Markentry() {
             <tr>
               <td>John</td>
               <td>1</td>
-              {[...Array(selectedCount)].map((_, i) => (
+              {marks.map((mark, i) => (
                 <td key={i}>
-                  <InputBox type="number" />
+                  <InputBox type="number" max={mark || 100} />
                 </td>
               ))}
               <td>
