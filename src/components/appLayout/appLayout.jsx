@@ -10,6 +10,7 @@ import Nptel from "../../allPages/NPTEL/Nptel";
 import OneCredit from "../../allPages/oneCredit/OneCredit";
 import Facultymap from "../../allPages/MarkEntry/SubjectAllocation/facultymap";
 import Markentry from "../../allPages/MarkEntry/MarkEntry/markentry";
+import Login from "../../allPages/Login/login";
 
 
 function AppLayout() {
@@ -20,7 +21,7 @@ function AppLayout() {
   };
 
   const closeVerticalNavbar = () => {
-    setIsMenuOpen(false); // Set isMenuOpen to false to close the vertical navbar
+    setIsMenuOpen(false); 
   };
 
   return (
@@ -41,8 +42,9 @@ function AppLayout() {
                 <Route path="/onecredit" element={<OneCredit />} />
                 <Route path="/facultymap" element={<Facultymap />} />
                 <Route path="/markentry" element= {<Markentry/>}/>
+                <Route path="/login" element= {<Login/>}/>
 
-              </Routes>
+             </Routes>
             </div>
           </div>
         </div>

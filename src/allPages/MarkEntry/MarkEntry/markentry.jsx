@@ -4,7 +4,6 @@ import apiHost from "../../../utils/api";
 import Dropdown from "../../../components/dropdown/dropdown";
 import InputBox from "../../../components/InputBox/inputbox";
 import Button from "../../../components/Button/button";
-
 function Markentry() {
   const [academicyearOptions, setAcademicyearOptions] = useState([]);
   const [academicyear, setAcademicyear] = useState("");
@@ -24,7 +23,8 @@ function Markentry() {
   const [selectedCount, setSelectedCount] = useState(1);
 
   const [courseoutcomeOptions, setCourseOutcomeOptions] = useState([]);
-  const [courseoutcome, setCourseOutcome] = useState("");
+  const [courseoutcomes, setCourseOutcomes] = useState(Array(10).fill("")); // Array to hold maximum marks for each outcome
+  const [marks, setMarks] = useState(Array(10).fill(""));
 
   useEffect(() => {
     fetch(`${apiHost}/academic_years`)
@@ -98,22 +98,48 @@ function Markentry() {
 
   const handleCountChange = (selectedCount) => {
     setSelectedCount(selectedCount.value);
+    setMarks(Array(selectedCount.value).fill(0));
+    setCourseOutcomes(Array(selectedCount.value).fill(""));
   };
 
-  const [marks, setMarks] = useState(Array.from({ length: 1 }, () => ""));
+  const handleMaxMarkChange = (index, value) => {
+    const updatedCourseOutcomes = [...courseoutcomes];
+    updatedCourseOutcomes[index] = value;
+    setCourseOutcomes(updatedCourseOutcomes);
+  };
 
   const handleMarkChange = (index, value) => {
-    const newMarks = [...marks];
-    newMarks[index] = value;
-    setMarks(newMarks);
+    if (value !== "" && parseInt(value) > parseInt(courseoutcomes[index])) {
+      value = courseoutcomes[index];
+    }
+    const updatedMarks = [...marks];
+    updatedMarks[index] = value;
+    setMarks(updatedMarks);
   };
 
-  const calculateMax = () => {
-    const filledMarks = marks
-      .filter((mark) => mark !== "")
-      .map((mark) => parseInt(mark, 10));
-    return filledMarks.length > 0 ? Math.max(...filledMarks) : 100;
+  const calculateTotal = () => {
+    if (marks.length === 1 && !isNaN(marks[0])) {
+      return parseInt(marks[0]);
+    }
+    let sum = 0;
+    marks.forEach((mark) => {
+      if (!isNaN(mark)) {
+        sum += parseInt(mark);
+      }
+    });
+    return sum;
   };
+
+  // search bar
+  const handleSearch = (event) => {
+    setSearchTerm(event.target.value);
+  };
+  const [searchTerm, setSearchTerm] = useState("");
+  // const filteredFacultyList = facultyList.filter(
+  //   (faculty) =>
+  //     faculty.student_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+  //     faculty.id.toString().includes(searchTerm.toLowerCase())
+  // );
 
   return (
     <div className="container">
@@ -160,19 +186,18 @@ function Markentry() {
           />
         </div>
       </div>
+
       <div className="white-containers">
         {[...Array(selectedCount)].map((_, index) => (
           <div key={index} className="white-container">
             <div className="mark-and-button">
-              <label>Course Outcome {index + 1}</label>
+              <label>Course Outcome {index + 1} </label>
               <div className="mark">
-                <label>Mark:</label>
+                <label>Max Mark:</label>
                 <InputBox
                   type="number"
-                  name={`mark-${index}`}
-                  value={marks[index]}
-                  onChange={(e) => handleMarkChange(index, e.target.value)}
-                  max={calculateMax()}
+                  value={courseoutcomes[index]}
+                  onChange={(e) => handleMaxMarkChange(index, e.target.value)}
                 />
               </div>
               <div className="button">
@@ -184,6 +209,12 @@ function Markentry() {
         ))}
       </div>
       <div className="table-container">
+        <InputBox
+          type="text"
+          placeholder="Student Name/Reg.."
+          value={searchTerm}
+          onChange={handleSearch}
+        />
         <table className="table">
           <thead>
             <tr>
@@ -195,19 +226,36 @@ function Markentry() {
               <th>Total</th>
             </tr>
           </thead>
-
           <tbody>
             <tr>
               <td>John</td>
               <td>1</td>
-              {marks.map((mark, i) => (
+              {[...Array(selectedCount)].map((_, i) => (
                 <td key={i}>
-                  <InputBox type="number" max={mark || 100} />
+                  <input
+                    type="number"
+                    value={marks[i]}
+                    max={courseoutcomes[i]}
+                    onChange={(e) => handleMarkChange(i, e.target.value)}
+                  />
                 </td>
               ))}
-              <td>
-                <InputBox type="number" />
-              </td>
+              <td>{calculateTotal()}</td>
+            </tr>
+            <tr>
+              <td>Vishnu</td>
+              <td>2</td>
+              {[...Array(selectedCount)].map((_, i) => (
+                <td key={i}>
+                  <input
+                    type="number"
+                    value={marks[i]}
+                    max={courseoutcomes[i]}
+                    onChange={(e) => handleMarkChange(i, e.target.value)}
+                  />
+                </td>
+              ))}
+              <td>{calculateTotal()}</td>
             </tr>
           </tbody>
         </table>
