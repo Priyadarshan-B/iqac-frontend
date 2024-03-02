@@ -11,7 +11,8 @@ import OneCredit from "../../allPages/oneCredit/OneCredit";
 import Facultymap from "../../allPages/MarkEntry/SubjectAllocation/facultymap";
 import Markentry from "../../allPages/MarkEntry/MarkEntry/markentry";
 import Login from "../../allPages/Login/login";
-
+import Logout from "../../Logout/logout";
+import MainForm from "../../allPages/form_entry/main_form";
 
 function AppLayout() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -43,6 +44,9 @@ function AppLayout() {
                 <Route path="/facultymap" element={<Facultymap />} />
                 <Route path="/markentry" element= {<Markentry/>}/>
                 <Route path="/login" element= {<Login/>}/>
+                <Route path="/logout" element= {<Logout/>}/>
+                <Route path="/mainform" element={<MainForm/>}/>
+
 
              </Routes>
             </div>

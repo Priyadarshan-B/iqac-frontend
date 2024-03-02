@@ -1,39 +1,76 @@
-// import React from "react";
-// import GoogleSignIn from "../../components/auth/auth";
+import { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
+import apiHost from "../../utils/api";
 
-// const Login =()=>{
-//     return(
-//         <div>
-//             <GoogleSignIn/>
-//         </div>
-//     )
-// }
-// export default Login;
+function Login() {
+  const [token, setToken] = useState(null);
 
-// login.jsx (or wherever your login component resides)
+  const googleAuth = () => {
+    window.open(`${apiHost}/auth/google`, "_self");
+  };
 
-import React from 'react';
-import axios from 'axios';
+  useEffect(() => {
+    console.log("Token updated:", token);
+  }, [token]);
 
-const Login = () => {
-  const handleGoogleLogin = async () => {
-    try {
-      const response = await axios.get('http://localhost:5000/api/login'); // Ensure you use the correct path here
-      // Redirect user to the URL provided by the backend for Google authentication
-      window.location.href = response.data.redirectUrl;
-    } catch (error) {
-      console.error('Google login failed:', error.message);
-      // Handle login failure
-    }
+  // const handleLogin = () => {
+  //   // Perform login using JWT token
+  //   // You can send the token to your backend for verification
+  //   console.log("Logged in with token:", token);
+  //   // Add your login logic here
+  // };
+
+  const handleLogout = () => {
+    setToken(null);
   };
 
   return (
     <div>
-      <h2>Sign in with Google</h2>
-      <button onClick={handleGoogleLogin}>Login with Google</button>
+      <h1>Log in Form</h1>
+      <div>
+        {!token ? (
+          <button onClick={googleAuth}>
+            <span>Sign in with Google</span>
+          </button>
+        ) : (
+          <div>
+            <p>You are logged in!</p>
+            <button onClick={handleLogout}>Logout</button>
+          </div>
+        )}
+      </div>
     </div>
   );
-};
+}
 
 export default Login;
 
+// import { Link } from "react-router-dom";
+// import apiHost from "../../utils/api";
+
+// function Login() {
+//     const googleAuth = () => {
+//     window.open(
+//       `${apiHost}/auth/google/callback`,
+//       "_self"
+//     );
+
+//   };
+//   return (
+//     <div >
+//       <h1 >Log in Form</h1>
+//       <div >
+
+//           <button >Log In</button>
+//           <p >or</p>
+//           <button  onClick={googleAuth}>
+//             <span>Sign in with</span>
+//           </button>
+
+//         </div>
+//       </div>
+
+//   );
+// }
+
+// export default Login;

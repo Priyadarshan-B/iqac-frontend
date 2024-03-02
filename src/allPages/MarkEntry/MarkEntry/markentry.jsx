@@ -27,7 +27,7 @@ function Markentry() {
   const [marks, setMarks] = useState(Array(10).fill(""));
 
   useEffect(() => {
-    fetch(`${apiHost}/academic_years`)
+    fetch(`${apiHost}/api/academic_years`)
       .then((response) => response.json())
       .then((data) => {
         const options = data.map((item) => ({
@@ -40,7 +40,7 @@ function Markentry() {
         console.error("Error fetching academic year data:", error)
       );
 
-    fetch(`${apiHost}/semester`)
+    fetch(`${apiHost}/api/semester`)
       .then((response) => response.json())
       .then((data) => {
         const options = data.map((item) => ({
@@ -51,7 +51,7 @@ function Markentry() {
       })
       .catch((error) => console.error("Error fetching semester data:", error));
 
-    fetch(`${apiHost}/subject`)
+    fetch(`${apiHost}/api/subject`)
       .then((response) => response.json())
       .then((data) => {
         const options = data.map((item) => ({
@@ -62,7 +62,7 @@ function Markentry() {
       })
       .catch((error) => console.error("Error fetching subject data:", error));
 
-    fetch(`${apiHost}/testtype`)
+    fetch(`${apiHost}/api/testtype`)
       .then((response) => response.json())
       .then((data) => {
         const options = data.map((item) => ({

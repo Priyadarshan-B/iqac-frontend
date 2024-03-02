@@ -22,7 +22,7 @@ function Facultymap() {
   const [searchTerm, setSearchTerm] = useState("");
 
   useEffect(() => {
-    fetch(`${apiHost}rf/dropdown/regulation`)
+    fetch(`${apiHost}/api/rf/dropdown/regulation`)
       .then((response) => response.json())
       .then((data) => {
         const options = data.map((item) => ({
@@ -35,7 +35,7 @@ function Facultymap() {
         console.error("Error fetching regulation dropdown:", error)
       );
 
-    fetch(`${apiHost}rf/dropdown/semester`)
+    fetch(`${apiHost}/api/rf/dropdown/semester`)
       .then((response) => response.json())
       .then((data) => {
         const options = data.map((item) => ({
@@ -48,7 +48,7 @@ function Facultymap() {
         console.error("Error fetching semester dropdown:", error)
       );
 
-    fetch(`${apiHost}rf/dropdown/academic-years`)
+    fetch(`${apiHost}/api/rf/dropdown/academic-years`)
       .then((response) => response.json())
       .then((data) => {
         const options = data.map((item) => ({
@@ -61,7 +61,7 @@ function Facultymap() {
         console.error("Error fetching academic-year dropdown", error)
       );
 
-    fetch(`${apiHost}rf/dropdown/department`)
+    fetch(`${apiHost}/api/rf/dropdown/department`)
       .then((response) => response.json())
       .then((data) => {
         const options = data.map((item) => ({
@@ -76,7 +76,7 @@ function Facultymap() {
   }, []);
 
   const handleRegulationChange = (selectedRegulation) => {
-    fetch(`${apiHost}rf/dropdown/degree?regulation=${selectedRegulation.value}`)
+    fetch(`${apiHost}/api/rf/dropdown/degree?regulation=${selectedRegulation.value}`)
       .then((response) => response.json())
       .then((data) => {
         const options = data.map((item) => ({
@@ -89,7 +89,7 @@ function Facultymap() {
   };
 
   const handleDegreeChange = (selectedDegree) => {
-    fetch(`${apiHost}rf/dropdown/branch?degree=${selectedDegree.value}`)
+    fetch(`${apiHost}/api/rf/dropdown/branch?degree=${selectedDegree.value}`)
       .then((response) => response.json())
       .then((data) => {
         const options = data.map((item) => ({
@@ -102,7 +102,7 @@ function Facultymap() {
   };
   const handleDepartmentChange = (selectedDepartment) => {
     fetch(
-      `${apiHost}cfm/dropdown/faculty?department=${selectedDepartment.value}`
+      `${apiHost}/api/cfm/dropdown/faculty?department=${selectedDepartment.value}`
     )
       .then((response) => response.json())
       .then((data) => {
@@ -126,7 +126,7 @@ function Facultymap() {
     );
     if (selectedBranch) {
       fetch(
-        `${apiHost}rf/dropdown/course?branch=${selectedBranch.value}&semester=${selectedSemester.value}`
+        `${apiHost}/api/rf/dropdown/course?branch=${selectedBranch.value}&semester=${selectedSemester.value}`
       )
         .then((response) => response.json())
         .then((data) => {
@@ -148,7 +148,7 @@ function Facultymap() {
   //   { id: 3, name: "ABC", subject: "History" },
   // ];
   useEffect(() => {
-    fetch(`${apiHost}cfm/faculty-mapping`)
+    fetch(`${apiHost}/api/cfm/faculty-mapping`)
       .then((response) => response.json())
       .then((data) => {
         setFacultyList(data);
@@ -180,7 +180,7 @@ function Facultymap() {
   );
 
   return (
-    <div className="content-container">
+      <div className="content-container">
       
       <div className="flex-for-facultymap">
         <div className="content-with-button">
@@ -188,7 +188,7 @@ function Facultymap() {
             <div className="drop-flex">
               <div className="dropdown">
                 <div className="label">
-                  <label>Regualtion:</label>
+                  <label>Regulation:</label>
                 </div>
                 <Select
                   className="select-field"

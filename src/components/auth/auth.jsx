@@ -1,48 +1,13 @@
-import React, { useState } from 'react';
-import { GoogleOAuthProvider, GoogleLogin, googleLogout } from '@react-oauth/google';
+import React from "react";
+import { Route, Navigate } from "react-router-dom";
 
-const Login = () => {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-
-  const onSuccess = (credentialResponse) => {
-    console.log(credentialResponse);
-    setIsLoggedIn(true);
-    // Handle successful login
-  };
-
-  const onError = () => {
-    console.log('Login Failed');
-    // Handle login failure
-  };
-
-  const handleLogout = () => {
-    googleLogout();
-    setIsLoggedIn(false);
-    // Handle logout
-  };
-
+const AuthRoute = ({ element: Element, isAuthenticated, ...rest }) => {
   return (
-    <GoogleOAuthProvider 
-      clientId="207769143225-vbmg55s3k3evs99vapl9a8uvql9essg1.apps.googleusercontent.com"
-    >
-      <div>
-        {isLoggedIn ? (
-          <div>
-            <h2>Logged in with Google</h2>
-            <button onClick={handleLogout}>Logout</button>
-          </div>
-        ) : (
-          <div>
-            <h2>Sign in with Google</h2>
-            <GoogleLogin
-              onSuccess={onSuccess}
-              onError={onError}
-            />
-          </div>
-        )}
-      </div>
-    </GoogleOAuthProvider>
+    <Route
+      {...rest}
+      element={isAuthenticated ? <Element /> : <Navigate to="/login" />}
+    />
   );
 };
 
-export default Login;
+export default AuthRoute;

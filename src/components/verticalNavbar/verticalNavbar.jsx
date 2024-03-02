@@ -27,6 +27,9 @@ function VerticalNavbar({ onClose }) {
             <div className={`menu-item ${activeLink === '/markentry' ? 'active' : ''}`} onClick={() => handleLinkClick('/markentry')}>
                 <Link to="/markentry" className="link-style"><DashboardRoundedIcon className='nav-icons' />Mark Entry</Link>
             </div>
+            <div className={`menu-item ${activeLink === '/mainform' ? 'active' : ''}`} onClick={() => handleLinkClick('/mainform')}>
+                <Link to="/mainform" className="link-style"><DashboardRoundedIcon className='nav-icons' />Forms</Link>
+            </div>
             
             
         </div>
