@@ -13,6 +13,7 @@ import Markentry from "../../allPages/MarkEntry/MarkEntry/markentry";
 import Login from "../../allPages/Login/login";
 import Logout from "../../Logout/logout";
 import MainForm from "../../allPages/form_entry/main_form";
+import SyllabusEntry from "../../allPages/Syllabus/syllabusEntry";
 
 function AppLayout() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -46,6 +47,7 @@ function AppLayout() {
                 <Route path="/login" element= {<Login/>}/>
                 <Route path="/logout" element= {<Logout/>}/>
                 <Route path="/mainform" element={<MainForm/>}/>
+                <Route path="/syllabusentry" element={<SyllabusEntry/>}/>
 
 
              </Routes>

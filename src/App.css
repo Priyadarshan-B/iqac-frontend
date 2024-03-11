@@ -40,7 +40,7 @@ body {
 }
 
 ::-webkit-scrollbar-thumb {
-  background-color: var(--card);
+  background-color: var(--scrollBar);
   border-radius: 6px;
 }
 
