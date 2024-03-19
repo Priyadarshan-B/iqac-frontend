@@ -12,7 +12,6 @@ const theme = createTheme({
 });
 
 // Define custom properties for light and dark modes
-
 // const darkModeProperties = {
 //     '--thumb-color': '#fff',
 //     '--background': '#2c2239',
@@ -52,44 +51,51 @@ const theme = createTheme({
 //     '--add-icon': '#61398F'
 
 // };
-const darkModeProperties = {
-  "--thumb-color": "#fff",
-  "--background": "#2c2239",
-  "--hover": "#9b5ae6",
-  "--button": "#8B5FBF",
-  "--card": "#D7C5DF",
-  "--card-1": "#563763",
-  "--card-2": "#c491ff80",
-  "--text-black": "#FFFFFF",
-  "--text-grey": "#909090",
-  "--background-1": "#251d30",
-  "--background-2": "#FFFFFF",
-  "--text-box": "#D7C5DF",
-  "--button-text-color": "#FFFFFF",
-  "--menu-text-hover": "#FFFFFF",
-  "--card-text": "#FFFFFF",
-  "--icon-hover-backgrd": "#251d30",
-  "--add-icon": "#FFFFFF",
-};
+
 const lightModeProperties = {
-  "--thumb-color": "#FBFBFB",
-  "--background": "#F4F7FE",
-  "--hover": "#FBFBFB",
-  "--button": "#116ACC",
-  "--card": "#FEFEFE",
-  "--card-1": "#FEFEFE",
-  "--card-2": "#FEFEFE",
-  "--text-black": "#2B3674",
-  "--text-grey": "#68709B",
-  "--background-1": "#FBFBFB",
-  "--background-2": "#FBFBFB",
-  "--text-box": "#9CA3AF",
-  "--button-text-color": "#FBFBFB",
-  "--menu-text-hover": "#2B3674 ",
-  "--card-text": "#2B3674",
-  "--icon-hover-backgrd": "#2B3674",
-  "--add-icon": "#2B3674",
+    "--thumb-color": "#FBFBFB",
+    "--background": "#F4F7FE",
+    "--hover": "#FBFBFB",
+    "--button": "#116ACC",
+    "--card": "#FEFEFE",
+    "--card-1": "#FEFEFE",
+    "--card-2": "#FEFEFE",
+    "--text-black": "#2B3674",
+    "--text-grey": "#68709B",
+    "--background-1": "#FBFBFB",
+    "--background-2": "#FBFBFB",
+    "--text-box": "#9CA3AF",
+    "--button-text-color": "#FBFBFB",
+    "--menu-text-hover": "#2B3674 ",
+    "--card-text": "#2B3674",
+    "--icon-hover-backgrd": "#2B3674",
+    "--add-icon": "#2B3674",
+    "--scrollBar": "#689bed"
 };
+
+const darkModeProperties = {
+    "--thumb-color": "#3D3D3D",
+    "--background": "#191919",
+    "--hover": "#6C6C6C",
+    "--button": "#116ACC",
+    "--card": "#2D2D2D",
+    "--card-1": "#2D2D2D",
+    "--card-2": "#2D2D2D",
+    "--text-black": "#FBFBFB",
+    "--text-grey": "#8491A5",
+    "--background-1": "#212121",
+    "--background-2": "#212121",
+    "--text-box": "#222222",
+    "--text-stroke": "#707070",
+    "--button-text-color": "#FFFFFF",
+    "--button-color": "#116ACC",
+    "--menu-text-hover": "#FBFBFB",
+    "--card-text": "#FBFBFB",
+    "--icon-hover-background": "#EAEAEA",
+    "--add-icon": "#FBFBFB",
+    "--scrollBar": "#689bed"
+};
+
 
 // Set custom properties based on theme mode
 const setCustomProperties = (mode) => {
