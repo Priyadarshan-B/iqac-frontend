@@ -1,0 +1,91 @@
+.dropdowns{
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+.dropdown-container{
+    display: flex;
+    margin-top: 10px;
+    align-items: center;
+    
+    flex-wrap: wrap;
+    justify-content: center;
+    background-color: white;
+    border-radius: 5px;
+}
+
+.container{
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.dropdowns .react-select-container {
+    width: 150px;
+  }
+
+  .dropdowns label {
+    margin-right: 10px; 
+  }
+
+
+  .white-containers {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+  
+  .white-container {
+
+    padding: 10px;
+    background-color: white;
+    /* border: 1px solid #ccc;  */
+    border-radius: 5px;
+
+  }
+
+  .mark-and-button{
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+    align-content: center;
+    justify-content: space-evenly;
+    align-items: center; 
+ }
+ .mark{
+    display: flex;
+    align-items: center;
+ }
+ .button{
+    display: flex;
+ }
+
+ .inputbox-label{
+    width: 10px;
+ }
+
+ .table-container {
+  overflow-x: auto; 
+  background-color: var(--);
+}
+
+.table {
+  width: 90%;
+  border-collapse: collapse;
+  overflow-x: auto;
+  overflow-wrap: normal;
+  }
+
+th, td {
+  padding: 8px;
+  border: 1px solid #ddd;
+  text-align: center;
+}
+
+/* Stacked layout for small screens */
+@media screen and (max-width: 600px) {
+  th, td {
+    display: block;
+    width: 90%;
+  }
+}
