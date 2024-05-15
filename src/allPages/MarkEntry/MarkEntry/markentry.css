@@ -65,14 +65,14 @@
  }
 
  .table-container {
-  overflow-x: auto; 
+  overflow-x:scroll; 
   background-color: var(--);
 }
 
 .table {
   width: 90%;
   border-collapse: collapse;
-  overflow-x: auto;
+  overflow-x:hidden;
   overflow-wrap: normal;
   }
 
