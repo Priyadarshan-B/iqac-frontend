@@ -4,6 +4,7 @@ import apiHost from "../../../utils/api";
 import Dropdown from "../../../components/dropdown/dropdown";
 import InputBox from "../../../components/InputBox/inputbox";
 import Button from "../../../components/Button/button";
+import { json } from "react-router-dom";
 
 function Markentry() {
   const [academicyearOptions, setAcademicyearOptions] = useState([]);
@@ -12,62 +13,171 @@ function Markentry() {
   const [semesterOptions, setSemesterOptions] = useState([]);
   const [semester, setSemester] = useState("");
 
+  const [yearOptions,setYearOptions]=useState([]);
+  const [year,setYear]= useState(undefined)
+
+  const [departmentOptions,setDepartmentOptions]=useState([]);
+  const [department,setDepartment]= useState(undefined)
+
   const [testtypeOptions, setTestTypeOptions] = useState([]);
   const [testtype, setTestType] = useState("");
 
   const [subjectOptions, setSubjectOptions] = useState([]);
-  const [subject, setSubject] = useState("");
+  const [subject, setSubject] = useState(undefined);
 
   const [facultyOptions, setFacultyOptions] = useState([]);
-  const [faculty, setFaculty] = useState("");
+  const [faculty, setFaculty] = useState(1);
 
-  const [selectedCount, setSelectedCount] = useState(1);
+  const [coCount, setCoCount] = useState(0);
 
   const [courseoutcomeOptions, setCourseOutcomeOptions] = useState([]);
-  const [courseoutcomes, setCourseOutcomes] = useState(Array(1).fill("")); // Array to hold maximum marks for each outcome
-  const [marks, setMarks] = useState(Array(10).fill(""));
-
-  const [studentsData, setStudentsData] = useState([
-    { name: "John", rollNumber: "1", marks: Array(10).fill("") },
-    { name: "Priyan", rollNumber: "2", marks: Array(10).fill("") },
-    
-  ]);
-
+  const [courseoutcomes, setCourseOutcomes] = useState([]); // Array to hold maximum marks for each outcome
+  const [marks, setMarks] = useState([]);
+  const [students,setStudents] = useState([]);
   useEffect(() => {
-  
-    fetchOptions(`${apiHost}/api/academic_years`, setAcademicyearOptions);
-    fetchOptions(`${apiHost}/api/semester`, setSemesterOptions);
-    fetchOptions(`${apiHost}/api/subject`, setSubjectOptions);
-    fetchOptions(`${apiHost}/api/testtype`, setTestTypeOptions);
-    fetchOptions(`${apiHost}/faculty`, setFacultyOptions);
-    fetchOptions(`${apiHost}/co`, setCourseOutcomeOptions);
-  }, []);
-
-  const fetchOptions = (url, setter) => {
-    fetch(url)
+    fetch(`${apiHost}/academic_years`)
       .then((response) => response.json())
       .then((data) => {
         const options = data.map((item) => ({
-          value: item.value,
-          label: item.label,
+          value: item.id,
+          label: item.year,
         }));
-        setter(options);
+        setAcademicyearOptions(options);
       })
-      .catch((error) => console.error("Error fetching data:", error));
-  };
+      .catch((error) =>
+        console.error("Error fetching academic year data:", error)
+      );
 
-  const handleCountChange = (selectedCount) => {
-    setSelectedCount(selectedCount.value);
-    setMarks(Array(selectedCount.value).fill(0));
-    setCourseOutcomes(Array(selectedCount.value).fill(""));
-  };
+    fetch(`${apiHost}/semester`)
+      .then((response) => response.json())
+      .then((data) => {
+        const options = data.map((item) => ({
+          value: item.id,
+          label: item.semester,
+        }));
+        setSemesterOptions(options);
+      })
+      .catch((error) => console.error("Error fetching semester data:", error));
 
+    fetch(`${apiHost}/testtype`)
+      .then((response) => response.json())
+      .then((data) => {
+        const options = data.map((item) => ({
+          value: item.type,
+          label: item.type,
+        }));
+        setTestTypeOptions(options);
+      })
+      .catch((error) => console.error("Error fetching test type data:", error));
+
+   fetch(`${apiHost}/department`)
+   .then((response)=>response.json())
+   .then((data)=>{
+    const options = data.map((res)=>     ( {
+        value:res.id,
+        label:res.branch
+      }
+    ))
+    console.log(options)
+    setDepartmentOptions(options)
+   }
+  )
+
+  fetch(`${apiHost}/year`)
+  .then((response)=>response.json())
+  .then((data)=>{
+   const options = data.map((res)=>     ( {
+       value:res.id,
+       label:res.year
+     }
+   ))
+   console.log(options)
+   setYearOptions(options)
+  }
+ )
+
+
+
+    }, []);
+
+useState(()=>{
+  console.log(departmentOptions)
+},[departmentOptions])
+  const getFaculty  =  ()=>{
+    fetch(`${apiHost}/faculty`)
+    .then((response) => response.json())
+    .then((data) => {
+      const options = data.map((item) => ({
+        value: item.id,
+        label: item.name,
+      }));
+      setFacultyOptions(options);
+    })
+    .catch((error) => console.error("Error fetching faculty data:", error));
+  
+  }
+  const getCourse = (semester)=>{
+    fetch(`${apiHost}/course?semester=${semester}&faculty=${faculty}&year=${academicyear.value}&branch=${department.value}`)
+      .then((response) => response.json())
+      .then((data) => {
+        const options = data.map((item) => ({
+          value: item.id,
+          label: item.name,
+        }));
+        setSubjectOptions(options);
+      })
+      .catch((error) => console.error("Error fetching subject data:", error));
+  }
+ const getCourseOutcomes = ()=>{
+  fetch(`${apiHost}/co?course=${subject.value}`)
+  .then((response)=>response.json())
+  .then((data)=>{
+    console.log(data)
+    setCoCount(data.length)
+  })
+ }
+
+
+ const getStudents = ()=>{
+  console.log(subject);
+  fetch(`${apiHost}/students?branch=${department.value}&year=${year.value}&course=${subject.value}`)
+  .then((response)=>response.json())
+  .then((data)=>{
+       setStudents(data)
+  }
+)
+ }
+useEffect(()=>{
+  setMarks(Array(coCount).fill(0));
+  setCourseOutcomes(Array(coCount).fill(""));
+},[coCount])
+
+
+
+
+useEffect(()=>{
+  if(subject){
+    getCourseOutcomes();
+  }
+},[subject,year,semester,department])
+
+useEffect(()=>{
+  if(semester){
+    getCourse(semester.value)
+  }
+},[semester,year])
+
+
+useEffect(()=>{
+  if(year && department && subject){
+    getStudents();
+  }
+},[year,department,subject])
   const handleMaxMarkChange = (index, value) => {
     const updatedCourseOutcomes = [...courseoutcomes];
     updatedCourseOutcomes[index] = value;
+    console.log(updatedCourseOutcomes)
     setCourseOutcomes(updatedCourseOutcomes);
-
-   
   };
 
   const handleMarkChange = (index, value) => {
@@ -79,44 +189,32 @@ function Markentry() {
     setMarks(updatedMarks);
   };
 
-  const calculateTotal = (studentMarks) => {
+  const calculateTotal = () => {
+    if (marks.length === 1 && !isNaN(marks[0])) {
+      return parseInt(marks[0]);
+    }
     let sum = 0;
-    studentMarks.forEach((mark) => {
-      if (!isNaN(mark) && mark !== "") {
+    marks.forEach((mark) => {
+      if (!isNaN(mark)) {
         sum += parseInt(mark);
       }
     });
     return sum;
   };
-
-  // const handleStudentMarkChange = (studentIndex, markIndex, value, courseOutcome) => {
-  //   if (value !== "" && parseInt(value) > parseInt(courseOutcome)) {
-  //     value = courseOutcome;
-  //   }
-  //   const updatedStudentsData = [...studentsData];
-  //   updatedStudentsData[studentIndex].marks[markIndex] = value;
-  //   setStudentsData(updatedStudentsData);
-  // };
-
-
-  const handleStudentMarkChange = (studentIndex, markIndex, value, courseOutcome) => {
-    if (courseOutcome === "" || isNaN(parseInt(courseOutcome))) {
-      return;
-    }
-    if (value !== "" && parseInt(value) > parseInt(courseOutcome)) {
-      value = courseOutcome;
-    }
-   const updatedStudentsData = [...studentsData];
-    updatedStudentsData[studentIndex].marks[markIndex] = value;
-    setStudentsData(updatedStudentsData);
-  };
-  
-
+  const handleSemesterChange  = (e) => {
+    setSemester(e);
+  }
+ 
   // search bar
   const handleSearch = (event) => {
     setSearchTerm(event.target.value);
   };
   const [searchTerm, setSearchTerm] = useState("");
+  // const filteredFacultyList = facultyList.filter(
+  //   (faculty) =>
+  //     faculty.student_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+  //     faculty.id.toString().includes(searchTerm.toLowerCase())
+  // );
 
   return (
     <div className="container">
@@ -126,33 +224,49 @@ function Markentry() {
             options={academicyearOptions}
             value={academicyear}
             onChange={setAcademicyear}
-            placeholder="Academic Year"
-          />
+            placeholder=" Academic Year"
+          /> 
+           <Dropdown
+          options={academicyear?yearOptions:undefined}
+          value={year}
+          isDisabled={!academicyear}
+          onChange={setYear}
+          placeholder=" Year"
+        />
           <Dropdown
-            options={semesterOptions}
-            value={semester}
-            onChange={setSemester}
-            placeholder="Semester"
+            options={academicyear?departmentOptions:undefined}
+            value={department}
+            isDisabled={!year}
+            onChange={setDepartment}
+            placeholder=" Department"
           />
+          
+          <Dropdown
+            options={academicyear?semesterOptions:undefined}
+            value={semester}
+            isDisabled={!department}
+            onChange={(e)=>handleSemesterChange(e)}
+            placeholder=" Semester"
+          />
+          
           <Dropdown
             options={testtypeOptions}
             value={testtype}
+            isDisabled={!semester}
             onChange={setTestType}
             placeholder="Test Type"
           />
           <Dropdown
             options={subjectOptions}
             value={subject}
+            isDisabled={!semester}
             onChange={setSubject}
             placeholder="Subject"
           />
-          <Dropdown
-            options={facultyOptions}
-            value={faculty}
-            onChange={setFaculty}
-            placeholder="Faculty Name"
-          />
-          <Dropdown
+          <div className="facultyname">
+            Faculty : John
+          </div>
+          {/* <Dropdown
             options={[...Array(10).keys()].map((count) => ({
               value: count + 1,
               label: `${count + 1}`,
@@ -160,12 +274,13 @@ function Markentry() {
             value={{ value: selectedCount, label: `${selectedCount}` }}
             onChange={handleCountChange}
             placeholder="Select Count"
-          />
+          /> */}
         </div>
       </div>
 
       <div className="white-containers">
-        {[...Array(selectedCount)].map((_, index) => (
+        {console.log(courseoutcomes.length)}
+        {courseoutcomes.length>0 && courseoutcomes.map((value, index) => (
           <div key={index} className="white-container">
             <div className="mark-and-button">
               <label>Course Outcome {index + 1} </label>
@@ -173,8 +288,8 @@ function Markentry() {
                 <label>Max Mark:</label>
                 <InputBox
                   type="number"
-                  value={courseoutcomes[index]}
-                  onChange={(e) => handleMaxMarkChange(index, e.target.value)}
+                  value={value}
+                  onChange={(e) => handleMaxMarkChange(index,e.target.value)}
                 />
               </div>
               <div className="button">
@@ -185,7 +300,6 @@ function Markentry() {
           </div>
         ))}
       </div>
-
       <div className="table-container">
         <InputBox
           type="text"
@@ -193,47 +307,45 @@ function Markentry() {
           value={searchTerm}
           onChange={handleSearch}
         />
-        <table className="table">
-          <thead>
+       { students.length>0 && <table className="table">
+       <thead>
             <tr>
+              <th>S.no</th>
               <th>Name</th>
               <th>Roll Number</th>
-              {courseoutcomes.map((_, i,courseOutcome) => (
-                <th key={i}>
-                COURSE OUTCOME {i + 1} (MAX : {courseoutcomes[i]})
-              </th>
+              {courseoutcomes.map((_, i) => (
+                <th key={i}>Mark {i + 1}</th>
               ))}
               <th>Total</th>
             </tr>
           </thead>
-          <tbody>
-            {studentsData.map((student, studentIndex) => (
-              <tr key={studentIndex}>
-                <td>{student.name}</td>
-                <td>{student.rollNumber}</td>
-                {courseoutcomes.map((courseOutcome, markIndex) => (
-                  <td key={markIndex}>
-                    <input
-                      type="number"
-                      value={student.marks[markIndex]}
-                      max={courseOutcome}
-                      onChange={(e) =>
-                        handleStudentMarkChange(studentIndex, markIndex, e.target.value, courseOutcome)
-                      }
-                    />
-                  </td>
-                ))}
-               <td>{calculateTotal(student.marks)}</td>
-
-              </tr>
-            ))}
+        {
+          students.map((data,index)=>(
+            <tbody>
+            <tr>
+              <td>{index+1}</td>
+              <td>{data.name}</td>
+              <td>{data.register_number}</td>
+              {courseoutcomes.map((_, i) => (
+                <td key={i}>
+                  <input
+                    type="number"
+                    value={marks[i]}
+                    max={courseoutcomes[i]}
+                    onChange={(e) => handleMarkChange(i, e.target.value)}
+                  />
+                </td>
+              ))}
+              <td>{calculateTotal()}</td>
+            </tr>
           </tbody>
-        </table>
+          ))
+        }
+        
+        </table>}
       </div>
     </div>
   );
 }
 
 export default Markentry;
-
-
