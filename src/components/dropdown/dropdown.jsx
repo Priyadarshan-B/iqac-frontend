@@ -2,7 +2,7 @@ import React from "react";
 import Select from "react-select";
 import "./dropdown.css";
 
-const Dropdown = ({ label, options, value, onChange, placeholder }) => {
+const Dropdown = ({ label, options, value, onChange, placeholder,disabled }) => {
   return (
     <div className="dropdown">
       <label>{label}</label>
@@ -13,6 +13,7 @@ const Dropdown = ({ label, options, value, onChange, placeholder }) => {
         onChange={onChange}
         placeholder={placeholder}
         isSearchable
+        isDisabled={disabled}
       />
     </div>
   );
