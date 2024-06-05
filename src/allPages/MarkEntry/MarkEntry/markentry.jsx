@@ -35,7 +35,7 @@ function Markentry() {
   const [courseoutcomes, setCourseOutcomes] = useState([]); // Array to hold maximum marks for each outcome
   const [courseOutcomeIds,setCourseOutcomeIds]=useState([]);
 
-
+  const [updatedMarks,setUpdatedMarks]=useState({})
   const [marks, setMarks] = useState([]);
   const [students,setStudents] = useState([]);
 
@@ -202,6 +202,44 @@ useEffect(()=>{
   }
 },[semester,year,department])
 
+useEffect(() => {
+  if (courseOutcomeIds.length > 0 && testtype && subject) {
+    setUpdatedMarks({});
+    setStudentsData([]);
+
+    const promises = courseOutcomeIds.map((id) =>
+      axios.get(`${apiHost}/marks?co_id=${id.id}&type=${testtype.value}`)
+    );
+
+    Promise.all(promises)
+      .then((responses) => {
+        const mergedData = responses.reduce(
+          (acc, res) => ({ ...acc, ...res.data }),
+          {}
+        );
+        setUpdatedMarks(mergedData);
+
+        const newStudentsData = studentsData.map((student) => {
+          const updatedMarks = courseOutcomeIds.map((co, markIndex) => {
+            const mark = mergedData[student.id + 'C' + co.id]?.mark || 0;
+            return mark;
+          });
+          return { ...student, marks: updatedMarks };
+        });
+
+        setStudentsData(newStudentsData);
+      })
+      .catch((error) => {
+        console.error("Error fetching marks:", error);
+      });
+  }
+}, [courseOutcomeIds, testtype, subject]);
+
+useEffect(()=>{
+  console.log(courseOutcomeIds)
+  console.log(updatedMarks)
+},[updatedMarks])
+
 useEffect(()=>{
   console.log("Test Type : ",+testtype.value)
 },[testtype])
@@ -222,6 +260,7 @@ useEffect(()=>{
   };
 
   const handleMarkChange =(studentIndex, markIndex, value, courseOutcome) => {
+    console.log(value)
     if(value<0){
       value=0;
     }
@@ -232,6 +271,7 @@ useEffect(()=>{
       value = courseOutcome;
     }
    const updatedStudentsData = [...studentsData];
+   
     updatedStudentsData[studentIndex].marks[markIndex] = value;
     setStudentsData(updatedStudentsData);
   };
@@ -271,6 +311,7 @@ useEffect(()=>{
       }
     })
   }
+
   return (
     <div className="container">
       <div className="dropdown-container">
