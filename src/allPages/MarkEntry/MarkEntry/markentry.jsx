@@ -133,7 +133,7 @@ useState(()=>{
       .then((data) => {
         const options = data.map((item) => ({
           value: item.id,
-          label: item.name,
+          label: item.name +' - '+ item.code,
         }));
         setSubjectOptions(options);
       })
@@ -203,10 +203,11 @@ useEffect(()=>{
 },[semester,year,department])
 
 useEffect(() => {
-  if (courseOutcomeIds.length > 0 && testtype && subject) {
-    setUpdatedMarks({});
+  setUpdatedMarks({});
     setStudentsData([]);
 
+  if (courseOutcomeIds.length > 0 && testtype && subject) {
+    
     const promises = courseOutcomeIds.map((id) =>
       axios.get(`${apiHost}/marks?co_id=${id.id}&type=${testtype.value}`)
     );
@@ -221,7 +222,7 @@ useEffect(() => {
 
         const newStudentsData = studentsData.map((student) => {
           const updatedMarks = courseOutcomeIds.map((co, markIndex) => {
-            const mark = mergedData[student.id + 'C' + co.id]?.mark || 0;
+            const mark = mergedData['S'+student.id + 'C' + co.id+'T'+testtype.value]?.mark || 0;
             return mark;
           });
           return { ...student, marks: updatedMarks };
@@ -295,8 +296,14 @@ useEffect(()=>{
     setSearchTerm(event.target.value);
   };
   const [searchTerm, setSearchTerm] = useState("");
-  const updateMarks = ()=>{
+
+  
+  useEffect(()=>{
     console.log(studentsData)
+  },[studentsData])
+
+  const updateMarks = ()=>{
+    
     let startIndex = (testtype.value==2 || testtype.value==4)?(coBound-1):0;
     let endIndex = (testtype.value==1 || testtype.value==3)?coBound:coCount;
     const updatedStudentData = [...studentsData]
@@ -396,6 +403,7 @@ useEffect(()=>{
                     <label>Max Mark:</label>
                     <InputBox
                       type="number"
+                      
                       value={index==coBound-1?courseoutcomes[index]/2:courseoutcomes[index]}
                       onChange={(e) => handleMaxMarkChange(index, e.target.value)}
                     />
@@ -448,6 +456,7 @@ useEffect(()=>{
               <th>Name</th>
               <th>Roll Number</th>
               {courseoutcomes.map((_, i,courseOutcome) => {
+
                 if(testtype.value == 1 || testtype.value ==3){
                   if(i<coBound){
                     return(
@@ -483,8 +492,12 @@ useEffect(()=>{
           <tbody>
 
             {
+            studentsData.map((student, studentIndex) => {
+               
+              let absent = false;
               
-            studentsData.map((student, studentIndex) => (
+              return(
+              
               <tr key={studentIndex}>
                 <td>{student.name}</td>
                 <td>{student.register_number}</td>
@@ -492,11 +505,18 @@ useEffect(()=>{
                   
                   if(testtype.value == 1 || testtype.value ==3 ){
                       if(markIndex < coBound){
+                        if(updatedMarks['S'+student.id+'C'+courseOutcomeIds[markIndex].id+'T'+testtype.value]?.present==0){
+                          absent= true
+                        }
+                        else{
+                          absent = false
+                        }
                         return(
                           <td key={markIndex}>
                             <input
-                              type="number"
-                              value={student.marks[markIndex]}
+                            disabled={absent}
+                              type={absent?"text":"number"}
+                              value={absent?"AB":student.marks[markIndex]}
                               max={(markIndex==coBound-1)? courseOutcome/2:courseOutcome}
                               onChange={(e) =>
                                 handleMarkChange(studentIndex, markIndex, e.target.value, (markIndex==coBound-1)? courseOutcome/2:courseOutcome)
@@ -541,10 +561,10 @@ useEffect(()=>{
 
                  
 })}
-               <td>{calculateTotal(student.marks)}</td>
+               <td>{absent?"AB":calculateTotal(student.marks)}</td>
 
               </tr>
-            ))}
+            )})}
           </tbody>
         </table>
       </div>
