@@ -11,7 +11,3 @@
     transition: all 0.2s;
 }
 
-.custum-button:hover {
-    background-color: var(--hover);
-
-}

@@ -1,0 +1,114 @@
+.container {
+   margin-top: 15px;
+  
+}
+
+.dropdown-container {
+    margin-bottom: 20px;
+}
+
+.dropdowns {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+}
+
+.report-container h2 {
+    margin-bottom: 25px;
+    padding: 2px;
+}
+
+.report-container p {
+    margin: 5px 0;
+    padding: 7px;
+}
+
+.report-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+}
+
+.report-row {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    gap: 20px;
+    width: 100%;
+}
+
+.report-item {
+    background-color: white;
+    border-radius: 8px;
+    padding: 20px;
+    margin: 10px 0;
+    width: 100%;
+    max-width: 250px;
+    box-sizing: border-box;
+}
+
+.search-input {
+    margin-bottom: 20px;
+    padding: 8px;
+    width: 100%;
+    max-width: 300px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.pagination {
+    display: flex;
+    list-style: none;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.page-item {
+    margin: 0 5px;
+}
+
+.page-link {
+    padding: 8px 12px;
+    border: 1px solid #007bff;
+    border-radius: 5px;
+    color: #007bff;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.page-item.active .page-link {
+    background-color: #007bff;
+    color: white;
+}
+
+.page-link:hover {
+    background-color: #007bff;
+    color: white;
+}
+
+.report-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+    background-color: white;
+    color: black; 
+    border-radius: 10px; 
+    overflow: hidden; 
+    height: 100%;
+}
+
+.report-table th, .report-table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: center;
+}
+
+.report-table th {
+    background-color: #f2f2f2;
+    color: black;
+}
+
+
+    

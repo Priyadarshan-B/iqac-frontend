@@ -6,8 +6,13 @@ import InputBox from "../../../components/InputBox/inputbox";
 import Button from "../../../components/Button/button";
 import axios from "axios";
 import { ToastContainer, toast } from 'react-toastify';
+import Modal from 'react-modal';
+
 
 function Markentry() {
+
+  const [modalIsOpen, setModalIsOpen] = useState(false);
+
   const [RegulationOptions, setRegulationOptions] = useState([]);
   const [Regulation, setRegulation] = useState("");
 
@@ -306,8 +311,8 @@ useEffect(()=>{
     setStudentsData(updatedStudentData)
     console.log( " start : "+startIndex + " end : "+endIndex)
     axios.post(`${apiHost}/updateMarks`,{student:studentsData,co:courseOutcomeIds.slice(startIndex,endIndex)}).then((res)=>{
-      if(res.status == 200){
-        alert("Added Marks Successfully")
+      if (res.status == 200) {
+        setModalIsOpen(true); 
       }
     })
   }
@@ -367,6 +372,7 @@ useEffect(()=>{
             if(index<coBound){
                return(
                 <div key={index} className="white-container">
+           
                 <div className="mark-and-button">
                   <label>Course Outcome {index + 1} </label>
                   <div className="mark">
@@ -377,11 +383,12 @@ useEffect(()=>{
                       onChange={(e) => handleMaxMarkChange(index, e.target.value)}
                     />
                   </div>
-                  <div className="button">
+                  
                     <Button label="Update" />
                     <Button label="Delete" />
-                  </div>
+             
                 </div>
+              
               </div>
                )
             }
@@ -413,6 +420,7 @@ useEffect(()=>{
             
             return(
               <div key={index} className="white-container">
+                
               <div className="mark-and-button">
                 <label>Course Outcome {index + 1} </label>
                 <div className="mark">
@@ -441,7 +449,7 @@ useEffect(()=>{
           placeholder="Student Name/Reg.."
           value={searchTerm}
           onChange={handleSearch}
-        />
+        /><br />
       <table className="table">
           <thead>
             <tr>
@@ -552,6 +560,19 @@ useEffect(()=>{
       { studentsData.length>0 && 
       <div className="Marks-Submit-Button">
       <Button onClick={updateMarks}  label={"Submit"}/>
+      <Modal
+            isOpen={modalIsOpen}
+            onRequestClose={() => setModalIsOpen(false)}
+            contentLabel="Marks Submission Success"
+            className="modal"
+            overlayClassName="modal-overlay"
+          >
+              <center>
+            <h2>Marks added successfully</h2>
+          
+            <button onClick={() => setModalIsOpen(false)}>Close</button>
+            </center>
+          </Modal>
 
       </div>
 }
