@@ -1,0 +1,33 @@
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+   
+  }
+  
+
+  th {
+    background-color: #f2f2f2;
+    border: 1px solid #dddddd;
+    padding: 8px;
+    text-align: left;
+  }
+  
+ 
+  td {
+    border: 1px solid #dddddd;
+    padding: 8px;
+    text-align: left;
+  }
+  
+
+ 
+
+
+  
+
+  .failed {
+    color: red;
+    font-weight: bold;
+  }
+  

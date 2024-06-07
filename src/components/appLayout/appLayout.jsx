@@ -14,6 +14,10 @@ import Login from "../../allPages/Login/login";
 import Logout from "../../Logout/logout";
 import MainForm from "../../allPages/form_entry/main_form";
 import SyllabusEntry from "../../allPages/Syllabus/syllabusEntry";
+import Attendance from "../../allPages/MarkEntry/MarkEntry/attendance";
+import Report from "../../allPages/MarkEntry/MarkEntry/report";
+import SubjectDetailsPage from "../../allPages/MarkEntry/MarkEntry/reportdetails";
+
 
 function AppLayout() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -48,6 +52,9 @@ function AppLayout() {
                 <Route path="/logout" element= {<Logout/>}/>
                 <Route path="/mainform" element={<MainForm/>}/>
                 <Route path="/syllabusentry" element={<SyllabusEntry/>}/>
+                <Route path="/markentry/attendance" element={<Attendance />}/>
+                <Route path="/markentry/report" element={<Report />}/>
+                <Route path="/markentry/report/:courseCode" element={< SubjectDetailsPage />}/>
 
 
              </Routes>
