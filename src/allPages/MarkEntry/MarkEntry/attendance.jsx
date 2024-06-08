@@ -2,14 +2,15 @@ import React, { useState, useEffect } from "react";
 import * as XLSX from "xlsx";
 import { useNavigate } from "react-router-dom";
 import apiHost from "../../../utils/api";
-import "./markentry.css";
+import "./attendance.css";
 import axios from "axios";
-
-import UploadIcon from '@mui/icons-material/Upload';
+import { Modal, Backdrop, Fade, Button } from '@mui/material';
 
 function Attendance() {
   const [studentsData, setStudentsData] = useState([]);
   const [excelData, setExcelData] = useState([]);
+  const [openModal, setOpenModal] = useState(false);
+  const [successMessage, setSuccessMessage] = useState("");
   const navigate = useNavigate(); 
 
   const handleFileUpload = (e) => {
@@ -60,63 +61,72 @@ function Attendance() {
       .then((response) => {
         console.log('Data sent successfully');
         toast.success('Data sent successfully');
-        navigate('/markentry', { state: { data: jsonData } });
+        navigate('/markentry', { state: { data: dataToSend } });
       })
       .catch((error) => {
         console.error('Error sending data:', error);
-        toast.error('Error sending data');
+        setSuccessMessage("Error adding student details");
+        setOpenModal(true);
       });
   };
 
+  const downloadExcel = () => {
+    const ws = XLSX.utils.aoa_to_sheet(excelData);
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
+    XLSX.writeFile(wb, "attendance_data.xlsx");
+  };
+
+  const handleCloseModal = () => {
+    setOpenModal(false);
+   
+  };
+
   return (
-    
-    <div style={{ marginTop:'25px',marginLeft:'20px', borderRadius: '5px' }}>
+    <div className="attendance-container">
       <input
         accept=".xlsx, .xls"
-        style={{ display: 'none' }}
-        id="upload-file"
+        className="file-upload-input"
         type="file"
         onChange={handleFileUpload}
       />
-      <div style={{height: '150px',width:'1400px',backgroundColor:'white'}}>
-        <center>
-        <br />
-          <h3>Here you can upload the student list</h3>
-       
-      <button 
-        style={{ backgroundColor: '#007bff', color: '#fff', border: 'none', padding: '10px 20px', borderRadius: '5px', cursor: 'pointer',marginTop:'30px' }}
-        onClick={() => document.getElementById('upload-file').click()}
-      >
-        Upload Excel
-      </button>
-      </center>
+      <div className="upload-section">
+        <center><br />
+        <h3>Here you can upload the student list</h3>
+        <button 
+          className="upload-button"
+          onClick={() => document.querySelector('.file-upload-input').click()}
+        >
+          Upload Excel
+        </button>
+        </center>
       </div>
-    
-
       {excelData.length > 0 && (
-        <div style={{ marginTop: '20px' }}>
-          <table style={{ width: '100%', borderCollapse: 'collapse' }}>
-            <thead>
-              <tr>
-                {excelData[0].map((header, index) => (
-                  <th key={index} style={{ border: '1px solid #ddd', padding: '8px', backgroundColor: '#f2f2f2', textAlign: 'left' }}>{header}</th>
-                ))}
-              </tr>
-            </thead>
-            <tbody>
-              {excelData.slice(1).map((row, rowIndex) => (
-                <tr key={rowIndex}>
-                  {row.map((cell, cellIndex) => (
-                    <td key={cellIndex} style={{ border: '1px solid #ddd', padding: '8px' }}>{cell}</td>
+        <div className="table-section">
+         
+          <div className="scrollable-table">
+            <table className="data-table">
+              <thead>
+                <tr>
+                  {excelData[0].map((header, index) => (
+                    <th key={index} className="table-header">{header}</th>
                   ))}
                 </tr>
-              ))}
-            </tbody>
-          </table>
-          <br />
+              </thead>
+              <tbody>
+                {excelData.slice(1).map((row, rowIndex) => (
+                  <tr key={rowIndex} className="table-row">
+                    {row.map((cell, cellIndex) => (
+                      <td key={cellIndex} className="table-cell">{cell}</td>
+                    ))}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
           <center>
             <button 
-              style={{ backgroundColor: '#007bff', color: '#fff', border: 'none', padding: '10px 20px', borderRadius: '5px', cursor: 'pointer' }}
+              className="submit-button"
               onClick={sendDataToBackend}
             >
               Submit
@@ -124,9 +134,28 @@ function Attendance() {
           </center>
         </div>
       )}
-  
+
+      {/* Modal */}
+      <center>
+      <Modal
+        open={openModal}
+        onClose={handleCloseModal}
+        closeAfterTransition
+       
+      >
+        <Fade in={openModal}>
+          <div className="modal-content">
+            <center>
+            <h2>{successMessage}</h2>
+
+            <Button onClick={handleCloseModal}>Close</Button>
+            </center>
+          </div>
+        </Fade>
+      </Modal>
+      </center>
     </div>
   );
 }
 
-export default Attendance;
+export default  Attendance;

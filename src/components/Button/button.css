@@ -3,7 +3,7 @@
     padding: 10px 15px;
     border-radius: 5px;
     border: none;
-    background-color: var(--button);
+    background-color: rgb(24, 143, 254);
     color: var(--button-text-color);
     font-weight: 600;
     box-shadow: 0px 0px 2px black;
