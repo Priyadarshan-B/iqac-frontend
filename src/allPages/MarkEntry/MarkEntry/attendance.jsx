@@ -55,23 +55,12 @@ function Attendance() {
   }, [jsonData]);
 
   const sendDataToBackend = () => {
-    const dataToSend = jsonData.map((row) => ({
-      rollNumber: row["ROLL NUMBER"],
-      coursecode: row["COURSE CODE"],
-      attendance: row["ATTENDANCE"] === "PRESENT" ? 1 : 0,
-      regulation: row["REGULATION"],
-      year: row["YEAR"],
-      dept: row["DEPT"],
-      sem: row["SEM"],
-      testType: row["TEST TYPE"],
-      subject: row["SUBJECT"]
-    }));
 
-    axios.post(`${apiHost}/attendance`, { data: dataToSend })
+    axios.post(`${apiHost}/updateAttendance`, { data: jsonData })
       .then((response) => {
         console.log('Data sent successfully');
         toast.success('Data sent successfully');
-        navigate('/markentry', { state: { data: dataToSend } });
+        navigate('/markentry', { state: { data: jsonData } });
       })
       .catch((error) => {
         console.error('Error sending data:', error);
