@@ -6,12 +6,21 @@ import CollectionsBookmarkIcon from '@mui/icons-material/CollectionsBookmark';
 
 function VerticalNavbar({ onClose }) {
     const [activeLink, setActiveLink] = useState(null);
+    const [showSubMenu, setShowSubMenu] = useState(false);
   
     const handleLinkClick = (pathname) => {
         onClose();
         setActiveLink(pathname);
   
     };
+
+    const handleMarkEntryClick = () => {
+        
+        setShowSubMenu(!showSubMenu);
+    
+       
+        handleLinkClick('/markentry');
+      };
     return (
         <div className='total-v-navbar'>
             <div className={`menu-item ${activeLink === '/' ? 'active' : ''}`} onClick={() => handleLinkClick('/')}>
@@ -26,10 +35,26 @@ function VerticalNavbar({ onClose }) {
             <div className={`menu-item ${activeLink === '/facultymap' ? 'active' : ''}`} onClick={() => handleLinkClick('/facultymap')}>
                 <Link to="/facultymap" className="link-style"><DashboardRoundedIcon className='nav-icons' />Faculty Map</Link>
             </div>
-            <div className={`menu-item ${activeLink === '/markentry' ? 'active' : ''}`} onClick={() => handleLinkClick('/markentry')}>
-                <Link to="/markentry" className="link-style"><DashboardRoundedIcon className='nav-icons' />Mark Entry</Link>
-               
-            </div>
+            <div className={`menu-item ${activeLink === '/markentry' ? 'active' : ''}`} onClick={handleMarkEntryClick}>
+        <Link to="/markentry" className="link-style">
+          <DashboardRoundedIcon className='nav-icons' />
+          Mark Entry
+        </Link>
+      </div>
+
+    
+      {showSubMenu && (
+        <div className="submenu">
+          <div className="submenu-item">
+            <Link to="/markentry/attendance" className="submenu-link">
+            <DashboardRoundedIcon  />
+            Student List</Link>
+          </div>
+          <div className="submenu-item">
+            <Link to="/markentry/report" className="submenu-link">  <DashboardRoundedIcon  /> Report List</Link>
+          </div>
+        </div>
+      )}
             <div className={`menu-item ${activeLink === '/mainform' ? 'active' : ''}`} onClick={() => handleLinkClick('/mainform')}>
                 <Link to="/mainform" className="link-style"><DashboardRoundedIcon className='nav-icons' />Forms</Link>
             </div>

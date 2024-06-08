@@ -69,4 +69,34 @@
     border-radius: 5px;
 }
 
-
+.submenu {
+    display: flex;
+  
+ 
+    color: var(--text-black);
+    width: 100%;
+    align-items: center;
+    flex-direction: column;
+    font-size: 15px;
+    font-weight: 600;
+  }
+  
+  .submenu-item {
+    display: flex;
+    align-items: center;
+  }
+  
+  .submenu-link {
+    text-decoration: none;
+    color: var(--text-black);
+    padding: 15px;
+    display: inline-flex;
+  }
+  
+  /* Adjust icon size and margin */
+  .submenu-item .MuiSvgIcon-root {
+    width: 20px;
+    height: 20px;
+    margin-right: 10px;
+  }
+  
