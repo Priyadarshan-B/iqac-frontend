@@ -1,43 +1,65 @@
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 import './report.css';
 import Dropdown from '../../../components/dropdown/dropdown';
 import * as XLSX from 'xlsx';
 import { Link } from 'react-router-dom';
+import axios from "axios";
+import apiHost from "../../../utils/api";
 
 function Report() {
-    const regulationOptions = [
-        { value: "Regulation 1", label: "2022" },
-        { value: "Regulation 2", label: "2021" },
-        { value: "Regulation 3", label: "2020" }
-    ];
-
-    const yearOptions = [
-        { value: "Year 1", label: "1" },
-        { value: "Year 2", label: "2" },
-        { value: "Year 3", label: "3" }
-    ];
-
-    const semesterOptions = [
-        { value: "Semester 1", label: "S1" },
-        { value: "Semester 2", label: "S2" },
-        { value: "Semester 3", label: "S3" }
-    ];
-
-    const testTypeOptions = [
-        { value: "Test Type 1", label: "PT 1" },
-        { value: "Test Type 2", label: "PT 2" },
-        { value: "Test Type 3", label: "SEM 2" }
-    ];
 
     const [selectedRegulation, setSelectedRegulation] = useState(null);
     const [selectedYear, setSelectedYear] = useState(null);
     const [selectedSemester, setSelectedSemester] = useState(null);
     const [selectedTestType, setSelectedTestType] = useState(null);
-
+    const [searchInput, setSearchInput] = useState('');
     const [reportData, setReportData] = useState([]);
-    const [searchTerm, setSearchTerm] = useState('');
-    const [currentPage, setCurrentPage] = useState(1);
-    const [itemsPerPage] = useState(10);
+    const [RegulationOptions, setRegulationOptions] = useState([]);
+    const [semesterOptions, setSemesterOptions] = useState([]);
+    const [yearOptions,setYearOptions]=useState([]);
+    const [testtypeOptions, setTestTypeOptions] = useState([]);
+
+    useEffect(() => {
+        axios.get(`${apiHost}/regulation`)
+            .then(response => {
+                const options = response.data.map(item => ({
+                    value: item.id,
+                    label: item.regulation,
+                }));
+                setRegulationOptions(options);
+            })
+            .catch(error => console.error("Error fetching regulation data:", error));
+
+        axios.get(`${apiHost}/year`)
+            .then(response => {
+                const options = response.data.map(item => ({
+                    value: item.id,
+                    label: item.year,
+                }));
+                setYearOptions(options);
+            })
+            .catch(error => console.error("Error fetching year data:", error));
+
+        axios.get(`${apiHost}/semester`)
+            .then(response => {
+                const options = response.data.map(item => ({
+                    value: item.id,
+                    label: item.semester,
+                }));
+                setSemesterOptions(options);
+            })
+            .catch(error => console.error("Error fetching semester data:", error));
+
+        axios.get(`${apiHost}/testtype`)
+            .then(response => {
+                const options = response.data.map(item => ({
+                    value: item.id,
+                    label: item.type,
+                }));
+                setTestTypeOptions(options);
+            })
+            .catch(error => console.error("Error fetching test type data:", error));
+    }, []);
 
     const generateReport = () => {
         const dummySubjects = [
@@ -48,26 +70,26 @@ function Report() {
             { id: 1, departments: "CT", courseCode: "CT105", courseName: "ENG" },
             { id: 1, departments: "CT", courseCode: "CT106", courseName: "CPS" },
 
-            { id: 2, departments: "CSE", courseCode: "CT101", courseName: "MATHS" },
-            { id: 2, departments: "CSE", courseCode: "CT102", courseName: "DCE" },
-            { id: 2, departments: "CSE", courseCode: "CT103", courseName: "CHEM" },
-            { id: 2, departments: "CSE", courseCode: "CT104", courseName: "PHY" },
-            { id: 2, departments: "CSE", courseCode: "CT105", courseName: "ENG" },
-            { id: 2, departments: "CSE", courseCode: "CT106", courseName: "CPS" },
+            { id: 2, departments: "CSE", courseCode: "CSE101", courseName: "MATHS" },
+            { id: 2, departments: "CSE", courseCode: "CSE102", courseName: "DCE" },
+            { id: 2, departments: "CSE", courseCode: "CSE103", courseName: "CHEM" },
+            { id: 2, departments: "CSE", courseCode: "CSE104", courseName: "PHY" },
+            { id: 2, departments: "CSE", courseCode: "CSE105", courseName: "ENG" },
+            { id: 2, departments: "CSE", courseCode: "CSE106", courseName: "CPS" },
 
-            { id: 3, departments: "IT", courseCode: "CT101", courseName: "MATHS" },
-            { id: 3, departments: "IT", courseCode: "CT102", courseName: "DCE" },
-            { id: 3, departments: "IT", courseCode: "CT103", courseName: "CHEM" },
-            { id: 3, departments: "IT", courseCode: "CT104", courseName: "PHY" },
-            { id: 3, departments: "IT", courseCode: "CT105", courseName: "ENG" },
-            { id: 3, departments: "IT", courseCode: "CT106", courseName: "CPS" },
+            { id: 3, departments: "IT", courseCode: "IT101", courseName: "MATHS" },
+            { id: 3, departments: "IT", courseCode: "IT102", courseName: "DCE" },
+            { id: 3, departments: "IT", courseCode: "IT103", courseName: "CHEM" },
+            { id: 3, departments: "IT", courseCode: "IT104", courseName: "PHY" },
+            { id: 3, departments: "IT", courseCode: "IT105", courseName: "ENG" },
+            { id: 3, departments: "IT", courseCode: "IT106", courseName: "CPS" },
 
-            { id: 4, departments: "BT", courseCode: "CT101", courseName: "MATHS" },
-            { id: 4, departments: "BT", courseCode: "CT102", courseName: "DCE" },
-            { id: 4, departments: "BT", courseCode: "CT103", courseName: "CHEM" },
-            { id: 4, departments: "BT", courseCode: "CT104", courseName: "PHY" },
-            { id: 4, departments: "BT", courseCode: "CT105", courseName: "ENG" },
-            { id: 4, departments: "BT", courseCode: "CT106", courseName: "CPS" },
+            { id: 4, departments: "BT", courseCode: "BT101", courseName: "MATHS" },
+            { id: 4, departments: "BT", courseCode: "BT102", courseName: "DCE" },
+            { id: 4, departments: "BT", courseCode: "BT103", courseName: "CHEM" },
+            { id: 4, departments: "BT", courseCode: "BT104", courseName: "PHY" },
+            { id: 4, departments: "BT", courseCode: "BT105", courseName: "ENG" },
+            { id: 4, departments: "BT", courseCode: "BT106", courseName: "CPS" },
         ];
 
         const allReportData = [];
@@ -113,30 +135,34 @@ function Report() {
         const ws = XLSX.utils.aoa_to_sheet(tableData);
         const wb = XLSX.utils.book_new();
         XLSX.utils.book_append_sheet(wb, ws, "Report");
-        XLSX.writeFile(wb, "report.xlsx");
+        const year = selectedYear ? selectedYear.label : "Year";
+    const semester = selectedSemester ? selectedSemester.label : "Semester";
+    const testType = selectedTestType ? selectedTestType.label : "TestType";
+    const fileName = `${semester} Semester ${testType}.xlsx`;
+
+    XLSX.writeFile(wb, fileName);
     };
 
-    const handleSearch = (e) => {
-        setSearchTerm(e.target.value);
-        setCurrentPage(1);
-    };
-
-    const filteredData = reportData.filter(data =>
-        data.courseName.toLowerCase().includes(searchTerm.toLowerCase())
+    const filteredReportData = reportData.filter(data =>
+        Object.values(data).some(val =>
+            String(val).toLowerCase().includes(searchInput.toLowerCase())
+        )
     );
 
-    const indexOfLastItem = currentPage * itemsPerPage;
-    const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-    const currentItems = filteredData.slice(indexOfFirstItem, indexOfLastItem);
-
-    const paginate = (pageNumber) => setCurrentPage(pageNumber);
+    const filteredGroupedData = filteredReportData.reduce((acc, cur) => {
+        if (!acc[cur.department]) {
+            acc[cur.department] = [];
+        }
+        acc[cur.department].push(cur);
+        return acc;
+    }, {});
 
     return (
         <div className="container">
             <div className="dropdown-container">
                 <div className="dropdowns">
                     <Dropdown
-                        options={regulationOptions}
+                        options={RegulationOptions}
                         placeholder="Regulation"
                         value={selectedRegulation}
                         onChange={setSelectedRegulation}
@@ -154,13 +180,12 @@ function Report() {
                         onChange={setSelectedSemester}
                     />
                     <Dropdown
-                        options={testTypeOptions}
+                        options={testtypeOptions}
                         placeholder="Test Type"
                         value={selectedTestType}
                         onChange={setSelectedTestType}
                     />
-                    <button onClick={generateReport} style={{ backgroundColor: '#007bff', color: '#fff', border: 'none', padding: '10px', borderRadius: '5px', cursor: 'pointer', height: '40px', marginTop: '29px' }}>Generate Report</button>
-                    <button onClick={downloadTableAsExcel} style={{ backgroundColor: 'green', color: '#fff', border: 'none', padding: '10px', borderRadius: '5px', cursor: 'pointer', height: '40px', marginTop: '29px' }}>Download Report</button>
+                    <button onClick={generateReport} style={{ backgroundColor: '#007bff', color: '#fff', border: 'none', padding: '10px', borderRadius: '5px', cursor: 'pointer', height: '40px' }}>Generate Report</button>
                 </div>
             </div>
             <div className='report'>
@@ -169,84 +194,74 @@ function Report() {
                         <center>
                             <h2>Report Summary</h2>
                         </center>
-                       
-                        <table className="report-table">
-                            <thead>
-                                <tr>
-                                    <th>Department</th>
-                                    <th>Course Code</th>
-                                    <th>Course Name</th>
-                                    <th>Total Students</th>
-                                    <th>Present Students</th>
-                                    <th>Absent Students</th>
-                                    <th>Failed Students</th>
-                                    <th>Pass Percentage</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {Object.keys(groupedData).map((department, index) => (
-                                    <React.Fragment key={index}>
-                                        <tr>
-                                            <td rowSpan={groupedData[department].length}>
-                                                <Link to={{ pathname: `/markentry/report/${groupedData[department][0].id}`, state: { department } }}>
-                                                    {department}
-                                                </Link>
-                                            </td>
-                                            <td>{groupedData[department][0].courseCode}</td>
-                                            <td>{groupedData[department][0].courseName}</td>
-                                            <td>{groupedData[department][0].totalStudents}</td>
-                                            <td>{groupedData[department][0].presentStudents}</td>
-                                            <td>{groupedData[department][0].absentStudents}</td>
-                                            <td>{groupedData[department][0].failedStudents}</td>
-                                            <td>{groupedData[department][0].passPercentage}</td>
-                                        </tr>
-                                        {groupedData[department].slice(1).map((data, subIndex) => (
-                                            <tr key={`${index}-${subIndex}`}>
-                                                <td>{data.courseCode}</td>
-                                                <td>{data.courseName}</td>
-                                                <td>{data.totalStudents}</td>
-                                                <td>{data.presentStudents}</td>
-                                                <td>{data.absentStudents}</td>
-                                                <td>{data.failedStudents}</td>
-                                                <td>{data.passPercentage}</td>
+                        <div className='row'>
+                            <input
+                                type="text"
+                                placeholder="Search ..."
+                                value={searchInput}
+                                onChange={e => setSearchInput(e.target.value)}
+                                style={{ marginBottom: '25px', padding: '10px', borderRadius: '5px', border: '1px solid #ccc' }}
+                            />
+                            <button
+                                onClick={downloadTableAsExcel}
+                                style={{
+                                    marginBottom: '25px', padding: '10px', backgroundColor: '#007bff', color: 'white', borderRadius: '5px',  border: '1px solid #ccc'
+                                }}
+                            >
+                                Download as Excel
+                            </button>
+                        </div>
+                        <div className="table-wrapper">
+                            <table className="report-table">
+                                <thead>
+                                    <tr>
+                                        <th>Department</th>
+                                        <th>Course Code</th>
+                                        <th>Course Name</th>
+                                        <th>Total Students</th>
+                                        <th>Present Students</th>
+                                        <th>Absent Students</th>
+                                        <th>Failed Students</th>
+                                        <th>Pass Percentage</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {Object.keys(filteredGroupedData).map((department, index) => (
+                                        <React.Fragment key={index}>
+                                            <tr>
+                                                <td rowSpan={filteredGroupedData[department].length}>
+                                                    <Link to={{ pathname: `/markentry/report/${filteredGroupedData[department][0].id}`, state: { department } }} className="line">
+                                                        {department}
+                                                    </Link>
+                                                </td>
+                                                <td>{filteredGroupedData[department][0].courseCode}</td>
+                                                <td>{filteredGroupedData[department][0].courseName}</td>
+                                                <td>{filteredGroupedData[department][0].totalStudents}</td>
+                                                <td>{filteredGroupedData[department][0].presentStudents}</td>
+                                                <td>{filteredGroupedData[department][0].absentStudents}</td>
+                                                <td>{filteredGroupedData[department][0].failedStudents}</td>
+                                                <td>{filteredGroupedData[department][0].passPercentage}</td>
                                             </tr>
-                                        ))}
-                                    </React.Fragment>
-                                ))}
-                            </tbody>
-                        </table>
-                        <Pagination
-                            itemsPerPage={itemsPerPage}
-                            totalItems={filteredData.length}
-                            paginate={paginate}
-                            currentPage={currentPage}
-                        />
+                                            {filteredGroupedData[department].slice(1).map((data, subIndex) => (
+                                                <tr key={`${index}-${subIndex}`}>
+                                                    <td>{data.courseCode}</td>
+                                                    <td>{data.courseName}</td>
+                                                    <td>{data.totalStudents}</td>
+                                                    <td>{data.presentStudents}</td>
+                                                    <td>{data.absentStudents}</td>
+                                                    <td>{data.failedStudents}</td>
+                                                    <td>{data.passPercentage}</td>
+                                                </tr>
+                                            ))}
+                                        </React.Fragment>
+                                    ))}
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 )}
             </div>
         </div>
-    );
-}
-
-function Pagination({ itemsPerPage, totalItems, paginate, currentPage }) {
-    const pageNumbers = [];
-
-    for (let i = 1; i <= Math.ceil(totalItems / itemsPerPage); i++) {
-        pageNumbers.push(i);
-    }
-
-    return (
-        <nav>
-            <ul className='pagination'>
-                {pageNumbers.map(number => (
-                    <li key={number} className={`page-item ${currentPage === number ? 'active' : ''}`}>
-                        <a onClick={() => paginate(number)} href='#!' className='page-link'>
-                            {number}
-                        </a>
-                    </li>
-                ))}
-            </ul>
-        </nav>
     );
 }
 

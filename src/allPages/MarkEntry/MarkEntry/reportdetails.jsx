@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import './Subject.css'; 
+import * as XLSX from 'xlsx';
+import './Subject.css';
 
 function SubjectDetailsPage() {
-    const { courseCode} = useParams(); 
+    const { courseCode } = useParams();
     const [subjectDetails, setSubjectDetails] = useState(null);
+    const [searchTerm, setSearchTerm] = useState('');
 
     useEffect(() => {
         fetchSubjectDetails(courseCode)
@@ -22,9 +24,9 @@ function SubjectDetailsPage() {
             courseCode: courseCode,
             courseName: "Course",
             students: [
-                { name: "KISHORE", rollNumber: "7376232CT126",  marks: {phy: 80, math: 75, sci: 85, eng: 70, tam: 90, dce: 85} },
-                { name: "MOHAN", rollNumber: "7376232CT127 ",   marks: {phy: 75, math: 70, sci: 80, eng: 65, tam: 85, dce: 80} },
-                { name: "RAJU", rollNumber: "7376232CT128",marks: {phy: 20, math: 65, sci: 30, eng: 55, tam: 75, dce: 60} },
+                { name: "KISHORE", rollNumber: "7376232CT126", marks: { phy: 80, math: 75, sci: 85, eng: 70, tam: 90, dce: 85 } },
+                { name: "MOHAN", rollNumber: "7376232CT127", marks: { phy: 75, math: 70, sci: 80, eng: 65, tam: 85, dce: 80 } },
+                { name: "RAJU", rollNumber: "7376232CT128", marks: { phy: 20, math: 65, sci: 30, eng: 55, tam: 75, dce: 60 } },
             ]
         };
     };
@@ -32,18 +34,87 @@ function SubjectDetailsPage() {
     const countFailedSubjects = (marks) => {
         let failedSubjects = 0;
         Object.values(marks).forEach(mark => {
-            if (mark < 50) { 
+            if (mark < 50) {
                 failedSubjects++;
             }
         });
         return failedSubjects;
     };
 
+    const handleSearch = (e) => {
+        setSearchTerm(e.target.value);
+    };
+
+    const filteredStudents = subjectDetails?.students.filter(student => {
+        const studentDetails = [
+            student.name,
+            student.rollNumber,
+            student.marks.phy,
+            student.marks.math,
+            student.marks.sci,
+            student.marks.eng,
+            student.marks.tam,
+            student.marks.dce,
+            countFailedSubjects(student.marks)
+        ];
+        return studentDetails.some(detail =>
+            detail.toString().toLowerCase().includes(searchTerm.toLowerCase())
+        );
+    });
+
+    const downloadTableAsExcel = () => {
+        const tableData = [
+            ["S.No", "Register Number", "Name", "Phy", "Math", "Chem", "Eng", "Cps", "DCE", "Failed"]
+        ];
+
+        filteredStudents.forEach((student, index) => {
+            tableData.push([
+                index + 1,
+                student.rollNumber,
+                student.name,
+                student.marks.phy,
+                student.marks.math,
+                student.marks.sci,
+                student.marks.eng,
+                student.marks.tam,
+                student.marks.dce,
+                countFailedSubjects(student.marks)
+            ]);
+        });
+
+        const ws = XLSX.utils.aoa_to_sheet(tableData);
+        const wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, "SubjectDetails");
+        XLSX.writeFile(wb, "SubjectDetails.xlsx");
+    };
+
     return (
-        <div style={{margin: '40px'}}>
-           
+        <div className="subject-details-container">
             {subjectDetails && (
-                <div>
+                <div className="table-container">
+                    <div className='row'>
+                    <input
+                        type="text"
+                        placeholder="Search ..."
+                        value={searchTerm}
+                        onChange={handleSearch}
+                        style={{ padding: '10px', borderRadius: '5px', border: '1px solid #ccc' }}
+                    />
+                    <button
+                        onClick={downloadTableAsExcel}
+                        style={{
+                            padding: '10px',
+                            borderRadius: '5px',
+                            border: '1px solid white',
+                            backgroundColor: '#007bff',
+                             
+                            color: 'white',
+                            cursor: 'pointer'
+                        }}
+                    >
+                        Download as Excel
+                    </button>
+                    </div>
                     <table>
                         <thead>
                             <tr>
@@ -52,15 +123,15 @@ function SubjectDetailsPage() {
                                 <th>Name</th>
                                 <th>Phy</th>
                                 <th>Math</th>
-                                <th>chem</th>
+                                <th>Chem</th>
                                 <th>Eng</th>
-                                <th>cps</th>
+                                <th>Cps</th>
                                 <th>DCE</th>
                                 <th>Failed</th>
                             </tr>
                         </thead>
                         <tbody>
-                            {subjectDetails.students.map((student, index) => (
+                            {filteredStudents.map((student, index) => (
                                 <tr key={student.rollNumber}>
                                     <td>{index + 1}</td>
                                     <td>{student.rollNumber}</td>

@@ -12,6 +12,7 @@ import Modal from 'react-modal';
 function Markentry() {
 
   const [modalIsOpen, setModalIsOpen] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
 
   const [RegulationOptions, setRegulationOptions] = useState([]);
   const [Regulation, setRegulation] = useState("");
@@ -43,9 +44,8 @@ function Markentry() {
   const [updatedMarks,setUpdatedMarks]=useState({})
   const [marks, setMarks] = useState([]);
   const [students,setStudents] = useState([]);
-
-  const [studentsData, setStudentsData] = useState([
-  ]);
+  
+  const [studentsData, setStudentsData] = useState([]);
 
   useEffect(() => {
     fetch(`${apiHost}/regulation`)
@@ -295,11 +295,18 @@ useEffect(()=>{
     setSemester(e);
   }
  
-  // search bar
   const handleSearch = (event) => {
     setSearchTerm(event.target.value);
   };
-  const [searchTerm, setSearchTerm] = useState("");
+
+  const filteredStudentsData = studentsData.filter((student) => {
+    return (
+      student.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      student.register_number.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+  });
+
+  
   const updateMarks = ()=>{
     console.log(studentsData)
     let startIndex = (testtype.value==2 || testtype.value==4)?(coBound-1):0;
@@ -374,9 +381,9 @@ useEffect(()=>{
                 <div key={index} className="white-container">
            
                 <div className="mark-and-button">
-                  <label>Course Outcome {index + 1} </label>
+                  <h4>Course Outcome {index + 1} </h4>
                   <div className="mark">
-                    <label>Max Mark:</label>
+                    <>Max Mark:</>
                     <InputBox
                       type="number"
                       value={index==coBound-1 ? courseoutcomes[index]/2:courseoutcomes[index]}
@@ -422,7 +429,7 @@ useEffect(()=>{
               <div key={index} className="white-container">
                 
               <div className="mark-and-button">
-                <label>Course Outcome {index + 1} </label>
+                <p>Course Outcome {index + 1} </p>
                 <div className="mark">
                   <label>Max Mark:</label>
                   <InputBox
@@ -432,7 +439,7 @@ useEffect(()=>{
                   />
                 </div>
                 <div className="button">
-                  <Button label="Update" />
+                  <Button label="Update"  />
                   <Button label="Delete" />
                 </div>
               </div>
@@ -446,7 +453,7 @@ useEffect(()=>{
       <div className="table-container">
         <InputBox
           type="text"
-          placeholder="Student Name/Reg.."
+          placeholder="SEARCH ..."
           value={searchTerm}
           onChange={handleSearch}
         /><br />
@@ -489,71 +496,61 @@ useEffect(()=>{
             </tr>
           </thead>
           <tbody>
-
-            {
-              
-            studentsData.map((student, studentIndex) => (
-              <tr key={studentIndex}>
-                <td>{student.name}</td>
-                <td>{student.register_number}</td>
-                {courseoutcomes.map((courseOutcome, markIndex) => {
-                  
-                  if(testtype.value == 1 || testtype.value ==3 ){
-                      if(markIndex < coBound){
-                        return(
-                          <td key={markIndex}>
-                            <input
-                              type="number"
-                              value={student.marks[markIndex]}
-                              max={(markIndex==coBound-1)? courseOutcome/2:courseOutcome}
-                              onChange={(e) =>
-                                handleMarkChange(studentIndex, markIndex, e.target.value, (markIndex==coBound-1)? courseOutcome/2:courseOutcome)
-                              }
-                            />
-                          </td>
-                          )
-                      }
+  {filteredStudentsData.map((student, studentIndex) => (
+    <tr key={studentIndex}>
+      <td>{student.name}</td>
+      <td>{student.register_number}</td>
+      {courseoutcomes.map((courseOutcome, markIndex) => {
+        if (testtype.value === 1 || testtype.value === 3) {
+          if (markIndex < coBound) {
+            return (
+              <td key={markIndex}>
+                <InputBox
+                  type="number"
+                  value={student.marks[markIndex]}
+                  max={(markIndex === coBound - 1) ? courseOutcome / 2 : courseOutcome}
+                  onChange={(e) =>
+                    handleMarkChange(studentIndex, markIndex, e.target.value, (markIndex === coBound - 1) ? courseOutcome / 2 : courseOutcome)
                   }
-                  else  if(testtype.value == 2 || testtype.value ==4){
-                    if(markIndex >= coBound-1){
-                      return(
-                        <td key={markIndex}>
-                          <input
-                            type="number"
-                            value={student.marks[markIndex]}
-                            max={(markIndex==coBound-1)?courseOutcome/2:courseOutcome}
-                            onChange={(e) =>
-                              handleMarkChange(studentIndex, markIndex, e.target.value, (markIndex==coBound-1)? courseOutcome/2:courseOutcome)
-                            }
-                            
-                          />
-                        </td>
-                        )
-                    }
+                />
+              </td>
+            );
+          }
+        } else if (testtype.value === 2 || testtype.value === 4) {
+          if (markIndex >= coBound - 1) {
+            return (
+              <td key={markIndex}>
+                <InputBox
+                  type="number"
+                  value={student.marks[markIndex]}
+                  max={(markIndex === coBound - 1) ? courseOutcome / 2 : courseOutcome}
+                  onChange={(e) =>
+                    handleMarkChange(studentIndex, markIndex, e.target.value, (markIndex === coBound - 1) ? courseOutcome / 2 : courseOutcome)
+                  }
+                />
+              </td>
+            );
+          }
+        } else {
+          return (
+            <td key={markIndex}>
+              <InputBox
+                type="number"
+                value={student.marks[markIndex]}
+                max={courseOutcome}
+                onChange={(e) =>
+                  handleMarkChange(studentIndex, markIndex, e.target.value, courseOutcome)
                 }
-                else{
-                  return(
-                    <td key={markIndex}>
-                      <input
-                        type="number"
-                        value={student.marks[markIndex]}
-                        max={courseOutcome}
-                        onChange={(e) =>
-                          handleMarkChange(studentIndex, markIndex, e.target.value, courseOutcome)
-                        }
-                        
-                      />
-                    </td>
-                    )
-                }
+              />
+            </td>
+          );
+        }
+      })}
+      <td>{calculateTotal(student.marks)}</td>
+    </tr>
+  ))}
+</tbody>
 
-                 
-})}
-               <td>{calculateTotal(student.marks)}</td>
-
-              </tr>
-            ))}
-          </tbody>
         </table>
       </div>
       }

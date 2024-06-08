@@ -7,18 +7,21 @@
     display: flex;
     margin-top: 10px;
     align-items: center;
-    
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     flex-wrap: wrap;
     justify-content: center;
     background-color: white;
     border-radius: 5px;
+    margin-bottom: 20px;
+    width: 96%;
+    
 }
 
 .container{
   display: flex;
   flex-direction: column;
 
-  
+  margin: 20px;
     width: calc(100% - 20px);
     height: calc(100% - 20px);
     overflow-y: scroll;
@@ -35,9 +38,11 @@
 
   .white-containers {
     display: flex;
-    gap: 10px;
+    gap: 12px;
     flex-wrap: wrap;
     align-items: center;
+   
+    
   }
   
   .white-container {
@@ -46,6 +51,7 @@
     background-color: white;
     /* border: 1px solid #ccc;  */
     border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     
 
   }
@@ -77,7 +83,8 @@
  .table-container {
   
  margin-top: 30px;
-
+ width: 96%;
+ box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
  
 }
 .table {
@@ -85,7 +92,7 @@
   border-collapse: collapse;
   border-radius: 30px;
   border: black;
-
+  
 }
 
 .table th,
@@ -94,28 +101,22 @@
   border: 1px solid #ddd;
  
 
-  color: #333; /* Dark gray text color */
+  color: #333; 
 }
 
 .table th {
-  background-color: #f2f2f2; /* Light gray background for header */
+  background-color: #f2f2f2; 
   text-align: left;
+ 
   
 }
 
-.table tbody tr:nth-child(even) {
-  background-color: #f9f9f9;
-  
-   /* Off-white background for even rows */
-}
-
-.table tbody tr:hover {
-  background-color: #f0f0f0; /* Slightly darker background on hover */
-}
 
 
 
-/* Stacked layout for small screens */
+
+
+
 @media screen and (max-width: 600px) {
   th, td {
     display: block;
