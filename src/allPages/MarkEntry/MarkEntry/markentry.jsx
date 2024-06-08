@@ -12,7 +12,7 @@ import Modal from 'react-modal';
 function Markentry() {
 
   const [modalIsOpen, setModalIsOpen] = useState(false);
-  const [searchTerm, setSearchTerm] = useState("");
+  
 
   const [RegulationOptions, setRegulationOptions] = useState([]);
   const [Regulation, setRegulation] = useState("");
@@ -138,7 +138,7 @@ useState(()=>{
       .then((data) => {
         const options = data.map((item) => ({
           value: item.id,
-          label: item.name,
+          label: item.name +' - '+ item.code,
         }));
         setSubjectOptions(options);
       })
@@ -208,10 +208,11 @@ useEffect(()=>{
 },[semester,year,department])
 
 useEffect(() => {
-  if (courseOutcomeIds.length > 0 && testtype && subject) {
-    setUpdatedMarks({});
+  setUpdatedMarks({});
     setStudentsData([]);
 
+  if (courseOutcomeIds.length > 0 && testtype && subject) {
+    
     const promises = courseOutcomeIds.map((id) =>
       axios.get(`${apiHost}/marks?co_id=${id.id}&type=${testtype.value}`)
     );
@@ -226,7 +227,7 @@ useEffect(() => {
 
         const newStudentsData = studentsData.map((student) => {
           const updatedMarks = courseOutcomeIds.map((co, markIndex) => {
-            const mark = mergedData[student.id + 'C' + co.id]?.mark || 0;
+            const mark = mergedData['S'+student.id + 'C' + co.id+'T'+testtype.value]?.mark || 0;
             return mark;
           });
           return { ...student, marks: updatedMarks };
@@ -298,17 +299,15 @@ useEffect(()=>{
   const handleSearch = (event) => {
     setSearchTerm(event.target.value);
   };
-
-  const filteredStudentsData = studentsData.filter((student) => {
-    return (
-      student.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      student.register_number.toLowerCase().includes(searchTerm.toLowerCase())
-    );
-  });
+  const [searchTerm, setSearchTerm] = useState("");
 
   
-  const updateMarks = ()=>{
+  useEffect(()=>{
     console.log(studentsData)
+  },[studentsData])
+
+  const updateMarks = ()=>{
+    
     let startIndex = (testtype.value==2 || testtype.value==4)?(coBound-1):0;
     let endIndex = (testtype.value==1 || testtype.value==3)?coBound:coCount;
     const updatedStudentData = [...studentsData]
@@ -410,6 +409,7 @@ useEffect(()=>{
                     <label>Max Mark:</label>
                     <InputBox
                       type="number"
+                      
                       value={index==coBound-1?courseoutcomes[index]/2:courseoutcomes[index]}
                       onChange={(e) => handleMaxMarkChange(index, e.target.value)}
                     />
@@ -463,6 +463,7 @@ useEffect(()=>{
               <th>Name</th>
               <th>Roll Number</th>
               {courseoutcomes.map((_, i,courseOutcome) => {
+
                 if(testtype.value == 1 || testtype.value ==3){
                   if(i<coBound){
                     return(
