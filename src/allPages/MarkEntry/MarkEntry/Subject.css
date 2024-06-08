@@ -1,6 +1,18 @@
 .subject-details-container {
-  margin: 40px;
 
+ 
+  border-radius: 5px;
+ 
+ 
+  width: 97%;
+  height: calc(100% - 20px);
+  margin: 20px;
+ overflow-y: scroll;
+  
+ 
+  
+ 
+ 
 }
 
 .table-container {
@@ -8,6 +20,8 @@
   padding: 20px;
   border-radius: 10px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  margin-bottom: 20px;
+ 
 }
 
 
@@ -18,6 +32,8 @@ table {
   border-collapse: collapse;
   margin-bottom: 20px;
   border-radius: 10px;
+  
+  
 }
 
 th, td {
