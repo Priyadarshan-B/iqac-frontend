@@ -4,6 +4,10 @@ import { Link } from 'react-router-dom';
 import DashboardRoundedIcon from '@mui/icons-material/DashboardRounded';
 import CollectionsBookmarkIcon from '@mui/icons-material/CollectionsBookmark';
 
+import School from '@mui/icons-material/School';
+import Description from '@mui/icons-material/Description';
+import SaveAsIcon from '@mui/icons-material/SaveAs';
+
 function VerticalNavbar({ onClose }) {
     const [activeLink, setActiveLink] = useState(null);
     const [showSubMenu, setShowSubMenu] = useState(false);
@@ -37,7 +41,8 @@ function VerticalNavbar({ onClose }) {
             </div>
             <div className={`menu-item ${activeLink === '/markentry' ? 'active' : ''}`} onClick={handleMarkEntryClick}>
         <Link to="/markentry" className="link-style">
-          <DashboardRoundedIcon className='nav-icons' />
+       
+          <SaveAsIcon  className='nav-icons' />
           Mark Entry
         </Link>
       </div>
@@ -47,11 +52,11 @@ function VerticalNavbar({ onClose }) {
         <div className="submenu">
           <div className="submenu-item">
             <Link to="/markentry/attendance" className="submenu-link">
-            <DashboardRoundedIcon  />
+            <School  />
             Student List</Link>
           </div>
           <div className="submenu-item">
-            <Link to="/markentry/report" className="submenu-link">  <DashboardRoundedIcon  /> Report List</Link>
+            <Link to="/markentry/report" className="submenu-link">   <Description  /> Report List</Link>
           </div>
         </div>
       )}

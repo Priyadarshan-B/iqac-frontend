@@ -7,11 +7,14 @@ import Button from "../../../components/Button/button";
 import axios from "axios";
 import { ToastContainer, toast } from 'react-toastify';
 import Modal from 'react-modal';
+import Box from '@mui/material/Box';
+import Typography from '@mui/material/Typography';
 
 
 function Markentry() {
 
   const [modalIsOpen, setModalIsOpen] = useState(false);
+  const [Open, setOpen] = useState(false);
 
   const [RegulationOptions, setRegulationOptions] = useState([]);
   const [Regulation, setRegulation] = useState("");
@@ -44,8 +47,9 @@ function Markentry() {
   const [marks, setMarks] = useState([]);
   const [students,setStudents] = useState([]);
 
-  const [studentsData, setStudentsData] = useState([
-  ]);
+  const [studentsData, setStudentsData] = useState([]);
+ 
+  const [alertMessage, setAlertMessage] = useState("");
 
   useEffect(() => {
     fetch(`${apiHost}/regulation`)
@@ -282,6 +286,11 @@ useEffect(()=>{
    
     updatedStudentsData[studentIndex].marks[markIndex] = value;
     setStudentsData(updatedStudentsData);
+
+    if (value > courseOutcome) {
+      setAlertMessage("Entered mark exceeds maximum mark!");
+      setModalIsOpen(true);
+    }
   };
 
   const calculateTotal = (studentMarks) => {
@@ -602,10 +611,28 @@ useEffect(()=>{
       </div>
 }
 
+<Modal
+        open={Open}
+        onClose={() => setOpen(false)}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <Box sx={{ width: 400, p: 4, m: 'auto', mt: '20vh', bgcolor: 'background.paper', boxShadow: 24 }}>
+          <Typography id="modal-modal-title" variant="h6" component="h2">
+            Alert
+          </Typography>
+          <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+            {alertMessage}
+          </Typography>
+        </Box>
+      </Modal>
+
 
   { !studentsData.length>0 && 
     <div className="noData">No Data To Show</div>
 }
+
+
     </div>
 
 

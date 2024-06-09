@@ -26,20 +26,11 @@ function SubjectDetailsPage() {
             students: [
                 { name: "KISHORE", rollNumber: "7376232CT126", marks: { phy: 80, math: 75, sci: 85, eng: 70, tam: 90, dce: 85 } },
                 { name: "MOHAN", rollNumber: "7376232CT127", marks: { phy: 75, math: 70, sci: 80, eng: 65, tam: 85, dce: 80 } },
-                // { name: "DHARANEESH", rollNumber: "7376232CT128", marks: { phy: 20, math: 65, sci: 30, eng: 55, tam: 75, dce: 60 } },
                 { name: "RAJU", rollNumber: "7376232CT128", marks: { phy: 20, math: 65, sci: 30, eng: 55, tam: 75, dce: 60 } },
                 { name: "AHIL", rollNumber: "7376232CT129", marks: { phy: 90, math: 85, sci: 95, eng: 80, tam: 92, dce: 88 } },
                 { name: "NARESH", rollNumber: "7376232CT130", marks: { phy: 60, math: 55, sci: 65, eng: 50, tam: 70, dce: 75 } },
                 { name: "SUDHIR", rollNumber: "7376232CT131", marks: { phy: 55, math: 60, sci: 75, eng: 85, tam: 90, dce: 95 } },
                 { name: "KARANEESH", rollNumber: "7376232CT132", marks: { phy: 85, math: 90, sci: 80, eng: 70, tam: 75, dce: 85 } },
-                 // { name: "DHARANEESH", rollNumber: "7376232CT128", marks: { phy: 20, math: 65, sci: 30, eng: 55, tam: 75, dce: 60 } },
-                 { name: "RAJU", rollNumber: "7376232CT128", marks: { phy: 20, math: 65, sci: 30, eng: 55, tam: 75, dce: 60 } },
-                 { name: "AHIL", rollNumber: "7376232CT129", marks: { phy: 90, math: 85, sci: 95, eng: 80, tam: 92, dce: 88 } },
-                 { name: "NARESH", rollNumber: "7376232CT130", marks: { phy: 60, math: 55, sci: 65, eng: 50, tam: 70, dce: 75 } },
-                 { name: "SUDHIR", rollNumber: "7376232CT131", marks: { phy: 55, math: 60, sci: 75, eng: 85, tam: 90, dce: 95 } },
-                 { name: "KARANEESH", rollNumber: "7376232CT132", marks: { phy: 85, math: 90, sci: 80, eng: 70, tam: 75, dce: 85 } },
-                
-               
                 { name: "THIRU", rollNumber: "7376232CT134", marks: { phy: 75, math: 80, sci: 85, eng: 90, tam: 95, dce: 100 } },
                 { name: "VIKRAM", rollNumber: "7376232CT135", marks: { phy: 35, math: 40, sci: 45, eng: 50, tam: 55, dce: 60 } }
             ]
@@ -108,27 +99,26 @@ function SubjectDetailsPage() {
             {subjectDetails && (
                 <div className="table-container">
                     <div className='row'>
-                    <input
-                        type="text"
-                        placeholder="Search ..."
-                        value={searchTerm}
-                        onChange={handleSearch}
-                        style={{ padding: '10px', borderRadius: '5px', border: '1px solid #ccc' }}
-                    />
-                    <button
-                        onClick={downloadTableAsExcel}
-                        style={{
-                            padding: '10px',
-                            borderRadius: '5px',
-                            border: '1px solid white',
-                            backgroundColor: '#007bff',
-                             
-                            color: 'white',
-                            cursor: 'pointer'
-                        }}
-                    >
-                        Download as Excel
-                    </button>
+                        <input
+                            type="text"
+                            placeholder="Search ..."
+                            value={searchTerm}
+                            onChange={handleSearch}
+                            style={{ padding: '10px', borderRadius: '5px', border: '1px solid #ccc' }}
+                        />
+                        <button
+                            onClick={downloadTableAsExcel}
+                            style={{
+                                padding: '10px',
+                                borderRadius: '5px',
+                                border: '1px solid white',
+                                backgroundColor: '#007bff',
+                                color: 'white',
+                                cursor: 'pointer'
+                            }}
+                        >
+                            Download as Excel
+                        </button>
                     </div>
                     <table>
                         <thead>
