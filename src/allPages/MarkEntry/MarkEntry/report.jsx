@@ -61,54 +61,23 @@ function Report() {
             .catch(error => console.error("Error fetching test type data:", error));
     }, []);
 
+    const fetchReport=()=>{
+        if(selectedRegulation&&selectedSemester&&selectedTestType&&selectedYear){
+            axios.get(`${apiHost}/markReport`,{params:{
+                type : selectedTestType.value,
+                regulation:selectedRegulation.value,
+                year : selectedYear.value,
+                semester:selectedSemester.value
+            }}).then((response)=>{
+                setReportData(response.data)
+                console.log(response.data)
+            })
+        }
+        
+    }
+
     const generateReport = () => {
-        const dummySubjects = [
-            { id: 1, departments: "CT", courseCode: "CT101", courseName: "MATHS" },
-            { id: 1, departments: "CT", courseCode: "CT102", courseName: "DCE" },
-            { id: 1, departments: "CT", courseCode: "CT103", courseName: "CHEM" },
-            { id: 1, departments: "CT", courseCode: "CT104", courseName: "PHY" },
-            { id: 1, departments: "CT", courseCode: "CT105", courseName: "ENG" },
-            { id: 1, departments: "CT", courseCode: "CT106", courseName: "CPS" },
-
-            { id: 2, departments: "CSE", courseCode: "CSE101", courseName: "MATHS" },
-            { id: 2, departments: "CSE", courseCode: "CSE102", courseName: "DCE" },
-            { id: 2, departments: "CSE", courseCode: "CSE103", courseName: "CHEM" },
-            { id: 2, departments: "CSE", courseCode: "CSE104", courseName: "PHY" },
-            { id: 2, departments: "CSE", courseCode: "CSE105", courseName: "ENG" },
-            { id: 2, departments: "CSE", courseCode: "CSE106", courseName: "CPS" },
-
-            { id: 3, departments: "IT", courseCode: "IT101", courseName: "MATHS" },
-            { id: 3, departments: "IT", courseCode: "IT102", courseName: "DCE" },
-            { id: 3, departments: "IT", courseCode: "IT103", courseName: "CHEM" },
-            { id: 3, departments: "IT", courseCode: "IT104", courseName: "PHY" },
-            { id: 3, departments: "IT", courseCode: "IT105", courseName: "ENG" },
-            { id: 3, departments: "IT", courseCode: "IT106", courseName: "CPS" },
-
-            { id: 4, departments: "BT", courseCode: "BT101", courseName: "MATHS" },
-            { id: 4, departments: "BT", courseCode: "BT102", courseName: "DCE" },
-            { id: 4, departments: "BT", courseCode: "BT103", courseName: "CHEM" },
-            { id: 4, departments: "BT", courseCode: "BT104", courseName: "PHY" },
-            { id: 4, departments: "BT", courseCode: "BT105", courseName: "ENG" },
-            { id: 4, departments: "BT", courseCode: "BT106", courseName: "CPS" },
-        ];
-
-        const allReportData = [];
-
-        dummySubjects.forEach(subject => {
-            allReportData.push({
-                id: subject.id,
-                department: subject.departments,
-                courseCode: subject.courseCode,
-                courseName: subject.courseName,
-                totalStudents: 100,
-                presentStudents: 95,
-                absentStudents: 5,
-                failedStudents: 5,
-                passPercentage: ((95 - 5) / 95 * 100).toFixed(2)
-            });
-        });
-
-        setReportData(allReportData);
+        fetchReport()
     };
 
     const groupedData = reportData.reduce((acc, cur) => {
@@ -122,15 +91,12 @@ function Report() {
     const downloadTableAsExcel = () => {
         const tableData = [];
         tableData.push(["Department", "Course Code", "Course Name", "Total Students", "Present Students", "Absent Students", "Failed Students", "Pass Percentage"]);
-        Object.keys(groupedData).forEach(department => {
-            groupedData[department].forEach((data, index) => {
-                if (index === 0) {
-                    tableData.push([department, data.courseCode, data.courseName, data.totalStudents, data.presentStudents, data.absentStudents, data.failedStudents, data.passPercentage]);
-                } else {
-                    tableData.push(["", data.courseCode, data.courseName, data.totalStudents, data.presentStudents, data.absentStudents, data.failedStudents, data.passPercentage]);
-                }
-            });
-        });
+        reportData.map((data,index)=>{
+            tableData.push([data.branch,
+                data.code, data.name, data.strength, data.present_count, data.absent_count, data.fail_count, data.pass_percentage]);
+
+        })
+           
 
         const ws = XLSX.utils.aoa_to_sheet(tableData);
         const wb = XLSX.utils.book_new();
@@ -226,23 +192,21 @@ function Report() {
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {Object.keys(filteredGroupedData).map((department, index) => (
+                                    {reportData.map((data, index) => (
                                         <React.Fragment key={index}>
                                             <tr>
-                                                <td rowSpan={filteredGroupedData[department].length}>
-                                                    <Link to={{ pathname: `/markentry/report/${filteredGroupedData[department][0].id}`, state: { department } }} className="line">
-                                                        {department}
-                                                    </Link>
+                                                <td rowSpan={1}>
+                                                <td>{data.branch}</td>
                                                 </td>
-                                                <td>{filteredGroupedData[department][0].courseCode}</td>
-                                                <td>{filteredGroupedData[department][0].courseName}</td>
-                                                <td>{filteredGroupedData[department][0].totalStudents}</td>
-                                                <td>{filteredGroupedData[department][0].presentStudents}</td>
-                                                <td>{filteredGroupedData[department][0].absentStudents}</td>
-                                                <td>{filteredGroupedData[department][0].failedStudents}</td>
-                                                <td>{filteredGroupedData[department][0].passPercentage}</td>
+                                                <td>{data.code}</td>
+                                                <td>{data.name}</td>
+                                                <td>{data.strength}</td>
+                                                <td>{data.present_count}</td>
+                                                <td>{data.absent_count}</td>
+                                                <td>{data.fail_count}</td>
+                                                <td>{data.pass_percentage}</td>
                                             </tr>
-                                            {filteredGroupedData[department].slice(1).map((data, subIndex) => (
+                                            {/* {filteredGroupedData[department].slice(1).map((data, subIndex) => (
                                                 <tr key={`${index}-${subIndex}`}>
                                                     <td>{data.courseCode}</td>
                                                     <td>{data.courseName}</td>
@@ -252,7 +216,7 @@ function Report() {
                                                     <td>{data.failedStudents}</td>
                                                     <td>{data.passPercentage}</td>
                                                 </tr>
-                                            ))}
+                                            ))} */}
                                         </React.Fragment>
                                     ))}
                                 </tbody>
