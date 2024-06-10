@@ -60,38 +60,23 @@ function Report() {
             .catch(error => console.error("Error fetching test type data:", error));
     }, []);
 
+    const fetchReport=()=>{
+        if(selectedRegulation&&selectedSemester&&selectedTestType&&selectedYear){
+            axios.get(`${apiHost}/markReport`,{params:{
+                type : selectedTestType.value,
+                regulation:selectedRegulation.value,
+                year : selectedYear.value,
+                semester:selectedSemester.value
+            }}).then((response)=>{
+                setReportData(response.data)
+                console.log(response.data)
+            })
+        }
+        
+    }
+
     const generateReport = () => {
-        const dummySubjects = [
-            { id: 1, department: "CT", courseCode: "CT101", courseName: "MATHS", totalStudents: 100, presentStudents: 90, absentStudents: 10, failedStudents: 5, passPercentage: "94.44" },
-            { id: 1, department: "CT", courseCode: "CT102", courseName: "DCE", totalStudents: 95, presentStudents: 85, absentStudents: 10, failedStudents: 6, passPercentage: "92.94" },
-            { id: 1, department: "CT", courseCode: "CT103", courseName: "CHEM", totalStudents: 105, presentStudents: 100, absentStudents: 5, failedStudents: 7, passPercentage: "93.00" },
-            { id: 1, department: "CT", courseCode: "CT104", courseName: "PHY", totalStudents: 90, presentStudents: 85, absentStudents: 5, failedStudents: 4, passPercentage: "95.29" },
-            { id: 1, department: "CT", courseCode: "CT105", courseName: "ENG", totalStudents: 110, presentStudents: 100, absentStudents: 10, failedStudents: 8, passPercentage: "92.00" },
-            { id: 1, department: "CT", courseCode: "CT106", courseName: "CPS", totalStudents: 120, presentStudents: 115, absentStudents: 5, failedStudents: 9, passPercentage: "92.17" },
-
-            { id: 2, department: "CSE", courseCode: "CSE101", courseName: "MATHS", totalStudents: 100, presentStudents: 90, absentStudents: 10, failedStudents: 5, passPercentage: "94.44" },
-            { id: 2, department: "CSE", courseCode: "CSE102", courseName: "DCE", totalStudents: 98, presentStudents: 88, absentStudents: 10, failedStudents: 4, passPercentage: "95.45" },
-            { id: 2, department: "CSE", courseCode: "CSE103", courseName: "CHEM", totalStudents: 105, presentStudents: 99, absentStudents: 6, failedStudents: 5, passPercentage: "94.95" },
-            { id: 2, department: "CSE", courseCode: "CSE104", courseName: "PHY", totalStudents: 97, presentStudents: 91, absentStudents: 6, failedStudents: 3, passPercentage: "96.70" },
-            { id: 2, department: "CSE", courseCode: "CSE105", courseName: "ENG", totalStudents: 103, presentStudents: 95, absentStudents: 8, failedStudents: 6, passPercentage: "94.74" },
-            { id: 2, department: "CSE", courseCode: "CSE106", courseName: "CPS", totalStudents: 108, presentStudents: 100, absentStudents: 8, failedStudents: 7, passPercentage: "93.00" },
-
-            { id: 3, department: "IT", courseCode: "IT101", courseName: "MATHS", totalStudents: 90, presentStudents: 85, absentStudents: 5, failedStudents: 4, passPercentage: "95.29" },
-            { id: 3, department: "IT", courseCode: "IT102", courseName: "DCE", totalStudents: 93, presentStudents: 88, absentStudents: 5, failedStudents: 3, passPercentage: "96.59" },
-            { id: 3, department: "IT", courseCode: "IT103", courseName: "CHEM", totalStudents: 87, presentStudents: 83, absentStudents: 4, failedStudents: 2, passPercentage: "97.59" },
-            { id: 3, department: "IT", courseCode: "IT104", courseName: "PHY", totalStudents: 92, presentStudents: 88, absentStudents: 4, failedStudents: 5, passPercentage: "94.32" },
-            { id: 3, department: "IT", courseCode: "IT105", courseName: "ENG", totalStudents: 89, presentStudents: 83, absentStudents: 6, failedStudents: 3, passPercentage: "96.39" },
-            { id: 3, department: "IT", courseCode: "IT106", courseName: "CPS", totalStudents: 91, presentStudents: 86, absentStudents: 5, failedStudents: 4, passPercentage: "95.35" },
-
-            { id: 4, department: "BT", courseCode: "BT101", courseName: "MATHS", totalStudents: 80, presentStudents: 75, absentStudents: 5, failedStudents: 3, passPercentage: "96.00" },
-            { id: 4, department: "BT", courseCode: "BT102", courseName: "DCE", totalStudents: 82, presentStudents: 77, absentStudents: 5, failedStudents: 4, passPercentage: "94.81" },
-            { id: 4, department: "BT", courseCode: "BT103", courseName: "CHEM", totalStudents: 85, presentStudents: 81, absentStudents: 4, failedStudents: 2, passPercentage: "97.53" },
-            { id: 4, department: "BT", courseCode: "BT104", courseName: "PHY", totalStudents: 79, presentStudents: 75, absentStudents: 4, failedStudents: 3, passPercentage: "96.00" },
-            { id: 4, department: "BT", courseCode: "BT105", courseName: "ENG", totalStudents: 84, presentStudents: 79, absentStudents: 5, failedStudents: 2, passPercentage: "97.47" },
-            { id: 4, department: "BT", courseCode: "BT106", courseName: "CPS", totalStudents: 88, presentStudents: 84, absentStudents: 4, failedStudents: 3, passPercentage: "96.43" },
-        ];
-
-        setReportData(dummySubjects);
+        fetchReport()
     };
 
     const groupedData = reportData.reduce((acc, cur) => {
@@ -105,15 +90,12 @@ function Report() {
     const downloadTableAsExcel = () => {
         const tableData = [];
         tableData.push(["Department", "Course Code", "Course Name", "Total Students", "Present Students", "Absent Students", "Failed Students", "Pass Percentage"]);
-        Object.keys(groupedData).forEach(department => {
-            groupedData[department].forEach((data, index) => {
-                if (index === 0) {
-                    tableData.push([department, data.courseCode, data.courseName, data.totalStudents, data.presentStudents, data.absentStudents, data.failedStudents, data.passPercentage]);
-                } else {
-                    tableData.push(["", data.courseCode, data.courseName, data.totalStudents, data.presentStudents, data.absentStudents, data.failedStudents, data.passPercentage]);
-                }
-            });
-        });
+        reportData.map((data,index)=>{
+            tableData.push([data.branch,
+                data.code, data.name, data.strength, data.present_count, data.absent_count, data.fail_count, data.pass_percentage]);
+
+        })
+           
 
         const ws = XLSX.utils.aoa_to_sheet(tableData);
         const wb = XLSX.utils.book_new();
@@ -218,23 +200,21 @@ function Report() {
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {Object.keys(groupedFilteredData).map((department, index) => (
+                                    {reportData.map((data, index) => (
                                         <React.Fragment key={index}>
                                             <tr>
-                                                <td rowSpan={groupedFilteredData[department].length}>
-                                                    <Link to={{ pathname: `/markentry/report/${groupedFilteredData[department][0].id}`, state: { department } }} className="line">
-                                                        {department}
-                                                    </Link>
+                                                <td rowSpan={1}>
+                                                <td>{data.branch}</td>
                                                 </td>
-                                                <td>{groupedFilteredData[department][0].courseCode}</td>
-                                                <td>{groupedFilteredData[department][0].courseName}</td>
-                                                <td>{groupedFilteredData[department][0].totalStudents}</td>
-                                                <td>{groupedFilteredData[department][0].presentStudents}</td>
-                                                <td>{groupedFilteredData[department][0].absentStudents}</td>
-                                                <td>{groupedFilteredData[department][0].failedStudents}</td>
-                                                <td>{groupedFilteredData[department][0].passPercentage}</td>
+                                                <td>{data.code}</td>
+                                                <td>{data.name}</td>
+                                                <td>{data.strength}</td>
+                                                <td>{data.present_count}</td>
+                                                <td>{data.absent_count}</td>
+                                                <td>{data.fail_count}</td>
+                                                <td>{data.pass_percentage}</td>
                                             </tr>
-                                            {groupedFilteredData[department].slice(1).map((data, subIndex) => (
+                                            {/* {filteredGroupedData[department].slice(1).map((data, subIndex) => (
                                                 <tr key={`${index}-${subIndex}`}>
                                                     <td>{data.courseCode}</td>
                                                     <td>{data.courseName}</td>
@@ -244,7 +224,7 @@ function Report() {
                                                     <td>{data.failedStudents}</td>
                                                     <td>{data.passPercentage}</td>
                                                 </tr>
-                                            ))}
+                                            ))} */}
                                         </React.Fragment>
                                     ))}
                                 </tbody>
