@@ -2,9 +2,10 @@ import React, { useState, useEffect } from 'react';
 import './report.css';
 import Dropdown from '../../../components/dropdown/dropdown';
 import * as XLSX from 'xlsx';
-import { Link } from 'react-router-dom';
+
 import axios from "axios";
 import apiHost from "../../../utils/api";
+import { useNavigate } from 'react-router-dom';
 
 function Report() {
     const [selectedRegulation, setSelectedRegulation] = useState(null);
@@ -17,6 +18,11 @@ function Report() {
     const [yearOptions, setYearOptions] = useState([]);
     const [testtypeOptions, setTestTypeOptions] = useState([]);
     const [searchTerm, setSearchTerm] = useState("");
+
+    
+
+
+    const navigate = useNavigate();
 
     useEffect(() => {
         axios.get(`${apiHost}/regulation`)
@@ -60,42 +66,30 @@ function Report() {
             .catch(error => console.error("Error fetching test type data:", error));
     }, []);
 
-    const fetchReport=()=>{
-        if(selectedRegulation&&selectedSemester&&selectedTestType&&selectedYear){
-            axios.get(`${apiHost}/markReport`,{params:{
-                type : selectedTestType.value,
-                regulation:selectedRegulation.value,
-                year : selectedYear.value,
-                semester:selectedSemester.value
-            }}).then((response)=>{
-                setReportData(response.data)
-                console.log(response.data)
-            })
+    const fetchReport = () => {
+        if (selectedRegulation && selectedSemester && selectedTestType && selectedYear) {
+            axios.get(`${apiHost}/markReport`, { params: {
+                type: selectedTestType.value,
+                regulation: selectedRegulation.value,
+                year: selectedYear.value,
+                semester: selectedSemester.value
+            }}).then((response) => {
+                setReportData(response.data);
+                console.log(response.data);
+            });
         }
-        
     }
 
     const generateReport = () => {
-        fetchReport()
+        fetchReport();
     };
-
-    const groupedData = reportData.reduce((acc, cur) => {
-        if (!acc[cur.department]) {
-            acc[cur.department] = [];
-        }
-        acc[cur.department].push(cur);
-        return acc;
-    }, {});
 
     const downloadTableAsExcel = () => {
         const tableData = [];
         tableData.push(["Department", "Course Code", "Course Name", "Total Students", "Present Students", "Absent Students", "Failed Students", "Pass Percentage"]);
-        reportData.map((data,index)=>{
-            tableData.push([data.branch,
-                data.code, data.name, data.strength, data.present_count, data.absent_count, data.fail_count, data.pass_percentage]);
-
-        })
-           
+        reportData.forEach((data) => {
+            tableData.push([data.branch, data.code, data.name, data.strength, data.present_count, data.absent_count, data.fail_count, data.pass_percentage]);
+        });
 
         const ws = XLSX.utils.aoa_to_sheet(tableData);
         const wb = XLSX.utils.book_new();
@@ -112,24 +106,9 @@ function Report() {
         setSearchTerm(event.target.value);
     };
 
-    const filteredData = reportData.filter(item =>
-        item.department.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        item.courseCode.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        item.courseName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        item.totalStudents.toString().includes(searchTerm) ||
-        item.presentStudents.toString().includes(searchTerm) ||
-        item.absentStudents.toString().includes(searchTerm) ||
-        item.failedStudents.toString().includes(searchTerm) ||
-        item.passPercentage.toString().includes(searchTerm)
-    );
-
-    const groupedFilteredData = filteredData.reduce((acc, cur) => {
-        if (!acc[cur.department]) {
-            acc[cur.department] = [];
-        }
-        acc[cur.department].push(cur);
-        return acc;
-    }, {});
+    const handleBranchClick = (branch) => {
+        navigate(`/markentry/report/${branch}`);
+    };
 
     return (
         <div className="container">
@@ -200,33 +179,31 @@ function Report() {
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {reportData.map((data, index) => (
-                                        <React.Fragment key={index}>
-                                            <tr>
-                                                <td rowSpan={1}>
-                                                <td>{data.branch}</td>
-                                                </td>
-                                                <td>{data.code}</td>
-                                                <td>{data.name}</td>
-                                                <td>{data.strength}</td>
-                                                <td>{data.present_count}</td>
-                                                <td>{data.absent_count}</td>
-                                                <td>{data.fail_count}</td>
-                                                <td>{data.pass_percentage}</td>
-                                            </tr>
-                                            {/* {filteredGroupedData[department].slice(1).map((data, subIndex) => (
-                                                <tr key={`${index}-${subIndex}`}>
-                                                    <td>{data.courseCode}</td>
-                                                    <td>{data.courseName}</td>
-                                                    <td>{data.totalStudents}</td>
-                                                    <td>{data.presentStudents}</td>
-                                                    <td>{data.absentStudents}</td>
-                                                    <td>{data.failedStudents}</td>
-                                                    <td>{data.passPercentage}</td>
-                                                </tr>
-                                            ))} */}
-                                        </React.Fragment>
-                                    ))}
+                                {reportData.filter(data => {
+       
+        const searchString = searchTerm.toLowerCase();
+        return (
+            data.branch.toLowerCase().includes(searchString) ||
+            data.code.toLowerCase().includes(searchString) ||
+            data.name.toLowerCase().includes(searchString)
+           
+        );
+    })
+    .map((data, index) => (
+        <tr key={index}>
+            <td onClick={() => handleBranchClick(data.branch)} style={{ cursor: 'pointer', color: 'blue' }}>
+                {data.branch}
+            </td>
+            <td>{data.code}</td>
+            <td>{data.name}</td>
+            <td>{data.strength}</td>
+            <td>{data.present_count}</td>
+            <td>{data.absent_count}</td>
+            <td>{data.fail_count}</td>
+            <td>{data.pass_percentage}</td>
+        </tr>
+    ))
+}
                                 </tbody>
                             </table>
                         </div>

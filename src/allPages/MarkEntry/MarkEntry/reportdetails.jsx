@@ -4,24 +4,24 @@ import * as XLSX from 'xlsx';
 import './Subject.css';
 
 function SubjectDetailsPage() {
-    const { courseCode } = useParams();
+    const { branch } = useParams();
     const [subjectDetails, setSubjectDetails] = useState(null);
     const [searchTerm, setSearchTerm] = useState('');
 
     useEffect(() => {
-        fetchSubjectDetails(courseCode)
+        fetchSubjectDetails(branch)
             .then(details => {
                 setSubjectDetails(details);
             })
             .catch(error => {
                 console.error('Error fetching subject details:', error);
             });
-    }, [courseCode]);
+    }, [branch]);
 
-    const fetchSubjectDetails = async (courseCode) => {
+    const fetchSubjectDetails = async (branch) => {
         return {
             name: "Subject",
-            courseCode: courseCode,
+            branch: branch,
             courseName: "Course",
             students: [
                 { name: "KISHORE", rollNumber: "7376232CT126", marks: { phy: 80, math: 75, sci: 85, eng: 70, tam: 90, dce: 85 } },

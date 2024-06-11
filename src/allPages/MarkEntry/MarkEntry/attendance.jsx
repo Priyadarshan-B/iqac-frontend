@@ -59,9 +59,16 @@ function Attendance() {
 
     axios.post(`${apiHost}/updateAttendance`, { data: jsonData })
       .then((response) => {
-        console.log('Data sent successfully');
-        toast.success('Data sent successfully');
-        navigate('/markentry', { state: { data: dataToSend } });
+        if(response.status == 200){
+          setSuccessMessage("Successfully added");
+          setOpenModal(true);
+        }
+        else{
+          setSuccessMessage("Error adding student details");
+          setOpenModal(true);
+        }
+        
+       
       })
       .catch((error) => {
         console.error('Error sending data:', error);

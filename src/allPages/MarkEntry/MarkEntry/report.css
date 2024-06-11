@@ -47,6 +47,7 @@
     border: 1px solid #ddd;
     padding: 13px;
     text-align: center;
+    width: 100px;
 }
 
 .report-table th {

@@ -426,10 +426,10 @@ useEffect(()=>{
                       onChange={(e) => handleMaxMarkChange(index, e.target.value)}
                     />
                   </div>
-                  <div className="button">
+              
                     <Button label="Update" />
                     <Button label="Delete" />
-                  </div>
+                 
                 </div>
               </div>
               )
@@ -450,10 +450,10 @@ useEffect(()=>{
                     onChange={(e) => handleMaxMarkChange(index, e.target.value)}
                   />
                 </div>
-                <div className="button">
+            
                   <Button label="Update" />
                   <Button label="Delete" />
-                </div>
+             
               </div>
             </div>
             )
@@ -552,7 +552,7 @@ useEffect(()=>{
                     if(markIndex >= coBound-1){
                       return(
                         <td key={markIndex}>
-                          <input
+                          <InputBox
                             type="number"
                             value={student.marks[markIndex]}
                             max={(markIndex==coBound-1)?courseOutcome/2:courseOutcome}
@@ -568,7 +568,7 @@ useEffect(()=>{
                 else{
                   return(
                     <td key={markIndex}>
-                      <input
+                      <InputBox
                         type="number"
                         value={student.marks[markIndex]}
                         max={courseOutcome}
