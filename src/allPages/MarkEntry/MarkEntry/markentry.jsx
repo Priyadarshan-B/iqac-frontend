@@ -22,11 +22,11 @@ function Markentry() {
   const [semesterOptions, setSemesterOptions] = useState([]);
   const [semester, setSemester] = useState("");
 
-  const [yearOptions,setYearOptions]=useState([]);
-  const [year,setYear]= useState(undefined)
+  const [yearOptions, setYearOptions] = useState([]);
+  const [year, setYear] = useState(undefined)
 
-  const [departmentOptions,setDepartmentOptions]=useState([]);
-  const [department,setDepartment]= useState(undefined)
+  const [departmentOptions, setDepartmentOptions] = useState([]);
+  const [department, setDepartment] = useState(undefined)
 
   const [testtypeOptions, setTestTypeOptions] = useState([]);
   const [testtype, setTestType] = useState("");
@@ -41,14 +41,14 @@ function Markentry() {
   const [coBound, setCoBound] = useState(3);
   const [courseoutcomeOptions, setCourseOutcomeOptions] = useState([]);
   const [courseoutcomes, setCourseOutcomes] = useState([]); // Array to hold maximum marks for each outcome
-  const [courseOutcomeIds,setCourseOutcomeIds]=useState([]);
+  const [courseOutcomeIds, setCourseOutcomeIds] = useState([]);
 
-  const [updatedMarks,setUpdatedMarks]=useState({})
+  const [updatedMarks, setUpdatedMarks] = useState({})
   const [marks, setMarks] = useState([]);
-  const [students,setStudents] = useState([]);
+  const [students, setStudents] = useState([]);
 
   const [studentsData, setStudentsData] = useState([]);
- 
+
   const [alertMessage, setAlertMessage] = useState("");
 
   useEffect(() => {
@@ -87,181 +87,181 @@ function Markentry() {
       })
       .catch((error) => console.error("Error fetching test type data:", error));
 
- 
-
-  fetch(`${apiHost}/year`)
-  .then((response)=>response.json())
-  .then((data)=>{
-   const options = data.map((res)=>     ( {
-       value:res.id,
-       label:res.year
-     }
-   ))
-   console.log(options)
-   setYearOptions(options)
-  }
- )
 
 
+    fetch(`${apiHost}/year`)
+      .then((response) => response.json())
+      .then((data) => {
+        const options = data.map((res) => ({
+          value: res.id,
+          label: res.year
+        }
+        ))
+        console.log(options)
+        setYearOptions(options)
+      }
+      )
 
-    }, []);
 
-useState(()=>{
-  console.log(departmentOptions)
-},[departmentOptions])
-  const getFaculty  =  ()=>{
+
+  }, []);
+
+  useState(() => {
+    console.log(departmentOptions)
+  }, [departmentOptions])
+  const getFaculty = () => {
     fetch(`${apiHost}/faculty`)
-    .then((response) => response.json())
-    .then((data) => {
-      const options = data.map((item) => ({
-        value: item.id,
-        label: item.name,
-      }));
-      setFacultyOptions(options);
-    })
-    .catch((error) => console.error("Error fetching faculty data:", error));
-  
+      .then((response) => response.json())
+      .then((data) => {
+        const options = data.map((item) => ({
+          value: item.id,
+          label: item.name,
+        }));
+        setFacultyOptions(options);
+      })
+      .catch((error) => console.error("Error fetching faculty data:", error));
+
   }
-  const getDepartment = ()=>{
+  const getDepartment = () => {
     fetch(`${apiHost}/department?regulation=${Regulation.value}`)
-    .then((response)=>response.json())
-    .then((data)=>{
-     const options = data.map((res)=>     ( {
-         value:res.id,
-         label:res.branch
-       }
-     ))
-     console.log(options)
-     setDepartmentOptions(options)
-    }
-   )
+      .then((response) => response.json())
+      .then((data) => {
+        const options = data.map((res) => ({
+          value: res.id,
+          label: res.branch
+        }
+        ))
+        console.log(options)
+        setDepartmentOptions(options)
+      }
+      )
   }
-  const getCourse = (semester)=>{
+  const getCourse = (semester) => {
     fetch(`${apiHost}/course?semester=${semester}&faculty=${faculty}&year=${Regulation.value}&branch=${department.value}`)
       .then((response) => response.json())
       .then((data) => {
         const options = data.map((item) => ({
           value: item.id,
-          label: item.name +' - '+ item.code,
+          label: item.name + ' - ' + item.code,
         }));
         setSubjectOptions(options);
       })
       .catch((error) => console.error("Error fetching subject data:", error));
   }
- const getCourseOutcomes = ()=>{
-  fetch(`${apiHost}/co?course=${subject.value}`)
-  .then((response)=>response.json())
-  .then((data)=>{
-    console.log(data)
-    setCoCount(data.length)
-    setCourseOutcomeIds(data)
-  })
- }
-  
-
- useEffect(()=>{
-  console.log(courseOutcomeIds)
- },[courseOutcomeIds])
-
-
- const getStudents = ()=>{
-  console.log(subject);
-  fetch(`${apiHost}/students?branch=${department.value}&year=${year.value}&course=${subject.value}`)
-  .then((response)=>response.json())
-  .then((data)=>{
-      const students = data.map((value)=>(
-
-        {
-          id:value.id,
-          name:value.name,
-          register_number:value.register_number,
-          marks: Array(coCount).fill(0),
-          type:testtype.value
-        }
-      ))
-       setStudentsData(students)
-  }
-)
- }
-useEffect(()=>{
-  setCourseOutcomes(Array(coCount).fill(20));
-},[coCount])
-
-useEffect(()=>{
-  if(Regulation){
-    getDepartment();
-  }
-},[Regulation])
-
-
-useEffect(()=>{
-  if(subject){
-    getCourseOutcomes();
-  }
-},[subject,year,semester,department])
-
-useEffect(()=>{
-  setSubject("")
-},[year,semester,department])
-
-
-useEffect(()=>{
-  if(semester){
-    getCourse(semester.value)
-  }
-},[semester,year,department])
-
-useEffect(() => {
-  setUpdatedMarks({});
-    setStudentsData([]);
-
-  if (courseOutcomeIds.length > 0 && testtype && subject) {
-    
-    const promises = courseOutcomeIds.map((id) =>
-      axios.get(`${apiHost}/marks?co_id=${id.id}&type=${testtype.value}`)
-    );
-
-    Promise.all(promises)
-      .then((responses) => {
-        const mergedData = responses.reduce(
-          (acc, res) => ({ ...acc, ...res.data }),
-          {}
-        );
-        setUpdatedMarks(mergedData);
-
-        const newStudentsData = studentsData.map((student) => {
-          const updatedMarks = courseOutcomeIds.map((co, markIndex) => {
-            const mark = mergedData['S'+student.id + 'C' + co.id+'T'+testtype.value]?.mark || 0;
-            return mark;
-          });
-          return { ...student, marks: updatedMarks };
-        });
-
-        setStudentsData(newStudentsData);
+  const getCourseOutcomes = () => {
+    fetch(`${apiHost}/co?course=${subject.value}`)
+      .then((response) => response.json())
+      .then((data) => {
+        console.log(data)
+        setCoCount(data.length)
+        setCourseOutcomeIds(data)
       })
-      .catch((error) => {
-        console.error("Error fetching marks:", error);
-      });
   }
-}, [courseOutcomeIds, testtype, subject]);
 
-useEffect(()=>{
-  console.log(courseOutcomeIds)
-  console.log(updatedMarks)
-},[updatedMarks])
 
-useEffect(() => {
-  if (testtype && testtype.value) { 
-    console.log("Test Type: ", testtype.value);
+  useEffect(() => {
+    console.log(courseOutcomeIds)
+  }, [courseOutcomeIds])
+
+
+  const getStudents = () => {
+    console.log(subject);
+    fetch(`${apiHost}/students?branch=${department.value}&year=${year.value}&course=${subject.value}`)
+      .then((response) => response.json())
+      .then((data) => {
+        const students = data.map((value) => (
+
+          {
+            id: value.id,
+            name: value.name,
+            register_number: value.register_number,
+            marks: Array(coCount).fill(0),
+            type: testtype.value
+          }
+        ))
+        setStudentsData(students)
+      }
+      )
   }
-}, [testtype]);
+  useEffect(() => {
+    setCourseOutcomes(Array(coCount).fill(20));
+  }, [coCount])
 
-useEffect(()=>{
-  if(year && department && subject){
+  useEffect(() => {
+    if (Regulation) {
+      getDepartment();
+    }
+  }, [Regulation])
+
+
+  useEffect(() => {
+    if (subject) {
+      getCourseOutcomes();
+    }
+  }, [subject, year, semester, department])
+
+  useEffect(() => {
+    setSubject("")
+  }, [year, semester, department])
+
+
+  useEffect(() => {
+    if (semester) {
+      getCourse(semester.value)
+    }
+  }, [semester, year, department])
+
+  useEffect(() => {
+    setUpdatedMarks({});
     setStudentsData([]);
-    getStudents();
-  }
-},[year,department,subject,semester])
+
+    if (courseOutcomeIds.length > 0 && testtype && subject) {
+
+      const promises = courseOutcomeIds.map((id) =>
+        axios.get(`${apiHost}/marks?co_id=${id.id}&type=${testtype.value}`)
+      );
+
+      Promise.all(promises)
+        .then((responses) => {
+          const mergedData = responses.reduce(
+            (acc, res) => ({ ...acc, ...res.data }),
+            {}
+          );
+          setUpdatedMarks(mergedData);
+
+          const newStudentsData = studentsData.map((student) => {
+            const updatedMarks = courseOutcomeIds.map((co, markIndex) => {
+              const mark = mergedData['S' + student.id + 'C' + co.id + 'T' + testtype.value]?.mark || 0;
+              return mark;
+            });
+            return { ...student, marks: updatedMarks };
+          });
+
+          setStudentsData(newStudentsData);
+        })
+        .catch((error) => {
+          console.error("Error fetching marks:", error);
+        });
+    }
+  }, [courseOutcomeIds, testtype, subject]);
+
+  useEffect(() => {
+    console.log(courseOutcomeIds)
+    console.log(updatedMarks)
+  }, [updatedMarks])
+
+  useEffect(() => {
+    if (testtype && testtype.value) {
+      console.log("Test Type: ", testtype.value);
+    }
+  }, [testtype]);
+
+  useEffect(() => {
+    if (year && department && subject) {
+      setStudentsData([]);
+      getStudents();
+    }
+  }, [year, department, subject, semester])
 
 
   const handleMaxMarkChange = (index, value) => {
@@ -271,10 +271,10 @@ useEffect(()=>{
     setCourseOutcomes(updatedCourseOutcomes);
   };
 
-  const handleMarkChange =(studentIndex, markIndex, value, courseOutcome) => {
+  const handleMarkChange = (studentIndex, markIndex, value, courseOutcome) => {
     console.log(value)
-    if(value<0){
-      value=0;
+    if (value < 0) {
+      value = 0;
     }
     if (courseOutcome === "" || isNaN(parseInt(courseOutcome))) {
       return;
@@ -282,8 +282,8 @@ useEffect(()=>{
     if (value !== "" && parseInt(value) > parseInt(courseOutcome)) {
       value = courseOutcome;
     }
-   const updatedStudentsData = [...studentsData];
-   
+    const updatedStudentsData = [...studentsData];
+
     updatedStudentsData[studentIndex].marks[markIndex] = value;
     setStudentsData(updatedStudentsData);
 
@@ -303,34 +303,34 @@ useEffect(()=>{
     return sum;
   };
 
-  const handleSemesterChange  = (e) => {
+  const handleSemesterChange = (e) => {
     setSemester(e);
   }
- 
+
   // search bar
   const handleSearch = (event) => {
     setSearchTerm(event.target.value);
   };
   const [searchTerm, setSearchTerm] = useState("");
 
-  
-  useEffect(()=>{
-    console.log(studentsData)
-  },[studentsData])
 
-  const updateMarks = ()=>{
-    
-    let startIndex = (testtype.value==2 || testtype.value==4)?(coBound-1):0;
-    let endIndex = (testtype.value==1 || testtype.value==3)?coBound:coCount;
+  useEffect(() => {
+    console.log(studentsData)
+  }, [studentsData])
+
+  const updateMarks = () => {
+
+    let startIndex = (testtype.value == 2 || testtype.value == 4) ? (coBound - 1) : 0;
+    let endIndex = (testtype.value == 1 || testtype.value == 3) ? coBound : coCount;
     const updatedStudentData = [...studentsData]
-    updatedStudentData.map((value,i)=>{
-      value.marks = value.marks.slice(startIndex,endIndex);
+    updatedStudentData.map((value, i) => {
+      value.marks = value.marks.slice(startIndex, endIndex);
     })
     setStudentsData(updatedStudentData)
-    console.log( " start : "+startIndex + " end : "+endIndex)
-    axios.post(`${apiHost}/updateMarks`,{student:studentsData,co:courseOutcomeIds.slice(startIndex,endIndex)}).then((res)=>{
+    console.log(" start : " + startIndex + " end : " + endIndex)
+    axios.post(`${apiHost}/updateMarks`, { student: studentsData, co: courseOutcomeIds.slice(startIndex, endIndex) }).then((res) => {
       if (res.status == 200) {
-        setModalIsOpen(true); 
+        setModalIsOpen(true);
       }
     })
   }
@@ -345,21 +345,21 @@ useEffect(()=>{
             onChange={setRegulation}
             placeholder="Regulation"
           />
-                     <Dropdown
-          options={Regulation?yearOptions:undefined}
-          value={year}
-          disabled={!Regulation}
-          onChange={setYear}
-          placeholder=" Year"
-        />
           <Dropdown
-            options={Regulation?departmentOptions:undefined}
+            options={Regulation ? yearOptions : undefined}
+            value={year}
+            disabled={!Regulation}
+            onChange={setYear}
+            placeholder=" Year"
+          />
+          <Dropdown
+            options={Regulation ? departmentOptions : undefined}
             value={department}
             disabled={!year}
             onChange={setDepartment}
             placeholder=" Department"
           />
-          
+
           <Dropdown
             options={semesterOptions}
             value={semester}
@@ -386,232 +386,233 @@ useEffect(()=>{
       <ToastContainer />
       <div className="white-containers">
         {courseoutcomes.map((_, index) => {
-          if(testtype.value==1 || testtype.value == 3){
-            if(index<coBound){
-               return(
+          if (testtype.value == 1 || testtype.value == 3) {
+            if (index < coBound) {
+              return (
                 <div key={index} className="white-container">
-           
-                <div className="mark-and-button">
-                  <h4>Course Outcome {index + 1} </h4>
-                  <div className="mark">
-                    <>Max Mark:</>
-                    <InputBox
-                      type="number"
-                      value={index==coBound-1 ? courseoutcomes[index]/2:courseoutcomes[index]}
-                      onChange={(e) => handleMaxMarkChange(index, e.target.value)}
-                    />
-                  </div>
-                  
+
+                  <div className="mark-and-button">
+                    <h4>Course Outcome {index + 1} </h4>
+                    <div className="mark">
+                      <>Max Mark:</>
+                      <InputBox
+                        type="number"
+                        value={index == coBound - 1 ? courseoutcomes[index] / 2 : courseoutcomes[index]}
+                        onChange={(e) => handleMaxMarkChange(index, e.target.value)}
+                      />
+                    </div>
+
                     <Button label="Update" />
                     <Button label="Delete" />
-             
-                </div>
-              
-              </div>
-               )
-            }
-          }
-          else if(testtype.value ==2 || testtype.value == 4){
-            if(index>=coBound-1){
-              return(
-                <div key={index} className="white-container">
-                <div className="mark-and-button">
-                  <h4>Course Outcome {index + 1} </h4>
-                  <div className="mark">
-                    <>Max Mark:</>
-                    <InputBox
-                      type="number"
-                      
-                      value={index==coBound-1?courseoutcomes[index]/2:courseoutcomes[index]}
-                      onChange={(e) => handleMaxMarkChange(index, e.target.value)}
-                    />
+
                   </div>
-              
-                    <Button label="Update" />
-                    <Button label="Delete" />
-                 
+
                 </div>
-              </div>
               )
             }
           }
-          else{
-            
-            return(
-              <div key={index} className="white-container">
-                
-              <div className="mark-and-button">
-                <h4>Course Outcome {index + 1} </h4>
-                <div className="mark">
-                  <>Max Mark:</>
-                  <InputBox
-                    type="number"
-                    value={courseoutcomes[index]}
-                    onChange={(e) => handleMaxMarkChange(index, e.target.value)}
-                  />
-                </div>
-            
-                  <Button label="Update" />
-                  <Button label="Delete" />
-             
-              </div>
-            </div>
-            )
-          }
-        
-})}
-      </div>
-      { studentsData.length>0 && 
-      <div className="table-container">
-        <InputBox
-          type="text"
-          placeholder="Student Name/Reg.."
-          value={searchTerm}
-          onChange={handleSearch}
-        /><br />
-      <table className="table">
-          <thead>
-            <tr>
-              <th>Name</th>
-              <th>Roll Number</th>
-              {courseoutcomes.map((_, i,courseOutcome) => {
-
-                if(testtype.value == 1 || testtype.value ==3){
-                  if(i<coBound){
-                    return(
-                      <th key={i}>
-                     COURSE OUTCOME {i + 1} (MAX : {i==coBound-1?courseoutcomes[i]/2:courseoutcomes[i]})
-
-                    </th>
-                    )
-                
-                  }
-                }
-                else if(testtype.value ==2 || testtype.value ==4){
-                  if(i>=coBound-1){
-                    return(
-                      <th key={i}>
-                      COURSE OUTCOME {i + 1} (MAX : {i==coBound-1?courseoutcomes[i]/2:courseoutcomes[i]})
-                    </th>
-                    )
-                  
-                  }
-                }
-                else{
-                  return(
-                    <th key={i}>
-                    COURSE OUTCOME {i + 1} (MAX : {courseoutcomes[i]})
-                  </th>
-                  )
-                }
-              })}
-              <th>Total</th>
-            </tr>
-          </thead>
-          <tbody>
-
-            {
-            studentsData.filter(student =>
-              student.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-              student.register_number.toLowerCase().includes(searchTerm.toLowerCase())
-            ).map((student, studentIndex) => {
-               
-              let absent = false;
-              
-              return(
-              
-              <tr key={studentIndex}>
-                <td>{student.name}</td>
-                <td>{student.register_number}</td>
-                {courseoutcomes.map((courseOutcome, markIndex) => {
-                  
-                  if(testtype.value == 1 || testtype.value ==3 ){
-                      if(markIndex < coBound){
-                        if(updatedMarks['S'+student.id+'C'+courseOutcomeIds[markIndex].id+'T'+testtype.value]?.present==0){
-                          absent= true
-                        }
-                        else{
-                          absent = false
-                        }
-                        return(
-                          <td key={markIndex}>
-                            <InputBox
-                            disabled={absent}
-                              type={absent?"text":"number"}
-                              value={absent?"AB":student.marks[markIndex]}
-                              max={(markIndex==coBound-1)? courseOutcome/2:courseOutcome}
-                              onChange={(e) =>
-                                handleMarkChange(studentIndex, markIndex, e.target.value, (markIndex==coBound-1)? courseOutcome/2:courseOutcome)
-                              }
-                            />
-                          </td>
-                          )
-                      }
-                  }
-                  else  if(testtype.value == 2 || testtype.value ==4){
-                    if(markIndex >= coBound-1){
-                      return(
-                        <td key={markIndex}>
-                          <InputBox
-                            type="number"
-                            value={student.marks[markIndex]}
-                            max={(markIndex==coBound-1)?courseOutcome/2:courseOutcome}
-                            onChange={(e) =>
-                              handleMarkChange(studentIndex, markIndex, e.target.value, (markIndex==coBound-1)? courseOutcome/2:courseOutcome)
-                            }
-                            
-                          />
-                        </td>
-                        )
-                    }
-                }
-                else{
-                  return(
-                    <td key={markIndex}>
+          else if (testtype.value == 2 || testtype.value == 4) {
+            if (index >= coBound - 1) {
+              return (
+                <div key={index} className="white-container">
+                  <div className="mark-and-button">
+                    <h4>Course Outcome {index + 1} </h4>
+                    <div className="mark">
+                      <>Max Mark:</>
                       <InputBox
                         type="number"
-                        value={student.marks[markIndex]}
-                        max={courseOutcome}
-                        onChange={(e) =>
-                          handleMarkChange(studentIndex, markIndex, e.target.value, courseOutcome)
-                        }
-                        
+
+                        value={index == coBound - 1 ? courseoutcomes[index] / 2 : courseoutcomes[index]}
+                        onChange={(e) => handleMaxMarkChange(index, e.target.value)}
                       />
-                    </td>
-                    )
-                }
+                    </div>
 
-                 
-})}
-               <td>{absent?"AB":calculateTotal(student.marks)}</td>
+                    <Button label="Update" />
+                    <Button label="Delete" />
 
-              </tr>
-            )})}
-          </tbody>
-        </table>
+                  </div>
+                </div>
+              )
+            }
+          }
+          else {
+
+            return (
+              <div key={index} className="white-container">
+
+                <div className="mark-and-button">
+                  <h4>Course Outcome {index + 1} </h4>
+                  <div className="mark">
+                    <>Max Mark:</>
+                    <InputBox
+                      type="number"
+                      value={courseoutcomes[index]}
+                      onChange={(e) => handleMaxMarkChange(index, e.target.value)}
+                    />
+                  </div>
+
+                  <Button label="Update" />
+                  <Button label="Delete" />
+
+                </div>
+              </div>
+            )
+          }
+
+        })}
       </div>
+      {studentsData.length > 0 &&
+        <div className="table-container">
+          <InputBox
+            type="text"
+            placeholder="Student Name/Reg.."
+            value={searchTerm}
+            onChange={handleSearch}
+          /><br />
+          <table className="table">
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Roll Number</th>
+                {courseoutcomes.map((_, i, courseOutcome) => {
+
+                  if (testtype.value == 1 || testtype.value == 3) {
+                    if (i < coBound) {
+                      return (
+                        <th key={i}>
+                          COURSE OUTCOME {i + 1} (MAX : {i == coBound - 1 ? courseoutcomes[i] / 2 : courseoutcomes[i]})
+
+                        </th>
+                      )
+
+                    }
+                  }
+                  else if (testtype.value == 2 || testtype.value == 4) {
+                    if (i >= coBound - 1) {
+                      return (
+                        <th key={i}>
+                          COURSE OUTCOME {i + 1} (MAX : {i == coBound - 1 ? courseoutcomes[i] / 2 : courseoutcomes[i]})
+                        </th>
+                      )
+
+                    }
+                  }
+                  else {
+                    return (
+                      <th key={i}>
+                        COURSE OUTCOME {i + 1} (MAX : {courseoutcomes[i]})
+                      </th>
+                    )
+                  }
+                })}
+                <th>Total</th>
+              </tr>
+            </thead>
+            <tbody>
+
+              {
+                studentsData.filter(student =>
+                  student.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                  student.register_number.toLowerCase().includes(searchTerm.toLowerCase())
+                ).map((student, studentIndex) => {
+
+                  let absent = false;
+
+                  return (
+
+                    <tr key={studentIndex}>
+                      <td>{student.name}</td>
+                      <td>{student.register_number}</td>
+                      {courseoutcomes.map((courseOutcome, markIndex) => {
+
+                        if (testtype.value == 1 || testtype.value == 3) {
+                          if (markIndex < coBound) {
+                            if (updatedMarks['S' + student.id + 'C' + courseOutcomeIds[markIndex].id + 'T' + testtype.value]?.present == 0) {
+                              absent = true
+                            }
+                            else {
+                              absent = false
+                            }
+                            return (
+                              <td key={markIndex}>
+                                <InputBox
+                                  disabled={absent}
+                                  type={absent ? "text" : "number"}
+                                  value={absent ? "AB" : student.marks[markIndex]}
+                                  max={(markIndex == coBound - 1) ? courseOutcome / 2 : courseOutcome}
+                                  onChange={(e) =>
+                                    handleMarkChange(studentIndex, markIndex, e.target.value, (markIndex == coBound - 1) ? courseOutcome / 2 : courseOutcome)
+                                  }
+                                />
+                              </td>
+                            )
+                          }
+                        }
+                        else if (testtype.value == 2 || testtype.value == 4) {
+                          if (markIndex >= coBound - 1) {
+                            return (
+                              <td key={markIndex}>
+                                <InputBox
+                                  type="number"
+                                  value={student.marks[markIndex]}
+                                  max={(markIndex == coBound - 1) ? courseOutcome / 2 : courseOutcome}
+                                  onChange={(e) =>
+                                    handleMarkChange(studentIndex, markIndex, e.target.value, (markIndex == coBound - 1) ? courseOutcome / 2 : courseOutcome)
+                                  }
+
+                                />
+                              </td>
+                            )
+                          }
+                        }
+                        else {
+                          return (
+                            <td key={markIndex}>
+                              <InputBox
+                                type="number"
+                                value={student.marks[markIndex]}
+                                max={courseOutcome}
+                                onChange={(e) =>
+                                  handleMarkChange(studentIndex, markIndex, e.target.value, courseOutcome)
+                                }
+
+                              />
+                            </td>
+                          )
+                        }
+
+
+                      })}
+                      <td>{absent ? "AB" : calculateTotal(student.marks)}</td>
+
+                    </tr>
+                  )
+                })}
+            </tbody>
+          </table>
+        </div>
       }
-      { studentsData.length>0 && 
-      <div className="Marks-Submit-Button">
-      <Button onClick={updateMarks}  label={"Submit"}/>
-      <Modal
+      {studentsData.length > 0 &&
+        <div className="Marks-Submit-Button">
+          <Button onClick={updateMarks} label={"Submit"} />
+          <Modal
             isOpen={modalIsOpen}
             onRequestClose={() => setModalIsOpen(false)}
             contentLabel="Marks Submission Success"
             className="modal"
             overlayClassName="modal-overlay"
           >
-              <center>
-            <h2>Marks added successfully</h2>
-          
-            <button onClick={() => setModalIsOpen(false)}>Close</button>
+            <center>
+              <h2>Marks added successfully</h2>
+
+              <button onClick={() => setModalIsOpen(false)}>Close</button>
             </center>
           </Modal>
 
-      </div>
-}
+        </div>
+      }
 
-<Modal
+      <Modal
         open={Open}
         onClose={() => setOpen(false)}
         aria-labelledby="modal-modal-title"
@@ -628,9 +629,9 @@ useEffect(()=>{
       </Modal>
 
 
-  { !studentsData.length>0 && 
-    <div className="noData">No Data To Show</div>
-}
+      {!studentsData.length > 0 &&
+        <div className="noData">No Data To Show</div>
+      }
 
 
     </div>
