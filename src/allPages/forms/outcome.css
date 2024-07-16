@@ -2,45 +2,34 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding: 20px;
-    background-color: #f9f9f9;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    max-width: 500px;
-    margin: auto;
+  
 }
 
 .outcome-form form {
+    background: #fff;
+    padding: 20px 10px 20px 10px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    max-width: 600px; 
     width: 100%;
+    margin-top: 15px;
 }
 
-.select-field {
-    width: 100%;
-    margin-bottom: 15px;
-}
 
-.select-field .dropdown {
-    width: 100%;
+
+
+
+
+
+.outcome-form input[type="text"] {
+    width: 97%;
     padding: 8px;
     border: 1px solid #ccc;
     border-radius: 4px;
     font-size: 16px;
 }
 
-.input-box {
-    width: 100%;
-    margin-bottom: 15px;
-}
-
-.input-box input {
-    width: 100%;
-    padding: 8px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    font-size: 16px;
-}
-
-.button {
+.button-sub {
     width: 100%;
     padding: 10px;
     background-color: #007bff;

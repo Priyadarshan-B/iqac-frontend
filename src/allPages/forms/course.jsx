@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from "react";
 import apiHost from "../../utils/api";
 import Dropdown from "../../components/dropdown/dropdown";
+import Button from "../../components/Button/button";
 import InputBox from "../../components/InputBox/inputbox";
 import '../dashboard/Dashboard.css'
 import '../MarkEntry/SubjectAllocation/facultymap.css'
 import './course.css';
+import  '../forms/degree.css'
 
 
 function CourseForm() {
@@ -151,9 +153,9 @@ function CourseForm() {
     };
 
     return (
-        <div className="">
-            <form onSubmit={handleSubmit}>
-                <div>
+        <div className="course-form-container">
+            <form onSubmit={handleSubmit} className="course-form">
+                <div className="flex-box">
                     <Dropdown
                         className="select-field"
                         options={regulation}
@@ -175,20 +177,23 @@ function CourseForm() {
                         placeholder="Branch"
                     />
                     <Dropdown
-              className="select-field"
-              options={semester}
-              onChange={(selectedSemester) => setSemesterId(selectedSemester.value)} // Update the selected semester ID
-              placeholder="Semester"
-            />
+                        className="select-field"
+                        options={semester}
+                        onChange={(selectedSemester) => setSemesterId(selectedSemester.value)}
+                        placeholder="Semester"
+                    />
                     <InputBox
                         value={code}
                         onChange={(e) => setCode(e.target.value)}
                         placeholder="Subject Code"
+                        type="text"
                     />
                     <InputBox
                         value={name}
                         onChange={(e) => setName(e.target.value)}
                         placeholder="Subject Name"
+                        type="text"
+
                     />
                     <InputBox
                         value={lecture}
@@ -246,8 +251,9 @@ function CourseForm() {
                         }
                         placeholder="Category"
                     />
-                </div>
-                <button type="submit" className="button">Submit</button>
+              
+                <button type="submit" className="button-sub">Submit</button>
+            </div>
             </form>
         </div>
     );

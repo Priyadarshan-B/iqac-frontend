@@ -6,7 +6,7 @@ import "./degree.css"; // Import your CSS file here
 
 function DegreeForm() {
     const [degree, setDegree] = useState("");
-    const [regulation, setRegulation] = useState("");
+    const [regulation, setRegulation] = useState([]);
     const [selectedRegulationId, setSelectedRegulationId] = useState(null);
 
     useEffect(() => {
@@ -57,24 +57,27 @@ function DegreeForm() {
     return (
         <div className="degree-form-container">
             <form className="degree-form" onSubmit={handleSubmit}>
-                <Dropdown
-                    className="select-field"
-                    options={regulation}
-                    onChange={(selectedOption) => {
-                        setRegulation(selectedOption);
-                        setSelectedRegulationId(selectedOption.value);
-                    }}
-                    placeholder="Regulation"
-                />
-                <InputBox
-                    className="input-field"
-                    value={degree}
-                    onChange={(e) => setDegree(e.target.value)}
-                    placeholder="Degree"
-                />
-                <button type="submit" className="button">
-                    Submit
-                </button>
+                <div className="flex-box">
+                    <Dropdown
+                        className="select-field"
+                        options={regulation}
+                        onChange={(selectedOption) => {
+                            setRegulation(selectedOption);
+                            setSelectedRegulationId(selectedOption.value);
+                        }}
+                        placeholder="Regulation"
+                    />
+                        <InputBox
+                            className="input-field"
+                            value={degree}
+                            onChange={(e) => setDegree(e.target.value)}
+                            placeholder="Enter Degree"
+                            type="text"
+                        />
+                    <button type="submit" className="submit-button">
+                        Submit
+                    </button>
+                </div>
             </form>
         </div>
     );

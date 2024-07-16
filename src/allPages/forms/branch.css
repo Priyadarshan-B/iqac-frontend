@@ -1,12 +1,10 @@
-/* branch.css */
 
-/* Container for the form */
 .form-container {
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh; /* Center the form vertically */
-    background-color: #f5f5f5; /* Light background color */
+    height: 60vh; 
+    background-color: #f5f5f5; 
 }
 
 /* Style for the form */
@@ -17,10 +15,12 @@
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow */
     max-width: 400px; /* Maximum width for the form */
     width: 100%; /* Full width within the max-width */
+    /* display: flex;
+    flex-direction: coloum; */
 }
 
 /* Select field style */
-.select-field {
+.branch-form select-field {
     width: 100%;
     padding: 12px; /* Padding inside the field */
     margin-bottom: 20px; /* Spacing below each field */
@@ -31,27 +31,29 @@
 }
 
 /* Input field style */
-.input-field {
+.branch-form input[type="text"] {
     width: 100%;
-    padding: 12px; /* Padding inside the field */
-    margin-bottom: 20px; /* Spacing below each field */
+    padding: 8px;
     border: 1px solid #ccc; /* Default border for input field */
-    border-radius: 5px; /* Rounded corners */
+    border-radius: 5px;
     box-sizing: border-box;
-    font-size: 16px; /* Font size */
+    font-size: 15px;
+   
 }
 
 /* Button style */
-.button {
+.button-sub button {
     width: 100%;
-    padding: 12px; /* Padding inside the button */
-    background-color: #007bff; /* Blue background color */
-    color: white; /* White text color */
-    border: none; /* No border */
-    border-radius: 5px; /* Rounded corners */
-    font-size: 16px; /* Font size */
-    cursor: pointer; /* Pointer cursor on hover */
-    transition: background-color 0.3s ease; /* Smooth background color transition */
+    padding: 10px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+   
+    
 }
 
 .button:hover {

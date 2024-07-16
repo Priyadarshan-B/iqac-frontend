@@ -70,6 +70,7 @@ function BranchForm() {
     return (
         <div className="form-container">
             <form className="branch-form" onSubmit={handleSubmit}>
+            <div className="flex-box">
                 <Dropdown
                     className="select-field"
                     options={regulation}
@@ -93,11 +94,13 @@ function BranchForm() {
                     className="input-field"
                     value={branch}
                     onChange={(e) => setBranch(e.target.value)}
-                    placeholder="Branch"
+                    placeholder="Enter Branch"
+                    type="text"
                 />
-                <button type="submit" className="button">
+                <button type="submit" className="button-sub">
                     Submit
                 </button>
+                </div>
             </form>
         </div>
     );

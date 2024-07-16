@@ -1,0 +1,76 @@
+/* course.css */
+
+/* General container styling */
+.course-form-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+ 
+    
+
+}
+
+/* Form element styling */
+.course-form {
+    background: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    max-width: 600px; /* Adjust max-width as needed */
+    width: 100%;
+    margin-top: 15px;
+ 
+}
+
+
+
+/* Input box styling */
+.course-form input[type="text"],
+.course-form input[type="number"] {
+    margin-bottom: 15px;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    width: 97%;
+    font-size: 16px;
+}
+
+ .button-sub {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    background-color: #007bff;
+    color: #fff;
+    font-size: 16px;
+    cursor: pointer;
+    margin-top: 10px;
+    text-align: center;
+   }
+
+
+.course-form-container .button:hover {
+    background-color: #0056b3;
+}
+.flex-box{
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+/* Responsive design */
+/* @media (max-width: 768px) {
+    .course-form-container {
+        padding: 15px;
+        max-width: 100%;
+    }
+
+    .course-form-container .select-field,
+    .course-form-container input[type="text"],
+    .course-form-container input[type="number"] {
+        font-size: 14px;
+    }
+
+    .course-form-container .button {
+        font-size: 14px;
+    }
+} */

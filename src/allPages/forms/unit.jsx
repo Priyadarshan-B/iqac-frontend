@@ -147,6 +147,7 @@ function UnitForm() {
     return (
         <div className="unit-form">
             <form onSubmit={handleSubmit}>
+                <div className="flex-box">
                 <Dropdown
                     className="select-field"
                     options={regulation}
@@ -207,7 +208,8 @@ function UnitForm() {
                     placeholder="Hours"
                     type="number"
                 />
-                <button type="submit" className="button">Submit</button>
+                <button type="submit" className="button-sub">Submit</button>
+                </div>
             </form>
         </div>
     );
