@@ -41,8 +41,11 @@ function RegulationForm() {
     };
 
     return (
+        
+        
         <div className="regulation-form-container">
             <ToastContainer />
+            
             <form className="regulation-form" onSubmit={handleSubmit}>
                 <InputBox
                     type="text"

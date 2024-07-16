@@ -7,6 +7,8 @@ import '../dashboard/Dashboard.css'
 import '../MarkEntry/SubjectAllocation/facultymap.css'
 import './course.css';
 import  '../forms/degree.css'
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 
 function CourseForm() {
@@ -143,17 +145,27 @@ function CourseForm() {
             });
 
             if (response.ok) {
+                toast.success("data submitted successfully", {
+                    position: 'bottom-right'
+                });
                 console.log("Data submitted successfully");
             } else {
+                toast.error("Failed to submit data", {
+                    position: 'bottom-right'
+                });
                 console.error("Failed to submit data");
             }
         } catch (error) {
+            toast.error("Error submitting data", {
+                position: 'bottom-right'
+            });
             console.error("Error submitting data:", error);
         }
     };
 
     return (
         <div className="course-form-container">
+             <ToastContainer />
             <form onSubmit={handleSubmit} className="course-form">
                 <div className="flex-box">
                     <Dropdown

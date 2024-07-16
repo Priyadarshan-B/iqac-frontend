@@ -3,6 +3,8 @@ import InputBox from "../../components/InputBox/inputbox";
 import Dropdown from "../../components/dropdown/dropdown";
 import apiHost from "../../utils/api";
 import './co_po_map.css';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 function CoPoMap() {
     const [regulation, setRegulation] = useState([]);
@@ -241,6 +243,7 @@ function CoPoMap() {
 
     return (
         <div className="co-po-map">
+             <ToastContainer />
             <form onSubmit={handleSubmit}>
                  <div className="flex-box">
                 <Dropdown

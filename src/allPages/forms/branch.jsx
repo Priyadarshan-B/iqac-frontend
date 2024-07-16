@@ -2,7 +2,9 @@ import React, { useState, useEffect } from "react";
 import apiHost from "../../utils/api";
 import Dropdown from "../../components/dropdown/dropdown";
 import InputBox from "../../components/InputBox/inputbox";
-import "./branch.css"; // Import your CSS file here
+import "./branch.css"; 
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 function BranchForm() {
     const [branch, setBranch] = useState("");
@@ -58,17 +60,27 @@ function BranchForm() {
             });
 
             if (response.ok) {
+                toast.success("data submitted successfully", {
+                    position: 'bottom-right'
+                });
                 console.log("Data submitted successfully");
             } else {
+                toast.error("Failed to submit data", {
+                    position: 'bottom-right'
+                });
                 console.error("Failed to submit data");
             }
         } catch (error) {
+            toast.error("Error submitting data", {
+                position: 'bottom-right'
+            });
             console.error("Error submitting data:", error);
         }
     };
 
     return (
         <div className="form-container">
+             <ToastContainer />
             <form className="branch-form" onSubmit={handleSubmit}>
             <div className="flex-box">
                 <Dropdown

@@ -2,7 +2,9 @@ import React, { useState, useEffect } from "react";
 import Dropdown from "../../components/dropdown/dropdown";
 import apiHost from "../../utils/api";
 import InputBox from "../../components/InputBox/inputbox";
-import "./degree.css"; // Import your CSS file here
+import "./degree.css"; 
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 function DegreeForm() {
     const [degree, setDegree] = useState("");
@@ -41,14 +43,23 @@ function DegreeForm() {
             });
 
             if (response.ok) {
+                toast.success("data submitted successfully", {
+                    position: 'bottom-right'
+                });
                 console.log("Data submitted successfully");
                 setDegree("");
                 // Handle success, such as showing a success message or redirecting
             } else {
+                toast.error("Failed to submit data", {
+                    position: 'bottom-right'
+                });
                 console.error("Failed to submit data");
                 // Handle error, such as displaying an error message
             }
         } catch (error) {
+            toast.error("Error submitting data", {
+                position: 'bottom-right'
+            });
             console.error("Error submitting data:", error);
             // Handle error, such as displaying an error message
         }
@@ -56,6 +67,7 @@ function DegreeForm() {
 
     return (
         <div className="degree-form-container">
+             <ToastContainer />
             <form className="degree-form" onSubmit={handleSubmit}>
                 <div className="flex-box">
                     <Dropdown

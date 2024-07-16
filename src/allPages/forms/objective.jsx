@@ -3,6 +3,8 @@ import Dropdown from "../../components/dropdown/dropdown";
 import InputBox from "../../components/InputBox/inputbox";
 import apiHost from "../../utils/api";
 import './objective.css';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 function ObjectiveForm() {
     const [regulation, setRegulation] = useState([]);
@@ -131,17 +133,27 @@ function ObjectiveForm() {
             });
 
             if (response.ok) {
+                toast.success("data submitted successfully", {
+                    position: 'bottom-right'
+                });
                 console.log("Data submitted successfully");
             } else {
+                toast.error("Failed to submit data", {
+                    position: 'bottom-right'
+                });
                 console.error("Failed to submit data");
             }
         } catch (error) {
+            toast.error("Error submitting data", {
+                position: 'bottom-right'
+            });
             console.error("Error submitting data:", error);
         }
     };
 
     return (
         <div className="objective-form">
+             <ToastContainer />
             <form onSubmit={handleSubmit}>
                 <div className="flex-box">
                 <Dropdown
