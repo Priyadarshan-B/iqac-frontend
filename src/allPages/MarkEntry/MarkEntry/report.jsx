@@ -219,8 +219,13 @@ function Report() {
                         <td>{data.fail_count}</td>
                         <td>{data.range_0_20}</td>
                         <td>{data.range_21_50}</td>
-                        <td>{data.range_51_80}</td>
-                        <td>{data.range_81_100}</td>
+                        {
+                          selectedTestType==5 && <>
+                          <td>{data.range_51_80}</td>
+                          <td>{data.range_81_100}</td>
+                          </>
+                        }
+                        
                         <td>{data.min_mark}</td>
                         <td>{data.max_mark}</td>
                         <td>{data.pass_percentage}</td>
