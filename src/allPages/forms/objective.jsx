@@ -143,6 +143,7 @@ function ObjectiveForm() {
     return (
         <div className="objective-form">
             <form onSubmit={handleSubmit}>
+                <div className="flex-box">
                 <Dropdown
                     className="select-field"
                     options={regulation}
@@ -189,7 +190,8 @@ function ObjectiveForm() {
                     placeholder="Description"
                     type="text"
                 />
-                <button type="submit" className="button">Submit</button>
+                <button type="submit" className="button-sub">Submit</button>
+                </div>
             </form>
         </div>
     );

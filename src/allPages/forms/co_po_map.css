@@ -2,43 +2,31 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding: 20px;
-    background-color: #f9f9f9;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    max-width: 600px;
-    margin: auto;
+   
 }
 
 .co-po-map form {
+    background: #fff;
+    padding: 20px 10px 20px 10px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    max-width: 600px; 
     width: 100%;
+    margin-top: 15px;
 }
 
-.select-field {
-    width: 100%;
-    margin-bottom: 15px;
-}
 
-.select-field .dropdown {
-    width: 100%;
+
+
+
+.co-po-map input[type="text"] {
+    width: 97%;
     padding: 8px;
     border: 1px solid #ccc;
     border-radius: 4px;
     font-size: 16px;
 }
 
-.input-field {
-    width: 100%;
-    margin-bottom: 15px;
-}
-
-.input-field input {
-    width: 100%;
-    padding: 8px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    font-size: 16px;
-}
 
 .button {
     width: 100%;
@@ -55,10 +43,7 @@
     background-color: #0056b3;
 }
 
-.additional-dropdowns {
-    width: 100%;
-    margin-top: 15px;
-}
+
 
 .additional-dropdowns .dropdown-set {
     display: flex;
@@ -66,7 +51,4 @@
     margin-bottom: 15px;
 }
 
-.dropdown-set .select-field,
-.dropdown-set .input-field {
-    margin-bottom: 10px;
-}
+

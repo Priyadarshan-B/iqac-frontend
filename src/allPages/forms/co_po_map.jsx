@@ -176,6 +176,7 @@ function CoPoMap() {
         setAdditionalDropdowns([
             ...additionalDropdowns,
             <div key={additionalDropdowns.length} className="dropdown-set">
+                <div className="flex-box">
                 <Dropdown
                     className="select-field"
                     options={co}
@@ -195,6 +196,7 @@ function CoPoMap() {
                     onChange={(e) => setLevelValue(e.target.value)}
                     ref={newLevelRefs[newLevelRefs.length - 1]}
                 />
+                </div>
             </div>,
         ]);
     
@@ -240,6 +242,7 @@ function CoPoMap() {
     return (
         <div className="co-po-map">
             <form onSubmit={handleSubmit}>
+                 <div className="flex-box">
                 <Dropdown
                     className="select-field"
                     options={regulation}
@@ -276,7 +279,8 @@ function CoPoMap() {
                 <div className="additional-dropdowns">
                     {additionalDropdowns}
                 </div>
-                <button type="submit" className="button">Submit</button>
+                <button type="submit" className="button-sub">Submit</button>
+                </div>
             </form>
         </div>
     );
