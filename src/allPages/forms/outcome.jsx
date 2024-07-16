@@ -2,25 +2,19 @@ import React, { useState, useEffect } from "react";
 import Dropdown from "../../components/dropdown/dropdown";
 import InputBox from "../../components/InputBox/inputbox";
 import apiHost from "../../utils/api";
-import './form.css'
-
+import './outcome.css';
 
 function OutcomeForm() {
     const [regulation, setRegulation] = useState([]);
     const [regulationId, setRegulationId] = useState(null);
-
     const [degree, setDegree] = useState([]);
     const [degreeId, setDegreeId] = useState(null);
-
     const [branch, setBranch] = useState([]);
     const [selectedBranchId, setSelectedBranchId] = useState(null);
-
     const [semester, setSemester] = useState([]);
     const [semesterId, setSemesterId] = useState(null);
-
     const [course, setCourse] = useState([]);
     const [courseId, setCourseId] = useState(null);
-
     const [co, setCo] = useState("");
     const [description, setDescription] = useState("");
 
@@ -116,6 +110,7 @@ function OutcomeForm() {
                 );
         }
     };
+
     const handleSubmit = async (e) => {
         e.preventDefault();
 
@@ -147,7 +142,7 @@ function OutcomeForm() {
     };
 
     return (
-        <div>
+        <div className="outcome-form">
             <form onSubmit={handleSubmit}>
                 <Dropdown
                     className="select-field"
@@ -181,14 +176,15 @@ function OutcomeForm() {
                     }
                     placeholder="Course"
                 />
-
                 <InputBox
+                    className="input-box"
                     value={co}
                     onChange={(e) => setCo(e.target.value)}
                     placeholder="CO Id"
                     type="text"
                 />
                 <InputBox
+                    className="input-box"
                     value={description}
                     onChange={(e) => setDescription(e.target.value)}
                     placeholder="Description"
@@ -199,4 +195,5 @@ function OutcomeForm() {
         </div>
     );
 }
+
 export default OutcomeForm;

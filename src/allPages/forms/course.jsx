@@ -4,7 +4,7 @@ import Dropdown from "../../components/dropdown/dropdown";
 import InputBox from "../../components/InputBox/inputbox";
 import '../dashboard/Dashboard.css'
 import '../MarkEntry/SubjectAllocation/facultymap.css'
-import './form.css'
+import './course.css';
 
 
 function CourseForm() {

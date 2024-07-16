@@ -1,0 +1,66 @@
+/* branch.css */
+
+/* Container for the form */
+.form-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh; /* Center the form vertically */
+    background-color: #f5f5f5; /* Light background color */
+}
+
+/* Style for the form */
+.branch-form {
+    background: #fff; /* White background for the form */
+    padding: 20px; /* Padding inside the form */
+    border-radius: 10px; /* Rounded corners */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+    max-width: 400px; /* Maximum width for the form */
+    width: 100%; /* Full width within the max-width */
+}
+
+/* Select field style */
+.select-field {
+    width: 100%;
+    padding: 12px; /* Padding inside the field */
+    margin-bottom: 20px; /* Spacing below each field */
+    border: 1px solid #007bff; /* Blue border for select field */
+    border-radius: 5px; /* Rounded corners */
+    box-sizing: border-box;
+    font-size: 16px; /* Font size */
+}
+
+/* Input field style */
+.input-field {
+    width: 100%;
+    padding: 12px; /* Padding inside the field */
+    margin-bottom: 20px; /* Spacing below each field */
+    border: 1px solid #ccc; /* Default border for input field */
+    border-radius: 5px; /* Rounded corners */
+    box-sizing: border-box;
+    font-size: 16px; /* Font size */
+}
+
+/* Button style */
+.button {
+    width: 100%;
+    padding: 12px; /* Padding inside the button */
+    background-color: #007bff; /* Blue background color */
+    color: white; /* White text color */
+    border: none; /* No border */
+    border-radius: 5px; /* Rounded corners */
+    font-size: 16px; /* Font size */
+    cursor: pointer; /* Pointer cursor on hover */
+    transition: background-color 0.3s ease; /* Smooth background color transition */
+}
+
+.button:hover {
+    background-color: #0056b3; /* Darker blue on hover */
+}
+
+.error-message {
+    color: red; /* Red color for error messages */
+    margin-top: 10px; /* Spacing above error message */
+}
+
+/* Additional styles can be added based on your design requirements */

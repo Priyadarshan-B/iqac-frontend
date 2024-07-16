@@ -1,3 +1,4 @@
+/* Existing CSS */
 .total-v-navbar {
     height: fit-content;
     width: 200px;
@@ -5,7 +6,6 @@
     display: flex;
     align-items: center;
     flex-direction: column;
-    /* position: relative; */
 }
 
 .menu-item {
@@ -16,7 +16,6 @@
     width: 100%;
     display: flex;
     align-items: center;
-    /* justify-content: center; */
     transition: all 0.2s;
     cursor: pointer;
     margin: 2px;
@@ -46,7 +45,6 @@
     align-items: center;
     color: var(--text-black);
     padding: 8px;
-    
 }
 
 .menu-item:hover .link-style {
@@ -71,32 +69,63 @@
 
 .submenu {
     display: flex;
-  
- 
     color: var(--text-black);
     width: 100%;
     align-items: center;
     flex-direction: column;
     font-size: 15px;
     font-weight: 600;
-  }
-  
-  .submenu-item {
+}
+
+.submenu-item {
     display: flex;
     align-items: center;
-  }
-  
-  .submenu-link {
+}
+
+.submenu-link {
     text-decoration: none;
     color: var(--text-black);
     padding: 15px;
     display: inline-flex;
-  }
-  
-  /* Adjust icon size and margin */
-  .submenu-item .MuiSvgIcon-root {
+}
+
+/* Adjust icon size and margin */
+.submenu-item .MuiSvgIcon-root {
     width: 20px;
     height: 20px;
     margin-right: 10px;
-  }
-  
+}
+
+/* New CSS for Forms Dropdown */
+.forms-submenu {
+    display: flex;
+    flex-direction: column;
+    color: var(--text-black);
+    width: 100%;
+    align-items: flex-start;
+    font-size: 14px;
+    font-weight: 500;
+    padding-left: 20px;
+}
+
+.forms-submenu-item {
+    display: flex;
+    align-items: center;
+    width: 100%;
+}
+
+.forms-submenu-link {
+    text-decoration: none;
+    color: var(--text-black);
+    padding: 8px;
+    width: 100%;
+    display: inline-flex;
+    align-items: center;
+}
+
+.forms-submenu-link:hover {
+    background-color: var(--card-2);
+    color: var(--button);
+    padding-left: 10px; /* Subtle indentation effect on hover */
+    transition: all 0.3s ease;
+}

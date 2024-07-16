@@ -2,24 +2,18 @@ import React, { useState, useEffect } from "react";
 import Dropdown from "../../components/dropdown/dropdown";
 import InputBox from "../../components/InputBox/inputbox";
 import apiHost from "../../utils/api";
-import './form.css'
-
+import './objective.css';
 
 function ObjectiveForm() {
     const [regulation, setRegulation] = useState([]);
     const [regulationId, setRegulationId] = useState(null);
-
     const [degree, setDegree] = useState([]);
     const [degreeId, setDegreeId] = useState(null);
-
     const [branch, setBranch] = useState([]);
     const [selectedBranchId, setSelectedBranchId] = useState(null);
-
     const [semester, setSemester] = useState([]);
-
     const [course, setCourse] = useState([]);
     const [courseId, setCourseId] = useState(null);
-
     const [objective, setObjective] = useState("");
     const [description, setDescription] = useState("");
 
@@ -115,6 +109,7 @@ function ObjectiveForm() {
                 );
         }
     };
+
     const handleSubmit = async (e) => {
         e.preventDefault();
 
@@ -146,7 +141,7 @@ function ObjectiveForm() {
     };
 
     return (
-        <div>
+        <div className="objective-form">
             <form onSubmit={handleSubmit}>
                 <Dropdown
                     className="select-field"
@@ -180,14 +175,15 @@ function ObjectiveForm() {
                     }
                     placeholder="Course"
                 />
-
                 <InputBox
+                    className="input-box"
                     value={objective}
                     onChange={(e) => setObjective(e.target.value)}
                     placeholder="Course Objective"
                     type="text"
                 />
                 <InputBox
+                    className="input-box"
                     value={description}
                     onChange={(e) => setDescription(e.target.value)}
                     placeholder="Description"
@@ -198,4 +194,5 @@ function ObjectiveForm() {
         </div>
     );
 }
+
 export default ObjectiveForm;

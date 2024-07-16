@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import apiHost from "../../utils/api";
 import Dropdown from "../../components/dropdown/dropdown";
 import InputBox from "../../components/InputBox/inputbox";
-import "./form.css";
+import "./branch.css"; // Import your CSS file here
 
 function BranchForm() {
     const [branch, setBranch] = useState("");
@@ -68,12 +68,15 @@ function BranchForm() {
     };
 
     return (
-        <div>
-            <form onSubmit={handleSubmit}>
+        <div className="form-container">
+            <form className="branch-form" onSubmit={handleSubmit}>
                 <Dropdown
                     className="select-field"
                     options={regulation}
-                    onChange={handleRegulationChange}
+                    onChange={(selectedOption) => {
+                        handleRegulationChange(selectedOption);
+                        setRegulationid(selectedOption.value);
+                    }}
                     placeholder="Regulation"
                 />
                 <Dropdown
@@ -87,16 +90,17 @@ function BranchForm() {
                 />
 
                 <InputBox
+                    className="input-field"
                     value={branch}
                     onChange={(e) => setBranch(e.target.value)}
                     placeholder="Branch"
                 />
                 <button type="submit" className="button">
-                    {" "}
                     Submit
                 </button>
             </form>
         </div>
     );
 }
+
 export default BranchForm;

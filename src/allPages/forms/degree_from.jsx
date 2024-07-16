@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import Dropdown from "../../components/dropdown/dropdown";
 import apiHost from "../../utils/api";
 import InputBox from "../../components/InputBox/inputbox";
-import "./form.css";
+import "./degree.css"; // Import your CSS file here
 
 function DegreeForm() {
     const [degree, setDegree] = useState("");
@@ -55,8 +55,8 @@ function DegreeForm() {
     };
 
     return (
-        <div>
-            <form onSubmit={handleSubmit}>
+        <div className="degree-form-container">
+            <form className="degree-form" onSubmit={handleSubmit}>
                 <Dropdown
                     className="select-field"
                     options={regulation}
@@ -67,7 +67,7 @@ function DegreeForm() {
                     placeholder="Regulation"
                 />
                 <InputBox
-                    className="select-field"
+                    className="input-field"
                     value={degree}
                     onChange={(e) => setDegree(e.target.value)}
                     placeholder="Degree"

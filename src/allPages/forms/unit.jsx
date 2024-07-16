@@ -2,22 +2,16 @@ import React, { useEffect, useState } from "react";
 import apiHost from "../../utils/api";
 import InputBox from "../../components/InputBox/inputbox";
 import Dropdown from "../../components/dropdown/dropdown";
-import './form.css'
-
+import './unit.css';
 
 function UnitForm() {
     const [regulation, setRegulation] = useState([]);
     const [regulationId, setRegulationId] = useState(null);
-
     const [degree, setDegree] = useState([]);
     const [degreeId, setDegreeId] = useState(null);
-
     const [branch, setBranch] = useState([]);
     const [selectedBranchId, setSelectedBranchId] = useState(null);
-
     const [semester, setSemester] = useState([]);
-    // const [semesterId, setSemesterId] = useState(null);
-
     const [course, setCourse] = useState([]);
     const [courseId, setCourseId] = useState(null);
     const [unit, setUnit] = useState("");
@@ -151,7 +145,7 @@ function UnitForm() {
     };
 
     return (
-        <div>
+        <div className="unit-form">
             <form onSubmit={handleSubmit}>
                 <Dropdown
                     className="select-field"
@@ -186,24 +180,28 @@ function UnitForm() {
                     placeholder="Course"
                 />
                 <InputBox
+                    className="input-box"
                     value={unit}
                     onChange={(e) => setUnit(e.target.value)}
                     placeholder="Unit"
                     type="text"
                 />
                 <InputBox
+                    className="input-box"
                     value={unitname}
                     onChange={(e) => setUnitname(e.target.value)}
                     placeholder="Unit Name"
                     type="text"
                 />
                 <InputBox
+                    className="input-box"
                     value={description}
                     onChange={(e) => setDescription(e.target.value)}
                     placeholder="Unit Description"
                     type="text"
                 />
                 <InputBox
+                    className="input-box"
                     value={hours}
                     onChange={(e) => setHours(e.target.value)}
                     placeholder="Hours"

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import apiHost from "../../utils/api";
 import InputBox from "../../components/InputBox/inputbox";
-import "./form.css";
+import "./category.css";
 
 function CategoryForm() {
     const [category, setCategory] = useState("");
@@ -30,15 +30,15 @@ function CategoryForm() {
     };
 
     return (
-        <div>
-            <form onSubmit={handleSubmit}>
+        <div className="category-form-container">
+            <form onSubmit={handleSubmit} className="category-form">
                 <InputBox
                     value={category}
                     type="text"
                     onChange={(e) => setCategory(e.target.value)}
                     placeholder="Category"
                 />
-                <button type="submit" className="button">
+                <button type="submit" className="category-button">
                     Submit
                 </button>
             </form>

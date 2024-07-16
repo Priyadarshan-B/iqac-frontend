@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import InputBox from "../../components/InputBox/inputbox";
 import Dropdown from "../../components/dropdown/dropdown";
 import apiHost from "../../utils/api";
+import './co_po_map.css';
 
 function CoPoMap() {
     const [regulation, setRegulation] = useState([]);
@@ -53,6 +54,7 @@ function CoPoMap() {
             .catch((error) =>
                 console.error("Error fetching semester dropdown:", error)
             );
+
         fetch(`${apiHost}/api/rf/po-pso`)
             .then((response) => response.json())
             .then((data) => {
@@ -173,7 +175,7 @@ function CoPoMap() {
     
         setAdditionalDropdowns([
             ...additionalDropdowns,
-            <div key={additionalDropdowns.length}>
+            <div key={additionalDropdowns.length} className="dropdown-set">
                 <Dropdown
                     className="select-field"
                     options={co}
@@ -200,7 +202,7 @@ function CoPoMap() {
         poRefs.current = newPoRefs;
         levelRefs.current = newLevelRefs;
     };
-    
+
     const handleSubmit = (event) => {
         event.preventDefault();
         // Prepare data to send to backend
@@ -214,9 +216,9 @@ function CoPoMap() {
                 mapping_level: levelValue,
             };
         });
-    
+
         console.log(dataToSend);
-    
+
         // Send data to backend
         fetch(`${apiHost}/api/rf/co-po-mapping`, {
             method: "POST",
@@ -228,14 +230,15 @@ function CoPoMap() {
             .then((response) => response.json())
             .then((data) => {
                 // Handle response if needed
+                console.log("Data submitted successfully", data);
             })
             .catch((error) => {
                 console.error("Error sending data to backend:", error);
             });
     };
-    
+
     return (
-        <div>
+        <div className="co-po-map">
             <form onSubmit={handleSubmit}>
                 <Dropdown
                     className="select-field"
@@ -270,8 +273,10 @@ function CoPoMap() {
                 <button type="button" onClick={handleAddDropdown}>
                     Add Dropdown
                 </button>
-                {additionalDropdowns}
-                <button type="submit">Submit</button>
+                <div className="additional-dropdowns">
+                    {additionalDropdowns}
+                </div>
+                <button type="submit" className="button">Submit</button>
             </form>
         </div>
     );
