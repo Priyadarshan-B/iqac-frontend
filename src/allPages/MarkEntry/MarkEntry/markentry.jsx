@@ -213,7 +213,6 @@ function Markentry() {
 
   useEffect(() => {
     setUpdatedMarks({});
-    setStudentsData([]);
 
     if (courseOutcomeIds.length > 0 && testtype && subject) {
 
@@ -257,11 +256,10 @@ function Markentry() {
   }, [testtype]);
 
   useEffect(() => {
-    if (year && department && subject) {
-      setStudentsData([]);
-      getStudents();
-    }
-  }, [year, department, subject, semester])
+    console.log("Resetting the studentsData");
+    setStudentsData([]);
+
+  }, [year, Regulation, testtype, department, subject, semester])
 
 
   const handleMaxMarkChange = (index, value) => {
@@ -315,7 +313,7 @@ function Markentry() {
 
 
   useEffect(() => {
-    console.log(studentsData)
+    console.log("The student data changed to", studentsData)
   }, [studentsData])
 
   const updateMarks = () => {
@@ -328,11 +326,12 @@ function Markentry() {
     })
     setStudentsData(updatedStudentData)
     console.log(" start : " + startIndex + " end : " + endIndex)
-    axios.post(`${apiHost}/updateMarks`, { student: studentsData, co: courseOutcomeIds.slice(startIndex, endIndex) }).then((res) => {
-      if (res.status == 200) {
-        setModalIsOpen(true);
-      }
-    })
+    axios.post(`${apiHost}/updateMarks`,
+      { student: studentsData, testtype: testtype.value, co: courseOutcomeIds.slice(startIndex, endIndex) }).then((res) => {
+        if (res.status == 200) {
+          setModalIsOpen(true);
+        }
+      })
   }
 
   return (
@@ -381,6 +380,7 @@ function Markentry() {
             onChange={setSubject}
             placeholder="Subject"
           />
+          <Button label="Get Student List" onClick={getStudents} />
         </div>
       </div>
       <ToastContainer />

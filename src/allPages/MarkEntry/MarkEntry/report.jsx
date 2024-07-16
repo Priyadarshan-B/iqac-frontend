@@ -89,11 +89,11 @@ function Report() {
   const downloadTableAsExcel = () => {
     const tableData = [];
     tableData.push(["Department", "Course Code", "Course Name", "Total Students", "Present Students"
-      , "Absent Students", "Failed Students", "[0-20]", "[21-50]", "minimum mark", "maximum mark", "Pass Percentage"]);
+      , "Absent Students", "Failed Students", "[0-20]", "[21-50]", "[51-80]", "[81-100]", "minimum mark", "maximum mark", "Pass Percentage"]);
     reportData.forEach((data) => {
       tableData.push([data.branch, data.code, data.name,
       data.strength, data.present_count, data.absent_count,
-      data.fail_count, data.range_0_20, data.range_21_50, data.min_mark, data.max_mark, data.pass_percentage]);
+      data.fail_count, data.range_0_20, data.range_21_50, data.range_51_80, data.range_81_100, data.min_mark, data.max_mark, data.pass_percentage]);
     });
 
     const ws = XLSX.utils.aoa_to_sheet(tableData);
@@ -112,9 +112,11 @@ function Report() {
   };
 
   const handleBranchClick = (branch) => {
-    navigate(`/markentry/report/${branch}`);
+    navigate(`/markentry/report/${branch}/`);
   };
-
+  useEffect(() => {
+    setReportData([]);
+  }, [selectedTestType, selectedRegulation, selectedYear, setSelectedRegulation])
   return (
     <div className="container">
       <div className="dropdown-container">
@@ -182,6 +184,12 @@ function Report() {
                     <th>Failed Students</th>
                     <th>[0-20]</th>
                     <th>[21-50]</th>
+                    {
+                      selectedTestType.value == 5 && <>
+                        <th>[51-80]</th>
+                        <th>[81-100]</th>
+                      </>
+                    }
                     <th>Minimum Mark</th>
                     <th>Maximum Mark</th>
                     <th>Pass Percentage</th>
@@ -211,6 +219,8 @@ function Report() {
                         <td>{data.fail_count}</td>
                         <td>{data.range_0_20}</td>
                         <td>{data.range_21_50}</td>
+                        <td>{data.range_51_80}</td>
+                        <td>{data.range_81_100}</td>
                         <td>{data.min_mark}</td>
                         <td>{data.max_mark}</td>
                         <td>{data.pass_percentage}</td>
