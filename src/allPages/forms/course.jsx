@@ -212,6 +212,7 @@ function CourseForm() {
                         onChange={(e) => setLecture(e.target.value)}
                         placeholder="Lecture Hours"
                         type="number"
+                        min="0"
                     />
                     <InputBox
                         value={tutorial}

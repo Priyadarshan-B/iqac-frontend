@@ -2,7 +2,7 @@ import React from 'react';
 import './inputbox.css';
 
 export default function InputBox(props) {
-    const { type, name, placeholder, value, onChange,disabled } = props;
+    const { type, name, placeholder, value, onChange,disabled ,min} = props;
 
     return (
         <div>
@@ -14,6 +14,7 @@ export default function InputBox(props) {
                 value={value}
                 onChange={onChange}
                 disabled = {disabled}
+                min={min}
             />
         </div>
     );
