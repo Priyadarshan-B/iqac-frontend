@@ -44,21 +44,28 @@ function RegulationForm() {
         
         
         <div className="regulation-form-container">
-        <div className="title">Regulation Form</div>
-            <ToastContainer />
-           
+        <div style={{
+            display:'flex',
+            flexDirection:'column',
+            textAlign:'center',
+            gap:'10px'
+        }}>
+            <div className="title">Regulation Form</div>
+                <ToastContainer />
             
-            <form className="regulation-form" onSubmit={handleSubmit}>
-                <InputBox
-                    type="text"
-                    value={regulationValue}
-                    onChange={(e) => setRegulationValue(e.target.value)}
-                    placeholder="Enter Regulation"
-                />
-                <button type="submit">
-                    Submit
-                </button>
-            </form>
+            
+                <form className="regulation-form" onSubmit={handleSubmit}>
+                    <InputBox
+                        type="text"
+                        value={regulationValue}
+                        onChange={(e) => setRegulationValue(e.target.value)}
+                        placeholder="Enter Regulation"
+                    />
+                    <button type="submit">
+                        Submit
+                    </button>
+                </form>
+        </div>
         </div>
     );
 }

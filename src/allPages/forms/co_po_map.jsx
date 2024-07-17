@@ -24,12 +24,16 @@ function CoPoMap() {
 
     const [co, setCo] = useState([]);
     const [po, setPo] = useState([]);
-    const [levelValue, setLevelValue] = useState("");
+    const [dropdownSets, setDropdownSets] = useState([{ co: null, po: null, level: "" }]);
 
-    const [additionalDropdowns, setAdditionalDropdowns] = useState([]);
+    // Refs for resetting dropdowns
+    const regulationRef = useRef(null);
+    const degreeRef = useRef(null);
+    const branchRef = useRef(null);
+    const semesterRef = useRef(null);
+    const courseRef = useRef(null);
 
     useEffect(() => {
-        // Fetch regulations on component mount
         fetch(`${apiHost}/api/rf/dropdown/regulation`)
             .then((response) => response.json())
             .then((data) => {
@@ -43,7 +47,6 @@ function CoPoMap() {
                 console.error("Error fetching regulation dropdown:", error)
             );
 
-        // Fetch semesters on component mount
         fetch(`${apiHost}/api/rf/dropdown/semester`)
             .then((response) => response.json())
             .then((data) => {
@@ -72,7 +75,7 @@ function CoPoMap() {
     }, []);
 
     const handleRegulationChange = (selectedRegulation) => {
-        setRegulationId(selectedRegulation.value);
+        setRegulationId(selectedRegulation);
         fetch(
             `${apiHost}/api/rf/dropdown/degree?regulation=${selectedRegulation.value}`
         )
@@ -90,7 +93,7 @@ function CoPoMap() {
     };
 
     const handleDegreeChange = (selectedDegree) => {
-        setDegreeId(selectedDegree.value);
+        setDegreeId(selectedDegree);
         fetch(
             `${apiHost}/api/rf/dropdown/branch?degree=${selectedDegree.value}`
         )
@@ -108,7 +111,7 @@ function CoPoMap() {
     };
 
     const handleCourseChange = (selectedCourse) => {
-        setCourseId(selectedCourse.value);
+        setCourseId(selectedCourse);
         fetch(`${apiHost}/api/rf/course-outcome?course=${selectedCourse.value}`)
             .then((response) => response.json())
             .then((data) => {
@@ -121,28 +124,15 @@ function CoPoMap() {
             .catch((error) =>
                 console.error("Error fetching outcome dropdown", error)
             );
-        fetch(`${apiHost}/api/rf/po-pso`)
-            .then((response) => response.json())
-            .then((data) => {
-                const options = data.map((item) => ({
-                    value: item.id,
-                    label: item.name,
-                }));
-                setPo(options);
-            })
-            .catch((error) =>
-                console.error("Error fetching po dropdown:", error)
-            );
     };
 
     const handleBranchChange = (selectedBranch) => {
-        setSelectedBranchId(selectedBranch.value);
-        // You can fetch courses based on selected branch here if needed
+        setSelectedBranchId(selectedBranch);
     };
 
     const handleSemesterChange = (selectedSemester) => {
         const selectedBranch = branch.find(
-            (item) => item.value === selectedBranchId
+            (item) => item.value === selectedBranchId.value
         );
         if (selectedBranch) {
             fetch(
@@ -162,66 +152,29 @@ function CoPoMap() {
         }
     };
 
-    const coRefs = useRef([]);
-    const poRefs = useRef([]);
-    const levelRefs = useRef("");
-
     const handleAddDropdown = () => {
-        const newCoRefs = [...coRefs.current];
-        const newPoRefs = [...poRefs.current];
-        const newLevelRefs = [...levelRefs.current];
-    
-        newCoRefs.push(React.createRef());
-        newPoRefs.push(React.createRef());
-        newLevelRefs.push(React.createRef());
-    
-        setAdditionalDropdowns([
-            ...additionalDropdowns,
-            <div key={additionalDropdowns.length} className="dropdown-set">
-                <div className="flex-box">
-                <Dropdown
-                    className="select-field"
-                    options={co}
-                    placeholder="CO"
-                    ref={newCoRefs[newCoRefs.length - 1]}
-                />
-                <Dropdown
-                    className="select-field"
-                    options={po}
-                    placeholder="PO"
-                    ref={newPoRefs[newPoRefs.length - 1]}
-                />
-                <InputBox
-                    className="input-field"
-                    placeholder="Mapping Level"
-                    value={levelValue}
-                    onChange={(e) => setLevelValue(e.target.value)}
-                    ref={newLevelRefs[newLevelRefs.length - 1]}
-                />
-                </div>
-            </div>,
-        ]);
-    
-        coRefs.current = newCoRefs;
-        poRefs.current = newPoRefs;
-        levelRefs.current = newLevelRefs;
+        setDropdownSets([...dropdownSets, { co: null, po: null, level: "" }]);
+    };
+
+    const handleRemoveDropdown = (index) => {
+        const updatedDropdownSets = dropdownSets.filter((_, i) => i !== index);
+        setDropdownSets(updatedDropdownSets);
+    };
+
+    const handleDropdownChange = (index, field, value) => {
+        const updatedDropdownSets = [...dropdownSets];
+        updatedDropdownSets[index][field] = value;
+        setDropdownSets(updatedDropdownSets);
     };
 
     const handleSubmit = (event) => {
         event.preventDefault();
         // Prepare data to send to backend
-        const dataToSend = additionalDropdowns.map((dropdownSet, index) => {
-            const coValue = coRefs.current[index].value;
-            const poValue = poRefs.current[index].value;
-            const levelValue = levelRefs.current[index].value;
-            return {
-                course_outcome: coValue,
-                program_outcome: poValue,
-                mapping_level: levelValue,
-            };
-        });
-
-        console.log(dataToSend);
+        const dataToSend = dropdownSets.map(({ co, po, level }) => ({
+            course_outcome: co ? co.value : "",
+            program_outcome: po ? po.value : "",
+            mapping_level: level,
+        }));
 
         // Send data to backend
         fetch(`${apiHost}/api/rf/co-po-mapping`, {
@@ -235,55 +188,116 @@ function CoPoMap() {
             .then((data) => {
                 // Handle response if needed
                 console.log("Data submitted successfully", data);
+                toast.success("Data submitted successfully!");
+
+                // Reset form using refs
+                if (regulationRef.current) regulationRef.current.select.clearValue();
+                if (degreeRef.current) degreeRef.current.select.clearValue();
+                if (branchRef.current) branchRef.current.select.clearValue();
+                if (semesterRef.current) semesterRef.current.select.clearValue();
+                if (courseRef.current) courseRef.current.select.clearValue();
+                // setRegulation(null)
+                // setRegulationId(null)
+                setDropdownSets([{ co: null, po: null, level: "" }]);
             })
             .catch((error) => {
                 console.error("Error sending data to backend:", error);
+                toast.error("Error submitting data");
             });
     };
 
     return (
         <div className="co-po-map">
-             <ToastContainer />
+            <ToastContainer />
             <form onSubmit={handleSubmit}>
-                 <div className="flex-box">
-                <Dropdown
-                    className="select-field"
-                    options={regulation}
-                    onChange={handleRegulationChange}
-                    placeholder="Regulation"
-                />
-                <Dropdown
-                    className="select-field"
-                    options={degree}
-                    onChange={handleDegreeChange}
-                    placeholder="Degree"
-                />
-                <Dropdown
-                    className="select-field"
-                    options={branch}
-                    onChange={handleBranchChange}
-                    placeholder="Branch"
-                />
-                <Dropdown
-                    className="select-field"
-                    options={semester}
-                    onChange={handleSemesterChange}
-                    placeholder="Semester"
-                />
-                <Dropdown
-                    className="select-field"
-                    options={course}
-                    onChange={handleCourseChange}
-                    placeholder="Course"
-                />
-                <button type="button" onClick={handleAddDropdown}>
-                    Add Dropdown
-                </button>
+                <div className="flex-box">
+                    <Dropdown
+                        className="select-field"
+                        options={regulation}
+                        onChange={handleRegulationChange}
+                        placeholder="Regulation"
+                        ref={regulationRef}
+                        value={regulationId}
+                    />
+                    <Dropdown
+                        className="select-field"
+                        options={degree}
+                        onChange={handleDegreeChange}
+                        placeholder="Degree"
+                        ref={degreeRef}
+                        value={degreeId}
+                    />
+                    <Dropdown
+                        className="select-field"
+                        options={branch}
+                        onChange={handleBranchChange}
+                        placeholder="Branch"
+                        ref={branchRef}
+                        value={selectedBranchId}
+                    />
+                    <Dropdown
+                        className="select-field"
+                        options={semester}
+                        onChange={handleSemesterChange}
+                        placeholder="Semester"
+                        ref={semesterRef}
+                        value={semesterId}
+                    />
+                    <Dropdown
+                        className="select-field"
+                        options={course}
+                        onChange={handleCourseChange}
+                        placeholder="Course"
+                        ref={courseRef}
+                        value={courseId}
+                    />
+                    <button type="button" onClick={handleAddDropdown}>
+                        Add Dropdown
+                    </button>
+                </div>
                 <div className="additional-dropdowns">
-                    {additionalDropdowns}
+                    {dropdownSets.map((set, index) => (
+                        <div key={index} className="dropdown-set">
+                            <div className="flex-box">
+                                <Dropdown
+                                    className="select-field"
+                                    options={co}
+                                    placeholder="CO"
+                                    value={set.co}
+                                    onChange={(e) =>
+                                        handleDropdownChange(index, "co", e)
+                                    }
+                                />
+                                <Dropdown
+                                    className="select-field"
+                                    options={po}
+                                    placeholder="PO"
+                                    value={set.po}
+                                    onChange={(e) =>
+                                        handleDropdownChange(index, "po", e)
+                                    }
+                                />
+                                <InputBox
+                                    className="input-field"
+                                    placeholder="Mapping Level"
+                                    value={set.level}
+                                    onChange={(e) =>
+                                        handleDropdownChange(index, "level", e.target.value)
+                                    }
+                                />
+                                <button
+                                    type="button"
+                                    onClick={() => handleRemoveDropdown(index)}
+                                >
+                                    Remove
+                                </button>
+                            </div>
+                        </div>
+                    ))}
                 </div>
-                <button type="submit" className="button-sub">Submit</button>
-                </div>
+                <button type="submit" className="button-sub">
+                    Submit
+                </button>
             </form>
         </div>
     );

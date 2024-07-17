@@ -24,6 +24,7 @@ import UnitForm from "../../allPages/forms/unit";
 import OutcomeForm from "../../allPages/forms/outcome";
 import ObjectiveForm from "../../allPages/forms/objective";
 import CoPoMap from "../../allPages/forms/co_po_map";
+import Units from "../../allPages/Units/units";
 
 function AppLayout() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -70,6 +71,8 @@ function AppLayout() {
                 <Route path="/mainform/outcomeform" element={<OutcomeForm />} />
                 <Route path="/mainform/objectiveform" element={<ObjectiveForm />} />
                 <Route path="/mainform/copomap" element={<CoPoMap />} />
+                <Route path="/unit" element={<Units />} />
+
               </Routes>
             </div>
           </div>
