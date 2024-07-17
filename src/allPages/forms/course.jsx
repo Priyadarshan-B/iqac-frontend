@@ -34,7 +34,7 @@ function CourseForm() {
     const [total, setTotal] = useState("");
     const [category, setCategory] = useState("");
 
-    useEffect(() => {
+    const fetchRegulations = () => {
         fetch(`${apiHost}/api/rf/dropdown/regulation`)
             .then((response) => response.json())
             .then((data) => {
@@ -47,7 +47,9 @@ function CourseForm() {
             .catch((error) =>
                 console.error("Error fetching regulation dropdown:", error)
             );
+    };
 
+    const fetchSemesters = () => {
         fetch(`${apiHost}/api/rf/dropdown/semester`)
             .then((response) => response.json())
             .then((data) => {
@@ -60,7 +62,9 @@ function CourseForm() {
             .catch((error) =>
                 console.error("Error fetching semester dropdown:", error)
             );
+    };
 
+    const fetchCourseCategories = () => {
         fetch(`${apiHost}/api/rf/dropdown/course-category`)
             .then((response) => response.json())
             .then((data) => {
@@ -73,6 +77,12 @@ function CourseForm() {
             .catch((error) =>
                 console.error("Error fetching course category dropdown:", error)
             );
+    };
+
+    useEffect(() => {
+        fetchRegulations();
+        fetchSemesters();
+        fetchCourseCategories();
     }, []);
 
     const handleRegulationChange = (selectedRegulation) => {
@@ -122,8 +132,6 @@ function CourseForm() {
 
         try {
             const dataToSend = {
-                // regulation: regulationId,
-                // degree: degreeId,
                 semester: semesterId,
                 branch: branchId,
                 code: code,
@@ -154,6 +162,28 @@ function CourseForm() {
                     position: 'bottom-right'
                 });
                 console.log("Data submitted successfully");
+
+                // Reset the form fields and dropdown selections
+                setRegulationId(null);
+                setDegreeId(null);
+                setBranchId(null);
+                setSemesterId(null);
+                setCode("");
+                setName("");
+                setLecture("");
+                setTutorial("");
+                setPractical("");
+                setCredit("");
+                setHours("");
+                setCa("");
+                setEs("");
+                setTotal("");
+                setCategory("");
+
+                // Re-fetch the dropdown options
+                fetchRegulations();
+                fetchSemesters();
+                fetchCourseCategories();
             } else {
                 toast.error("Failed to submit course", {
                     position: 'bottom-right'
@@ -170,33 +200,35 @@ function CourseForm() {
 
     return (
         <div className="course-form-container">
-             <div className="title">Course Form</div>
-             <ToastContainer />
+            <div className="title">Course Form</div>
+            <ToastContainer />
             <form onSubmit={handleSubmit} className="course-form">
                 <div className="flex-box">
                     <Dropdown
                         className="select-field"
                         options={regulation}
+                        value={regulation.find(option => option.value === regulationId) || null}
                         onChange={handleRegulationChange}
                         placeholder="Regulation"
                     />
                     <Dropdown
                         className="select-field"
                         options={degree}
+                        value={degree.find(option => option.value === degreeId) || null}
                         onChange={handleDegreeChange}
                         placeholder="Degree"
                     />
                     <Dropdown
                         className="select-field"
                         options={branch}
-                        onChange={(selectedBranch) =>
-                            setBranchId(selectedBranch.value)
-                        }
+                        value={branch.find(option => option.value === branchId) || null}
+                        onChange={(selectedBranch) => setBranchId(selectedBranch.value)}
                         placeholder="Branch"
                     />
                     <Dropdown
                         className="select-field"
                         options={semester}
+                        value={semester.find(option => option.value === semesterId) || null}
                         onChange={(selectedSemester) => setSemesterId(selectedSemester.value)}
                         placeholder="Semester"
                     />
@@ -205,14 +237,12 @@ function CourseForm() {
                         onChange={(e) => setCode(e.target.value)}
                         placeholder="Subject Code"
                         type="text"
-
                     />
                     <InputBox
                         value={name}
                         onChange={(e) => setName(e.target.value)}
                         placeholder="Subject Name"
                         type="text"
-
                     />
                     <InputBox
                         value={lecture}
@@ -269,19 +299,17 @@ function CourseForm() {
                         placeholder="Total"
                         type="number"
                         min="0"
-                        readOnly /* Make the total input read-only */
+                        readOnly
                     />
                     <Dropdown
                         className="select-field"
                         options={courseCategory}
-                        onChange={(selectedCategory) =>
-                            setCategory(selectedCategory.value)
-                        }
+                        value={courseCategory.find(option => option.value === category) || null}
+                        onChange={(selectedCategory) => setCategory(selectedCategory.value)}
                         placeholder="Category"
                     />
-              
-                <button type="submit" className="button-sub">Submit</button>
-            </div>
+                    <button type="submit" className="button-sub">Submit</button>
+                </div>
             </form>
         </div>
     );

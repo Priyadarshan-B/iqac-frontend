@@ -213,6 +213,7 @@ const SyllabusEntry = () => {
                     onChange={(e) =>
                       handleCourseContentChange(content.id, 'hours', e.target.value)
                     }
+                    min="0"
                   />
                   <span className='font-in-dropdown'>Details</span>
                   <textarea

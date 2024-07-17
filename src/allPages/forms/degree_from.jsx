@@ -11,7 +11,7 @@ function DegreeForm() {
     const [regulation, setRegulation] = useState([]);
     const [selectedRegulationId, setSelectedRegulationId] = useState(null);
 
-    useEffect(() => {
+    const fetchRegulations = () => {
         fetch(`${apiHost}/api/rf/dropdown/regulation`)
             .then((response) => response.json())
             .then((data) => {
@@ -24,13 +24,16 @@ function DegreeForm() {
             .catch((error) =>
                 console.error("Error fetching regulation dropdown:", error)
             );
+    };
+
+    useEffect(() => {
+        fetchRegulations();
     }, []);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
 
         try {
-            // Post the regulation ID and degree value to the backend
             const response = await fetch(`${apiHost}/api/rf/degree`, {
                 method: "POST",
                 headers: {
@@ -48,45 +51,44 @@ function DegreeForm() {
                 });
                 console.log("Data submitted successfully");
                 setDegree("");
-                // Handle success, such as showing a success message or redirecting
+                setSelectedRegulationId(null);
+                fetchRegulations(); // Re-fetch the regulations to update the dropdown options
             } else {
                 toast.error("Failed to submit degree", {
                     position: 'bottom-right'
                 });
                 console.error("Failed to submit Degree");
-                // Handle error, such as displaying an error message
             }
         } catch (error) {
             toast.error("Error submitting degree", {
                 position: 'bottom-right'
             });
             console.error("Error submitting data:", error);
-            // Handle error, such as displaying an error message
         }
     };
 
     return (
         <div className="degree-form-container">
-             <div className="title">Degree Form</div>
-             <ToastContainer />
+            <div className="title">Degree Form</div>
+            <ToastContainer />
             <form className="degree-form" onSubmit={handleSubmit}>
                 <div className="flex-box">
                     <Dropdown
                         className="select-field"
                         options={regulation}
+                        value={regulation.find(option => option.value === selectedRegulationId) || null}
                         onChange={(selectedOption) => {
-                            setRegulation(selectedOption);
                             setSelectedRegulationId(selectedOption.value);
                         }}
                         placeholder="Regulation"
                     />
-                        <InputBox
-                            className="input-field"
-                            value={degree}
-                            onChange={(e) => setDegree(e.target.value)}
-                            placeholder="Enter Degree"
-                            type="text"
-                        />
+                    <InputBox
+                        className="input-field"
+                        value={degree}
+                        onChange={(e) => setDegree(e.target.value)}
+                        placeholder="Enter Degree"
+                        type="text"
+                    />
                     <button type="submit" className="submit-button">
                         Submit
                     </button>

@@ -21,8 +21,7 @@ function UnitForm() {
     const [description, setDescription] = useState("");
     const [hours, setHours] = useState("");
 
-    useEffect(() => {
-        // Fetch regulations on component mount
+    const fetchRegulations = () => {
         fetch(`${apiHost}/api/rf/dropdown/regulation`)
             .then((response) => response.json())
             .then((data) => {
@@ -35,8 +34,9 @@ function UnitForm() {
             .catch((error) =>
                 console.error("Error fetching regulation dropdown:", error)
             );
+    };
 
-        // Fetch semesters on component mount
+    const fetchSemesters = () => {
         fetch(`${apiHost}/api/rf/dropdown/semester`)
             .then((response) => response.json())
             .then((data) => {
@@ -49,6 +49,11 @@ function UnitForm() {
             .catch((error) =>
                 console.error("Error fetching semester dropdown:", error)
             );
+    };
+
+    useEffect(() => {
+        fetchRegulations();
+        fetchSemesters();
     }, []);
 
     const handleRegulationChange = (selectedRegulation) => {
@@ -89,7 +94,6 @@ function UnitForm() {
 
     const handleBranchChange = (selectedBranch) => {
         setSelectedBranchId(selectedBranch.value);
-        // You can fetch courses based on selected branch here if needed
     };
 
     const handleSemesterChange = (selectedSemester) => {
@@ -119,7 +123,7 @@ function UnitForm() {
 
         try {
             const dataToSend = {
-                course: courseId, // Corrected variable name
+                course: courseId,
                 unit: unit,
                 unit_name: unitname,
                 description: description,
@@ -137,10 +141,24 @@ function UnitForm() {
             });
 
             if (response.ok) {
-                toast.success("data submitted successfully", {
+                toast.success("Data submitted successfully", {
                     position: 'bottom-right'
                 });
                 console.log("Unit submitted successfully");
+
+                // Reset the form fields and dropdown selections
+                setRegulationId(null);
+                setDegreeId(null);
+                setSelectedBranchId(null);
+                setCourseId(null);
+                setUnit("");
+                setUnitname("");
+                setDescription("");
+                setHours("");
+
+                // Re-fetch the dropdown options
+                fetchRegulations();
+                fetchSemesters();
             } else {
                 toast.error("Failed to submit unit", {
                     position: 'bottom-right'
@@ -157,72 +175,74 @@ function UnitForm() {
 
     return (
         <div className="unit-form">
-             <div className="title">Unit Form</div>
+            <div className="title">Unit Form</div>
             <ToastContainer />
             <form onSubmit={handleSubmit}>
                 <div className="flex-box">
-                <Dropdown
-                    className="select-field"
-                    options={regulation}
-                    onChange={handleRegulationChange}
-                    placeholder="Regulation"
-                />
-                <Dropdown
-                    className="select-field"
-                    options={degree}
-                    onChange={handleDegreeChange}
-                    placeholder="Degree"
-                />
-                <Dropdown
-                    className="select-field"
-                    options={branch}
-                    onChange={handleBranchChange}
-                    placeholder="Branch"
-                />
-                <Dropdown
-                    className="select-field"
-                    options={semester}
-                    onChange={handleSemesterChange}
-                    placeholder="Semester"
-                />
-                <Dropdown
-                    className="select-field"
-                    options={course}
-                    onChange={(selectedCourse) =>
-                        setCourseId(selectedCourse.value)
-                    }
-                    placeholder="Course"
-                />
-                <InputBox
-                    className="input-box"
-                    value={unit}
-                    onChange={(e) => setUnit(e.target.value)}
-                    placeholder="Unit"
-                    type="text"
-                />
-                <InputBox
-                    className="input-box"
-                    value={unitname}
-                    onChange={(e) => setUnitname(e.target.value)}
-                    placeholder="Unit Name"
-                    type="text"
-                />
-                <InputBox
-                    className="input-box"
-                    value={description}
-                    onChange={(e) => setDescription(e.target.value)}
-                    placeholder="Unit Description"
-                    type="text"
-                />
-                <InputBox
-                    className="input-box"
-                    value={hours}
-                    onChange={(e) => setHours(e.target.value)}
-                    placeholder="Hours"
-                    type="number"
-                    min="0"
-                />
-                <button type="submit" className="button-sub">Submit</button>
+                    <Dropdown
+                        className="select-field"
+                        options={regulation}
+                        value={regulation.find(option => option.value === regulationId) || null}
+                        onChange={handleRegulationChange}
+                        placeholder="Regulation"
+                    />
+                    <Dropdown
+                        className="select-field"
+                        options={degree}
+                        value={degree.find(option => option.value === degreeId) || null}
+                        onChange={handleDegreeChange}
+                        placeholder="Degree"
+                    />
+                    <Dropdown
+                        className="select-field"
+                        options={branch}
+                        value={branch.find(option => option.value === selectedBranchId) || null}
+                        onChange={handleBranchChange}
+                        placeholder="Branch"
+                    />
+                    <Dropdown
+                        className="select-field"
+                        options={semester}
+                        onChange={handleSemesterChange}
+                        placeholder="Semester"
+                    />
+                    <Dropdown
+                        className="select-field"
+                        options={course}
+                        value={course.find(option => option.value === courseId) || null}
+                        onChange={(selectedCourse) => setCourseId(selectedCourse.value)}
+                        placeholder="Course"
+                    />
+                    <InputBox
+                        className="input-box"
+                        value={unit}
+                        onChange={(e) => setUnit(e.target.value)}
+                        placeholder="Unit"
+                        type="text"
+                    />
+                    <InputBox
+                        className="input-box"
+                        value={unitname}
+                        onChange={(e) => setUnitname(e.target.value)}
+                        placeholder="Unit Name"
+                        type="text"
+                    />
+                    <InputBox
+                        className="input-box"
+                        value={description}
+                        onChange={(e) => setDescription(e.target.value)}
+                        placeholder="Unit Description"
+                        type="text"
+                    />
+                    <InputBox
+                        className="input-box"
+                        value={hours}
+                        onChange={(e) => setHours(e.target.value)}
+                        placeholder="Hours"
+                        type="number"
+                        min="0"
+                    />
+                    <button type="submit" className="button-sub">Submit</button>
                 </div>
             </form>
         </div>
