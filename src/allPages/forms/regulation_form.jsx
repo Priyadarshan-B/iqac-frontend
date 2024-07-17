@@ -30,7 +30,7 @@ function RegulationForm() {
                 toast.error("Failed to submit regulation", {
                     position: 'bottom-right'
                 });
-                console.error("Failed to submit regulation");
+                console.error("Failed to submit Regulation");
             }
         } catch (error) {
             toast.error("Error submitting regulation", {

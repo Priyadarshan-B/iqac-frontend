@@ -21,7 +21,7 @@ function CategoryForm() {
             });
 
             if (response.ok) {
-                toast.success("category submitted successfully", {
+                toast.success("Category submitted successfully", {
                     position: 'bottom-right'
                 });
                 console.log("Category submitted successfully");

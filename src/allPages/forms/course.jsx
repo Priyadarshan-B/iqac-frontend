@@ -150,18 +150,18 @@ function CourseForm() {
             });
 
             if (response.ok) {
-                toast.success("Data submitted successfully", {
+                toast.success("Course submitted successfully", {
                     position: 'bottom-right'
                 });
                 console.log("Data submitted successfully");
             } else {
-                toast.error("Failed to submit data", {
+                toast.error("Failed to submit course", {
                     position: 'bottom-right'
                 });
-                console.error("Failed to submit data");
+                console.error("Failed to submit Course");
             }
         } catch (error) {
-            toast.error("Error submitting data", {
+            toast.error("Error submitting course", {
                 position: 'bottom-right'
             });
             console.error("Error submitting data:", error);

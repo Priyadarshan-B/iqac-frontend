@@ -60,18 +60,18 @@ function BranchForm() {
             });
 
             if (response.ok) {
-                toast.success("data submitted successfully", {
+                toast.success("Branch submitted successfully", {
                     position: 'bottom-right'
                 });
                 console.log("Data submitted successfully");
             } else {
-                toast.error("Failed to submit data", {
+                toast.error("Failed to submit branch ", {
                     position: 'bottom-right'
                 });
                 console.error("Failed to submit data");
             }
         } catch (error) {
-            toast.error("Error submitting data", {
+            toast.error("Error submitting branch ", {
                 position: 'bottom-right'
             });
             console.error("Error submitting data:", error);

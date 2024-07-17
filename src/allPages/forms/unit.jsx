@@ -140,15 +140,15 @@ function UnitForm() {
                 toast.success("data submitted successfully", {
                     position: 'bottom-right'
                 });
-                console.log("Data submitted successfully");
+                console.log("Unit submitted successfully");
             } else {
-                toast.error("Failed to submit data", {
+                toast.error("Failed to submit unit", {
                     position: 'bottom-right'
                 });
                 console.error("Failed to submit data");
             }
         } catch (error) {
-            toast.error("Error submitting data", {
+            toast.error("Error submitting unit", {
                 position: 'bottom-right'
             });
             console.error("Error submitting data:", error);
