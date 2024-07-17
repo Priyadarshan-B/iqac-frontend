@@ -21,7 +21,7 @@ function CategoryForm() {
             });
 
             if (response.ok) {
-                toast.success("category submitted successfully", {
+                toast.success("Category submitted successfully", {
                     position: 'bottom-right'
                 });
                 console.log("Category submitted successfully");
@@ -42,6 +42,7 @@ function CategoryForm() {
 
     return (
         <div className="category-form-container">
+            <div className="title">Category Form</div>
             <ToastContainer />
             <form onSubmit={handleSubmit} className="category-form">
                 <InputBox

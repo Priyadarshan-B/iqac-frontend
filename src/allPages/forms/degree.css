@@ -1,12 +1,10 @@
-/* degree.css */
 
-/* Container for the form */
 .degree-form-container {
     display: flex;
-    justify-content: center;
     align-items: center;
-    height: 60vh; /* Adjust height as needed */
+    height: 80vh; 
     background-color: #f5f5f5;
+   
 }
 
 /* Style for the form */

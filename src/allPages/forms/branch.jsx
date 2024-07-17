@@ -30,7 +30,7 @@ function BranchForm() {
             );
     };
 
-    useEffect(() => {
+    const fetchRegulations = () => {
         fetch(`${apiHost}/api/rf/dropdown/regulation`)
             .then((response) => response.json())
             .then((data) => {
@@ -41,6 +41,10 @@ function BranchForm() {
                 setRegulation(options);
             })
             .catch((error) => console.log("error fetching the degree", error));
+    };
+
+    useEffect(() => {
+        fetchRegulations();
     }, []);
 
     const handleSubmit = async (e) => {
@@ -60,18 +64,23 @@ function BranchForm() {
             });
 
             if (response.ok) {
-                toast.success("data submitted successfully", {
+                toast.success("Branch submitted successfully", {
                     position: 'bottom-right'
                 });
                 console.log("Data submitted successfully");
+                setBranch("");
+                setRegulationid(null);
+                setDegree([]);
+                setDegreeid(null);
+                fetchRegulations(); // Re-fetch the regulations to update the dropdown options
             } else {
-                toast.error("Failed to submit data", {
+                toast.error("Failed to submit branch ", {
                     position: 'bottom-right'
                 });
                 console.error("Failed to submit data");
             }
         } catch (error) {
-            toast.error("Error submitting data", {
+            toast.error("Error submitting branch ", {
                 position: 'bottom-right'
             });
             console.error("Error submitting data:", error);
@@ -80,38 +89,39 @@ function BranchForm() {
 
     return (
         <div className="form-container">
-             <ToastContainer />
+            <div className="title">Branch Form</div>
+            <ToastContainer />
             <form className="branch-form" onSubmit={handleSubmit}>
-            <div className="flex-box">
-                <Dropdown
-                    className="select-field"
-                    options={regulation}
-                    onChange={(selectedOption) => {
-                        handleRegulationChange(selectedOption);
-                        setRegulationid(selectedOption.value);
-                    }}
-                    placeholder="Regulation"
-                />
-                <Dropdown
-                    className="select-field"
-                    options={degree}
-                    onChange={(selectedOption) => {
-                        setDegree(selectedOption);
-                        setDegreeid(selectedOption.value);
-                    }}
-                    placeholder="Degree"
-                />
-
-                <InputBox
-                    className="input-field"
-                    value={branch}
-                    onChange={(e) => setBranch(e.target.value)}
-                    placeholder="Enter Branch"
-                    type="text"
-                />
-                <button type="submit" className="button-sub">
-                    Submit
-                </button>
+                <div className="flex-box">
+                    <Dropdown
+                        className="select-field"
+                        options={regulation}
+                        value={regulation.find(option => option.value === regulationid) || null}
+                        onChange={(selectedOption) => {
+                            handleRegulationChange(selectedOption);
+                            setRegulationid(selectedOption.value);
+                        }}
+                        placeholder="Regulation"
+                    />
+                    <Dropdown
+                        className="select-field"
+                        options={degree}
+                        value={degree.find(option => option.value === degreeid) || null}
+                        onChange={(selectedOption) => {
+                            setDegreeid(selectedOption.value);
+                        }}
+                        placeholder="Degree"
+                    />
+                    <InputBox
+                        className="input-field"
+                        value={branch}
+                        onChange={(e) => setBranch(e.target.value)}
+                        placeholder="Enter Branch"
+                        type="text"
+                    />
+                    <button type="submit" className="button-sub">
+                        Submit
+                    </button>
                 </div>
             </form>
         </div>

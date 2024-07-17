@@ -1,6 +1,4 @@
-/* course.css */
 
-/* General container styling */
 .course-form-container {
     display: flex;
     flex-direction: column;
@@ -10,13 +8,12 @@
 
 }
 
-/* Form element styling */
 .course-form {
     background: #fff;
     padding: 20px;
     border-radius: 10px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    max-width: 600px; /* Adjust max-width as needed */
+    max-width: 600px;
     width: 100%;
     margin-top: 15px;
  

@@ -30,7 +30,7 @@ function RegulationForm() {
                 toast.error("Failed to submit regulation", {
                     position: 'bottom-right'
                 });
-                console.error("Failed to submit regulation");
+                console.error("Failed to submit Regulation");
             }
         } catch (error) {
             toast.error("Error submitting regulation", {
@@ -44,14 +44,10 @@ function RegulationForm() {
         
         
         <div className="regulation-form-container">
-        <div style={{
-            display:'flex',
-            flexDirection:'column',
-            textAlign:'center',
-            gap:'10px'
-        }}>
-            <div className="title">Regulation Form</div>
-                <ToastContainer />
+            
+        <div className="title">Regulation Form</div>
+            <ToastContainer />
+           
             
             
                 <form className="regulation-form" onSubmit={handleSubmit}>
@@ -65,7 +61,6 @@ function RegulationForm() {
                         Submit
                     </button>
                 </form>
-        </div>
         </div>
     );
 }

@@ -20,8 +20,7 @@ function OutcomeForm() {
     const [co, setCo] = useState("");
     const [description, setDescription] = useState("");
 
-    useEffect(() => {
-        // Fetch regulations on component mount
+    const fetchRegulations = () => {
         fetch(`${apiHost}/api/rf/dropdown/regulation`)
             .then((response) => response.json())
             .then((data) => {
@@ -34,8 +33,9 @@ function OutcomeForm() {
             .catch((error) =>
                 console.error("Error fetching regulation dropdown:", error)
             );
+    };
 
-        // Fetch semesters on component mount
+    const fetchSemesters = () => {
         fetch(`${apiHost}/api/rf/dropdown/semester`)
             .then((response) => response.json())
             .then((data) => {
@@ -48,6 +48,11 @@ function OutcomeForm() {
             .catch((error) =>
                 console.error("Error fetching semester dropdown:", error)
             );
+    };
+
+    useEffect(() => {
+        fetchRegulations();
+        fetchSemesters();
     }, []);
 
     const handleRegulationChange = (selectedRegulation) => {
@@ -88,10 +93,10 @@ function OutcomeForm() {
 
     const handleBranchChange = (selectedBranch) => {
         setSelectedBranchId(selectedBranch.value);
-        // You can fetch courses based on selected branch here if needed
     };
 
     const handleSemesterChange = (selectedSemester) => {
+        setSemesterId(selectedSemester.value);
         const selectedBranch = branch.find(
             (item) => item.value === selectedBranchId
         );
@@ -118,7 +123,7 @@ function OutcomeForm() {
 
         try {
             const dataToSend = {
-                course: courseId, // Corrected variable name
+                course: courseId,
                 co_id: co,
                 description: description,
             };
@@ -134,18 +139,31 @@ function OutcomeForm() {
             });
 
             if (response.ok) {
-                toast.success("data submitted successfully", {
+                toast.success("Outcome submitted successfully", {
                     position: 'bottom-right'
                 });
                 console.log("Data submitted successfully");
+
+                // Reset the form fields and dropdown selections
+                setRegulationId(null);
+                setDegreeId(null);
+                setSelectedBranchId(null);
+                setSemesterId(null);
+                setCourseId(null);
+                setCo("");
+                setDescription("");
+
+                // Re-fetch the dropdown options
+                fetchRegulations();
+                fetchSemesters();
             } else {
-                toast.error("Failed to submit data", {
+                toast.error("Failed to submit outcome", {
                     position: 'bottom-right'
                 });
                 console.error("Failed to submit data");
             }
         } catch (error) {
-            toast.error("Error submitting data", {
+            toast.error("Error submitting outcome", {
                 position: 'bottom-right'
             });
             console.error("Error submitting data:", error);
@@ -154,56 +172,60 @@ function OutcomeForm() {
 
     return (
         <div className="outcome-form">
+            <div className="title">Outcome Form</div>
             <ToastContainer />
             <form onSubmit={handleSubmit}>
                 <div className="flex-box">
-                <Dropdown
-                    className="select-field"
-                    options={regulation}
-                    onChange={handleRegulationChange}
-                    placeholder="Regulation"
-                />
-                <Dropdown
-                    className="select-field"
-                    options={degree}
-                    onChange={handleDegreeChange}
-                    placeholder="Degree"
-                />
-                <Dropdown
-                    className="select-field"
-                    options={branch}
-                    onChange={handleBranchChange}
-                    placeholder="Branch"
-                />
-                <Dropdown
-                    className="select-field"
-                    options={semester}
-                    onChange={handleSemesterChange}
-                    placeholder="Semester"
-                />
-                <Dropdown
-                    className="select-field"
-                    options={course}
-                    onChange={(selectedCourse) =>
-                        setCourseId(selectedCourse.value)
-                    }
-                    placeholder="Course"
-                />
-                <InputBox
-                    className="input-box"
-                    value={co}
-                    onChange={(e) => setCo(e.target.value)}
-                    placeholder="CO Id"
-                    type="text"
-                />
-                <InputBox
-                    className="input-box"
-                    value={description}
-                    onChange={(e) => setDescription(e.target.value)}
-                    placeholder="Description"
-                    type="text"
-                />
-                <button type="submit" className="button-sub">Submit</button>
+                    <Dropdown
+                        className="select-field"
+                        options={regulation}
+                        value={regulation.find(option => option.value === regulationId) || null}
+                        onChange={handleRegulationChange}
+                        placeholder="Regulation"
+                    />
+                    <Dropdown
+                        className="select-field"
+                        options={degree}
+                        value={degree.find(option => option.value === degreeId) || null}
+                        onChange={handleDegreeChange}
+                        placeholder="Degree"
+                    />
+                    <Dropdown
+                        className="select-field"
+                        options={branch}
+                        value={branch.find(option => option.value === selectedBranchId) || null}
+                        onChange={handleBranchChange}
+                        placeholder="Branch"
+                    />
+                    <Dropdown
+                        className="select-field"
+                        options={semester}
+                        value={semester.find(option => option.value === semesterId) || null}
+                        onChange={handleSemesterChange}
+                        placeholder="Semester"
+                    />
+                    <Dropdown
+                        className="select-field"
+                        options={course}
+                        value={course.find(option => option.value === courseId) || null}
+                        onChange={(selectedCourse) => setCourseId(selectedCourse.value)}
+                        placeholder="Course"
+                    />
+                    <InputBox
+                        className="input-box"
+                        value={co}
+                        onChange={(e) => setCo(e.target.value)}
+                        placeholder="CO Id"
+                        type="text"
+                    />
+                    <InputBox
+                        className="input-box"
+                        value={description}
+                        onChange={(e) => setDescription(e.target.value)}
+                        placeholder="Description"
+                        type="text"
+                    />
+                    <button type="submit" className="button-sub">Submit</button>
                 </div>
             </form>
         </div>
