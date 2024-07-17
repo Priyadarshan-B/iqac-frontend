@@ -44,7 +44,9 @@ function RegulationForm() {
         
         
         <div className="regulation-form-container">
+        <div className="title">Regulation Form</div>
             <ToastContainer />
+           
             
             <form className="regulation-form" onSubmit={handleSubmit}>
                 <InputBox
