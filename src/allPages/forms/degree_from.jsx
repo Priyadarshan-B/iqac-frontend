@@ -67,6 +67,7 @@ function DegreeForm() {
 
     return (
         <div className="degree-form-container">
+             <div className="title">Degree Form</div>
              <ToastContainer />
             <form className="degree-form" onSubmit={handleSubmit}>
                 <div className="flex-box">

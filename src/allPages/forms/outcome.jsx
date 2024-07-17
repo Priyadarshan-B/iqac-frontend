@@ -154,6 +154,7 @@ function OutcomeForm() {
 
     return (
         <div className="outcome-form">
+             <div className="title">Outcome Form</div>
             <ToastContainer />
             <form onSubmit={handleSubmit}>
                 <div className="flex-box">

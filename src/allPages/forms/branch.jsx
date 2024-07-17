@@ -80,6 +80,7 @@ function BranchForm() {
 
     return (
         <div className="form-container">
+             <div className="title">Branch Form</div>
              <ToastContainer />
             <form className="branch-form" onSubmit={handleSubmit}>
             <div className="flex-box">

@@ -10,7 +10,6 @@ import  '../forms/degree.css'
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-
 function CourseForm() {
     const [regulation, setRegulation] = useState([]);
     const [degree, setDegree] = useState([]);
@@ -112,6 +111,12 @@ function CourseForm() {
             );
     };
 
+    useEffect(() => {
+        if (ca && es) {
+            setTotal(parseInt(ca) + parseInt(es));
+        }
+    }, [ca, es]);
+
     const handleSubmit = async (e) => {
         e.preventDefault();
 
@@ -145,7 +150,7 @@ function CourseForm() {
             });
 
             if (response.ok) {
-                toast.success("data submitted successfully", {
+                toast.success("Data submitted successfully", {
                     position: 'bottom-right'
                 });
                 console.log("Data submitted successfully");
@@ -165,6 +170,7 @@ function CourseForm() {
 
     return (
         <div className="course-form-container">
+             <div className="title">Course Form</div>
              <ToastContainer />
             <form onSubmit={handleSubmit} className="course-form">
                 <div className="flex-box">
@@ -199,6 +205,7 @@ function CourseForm() {
                         onChange={(e) => setCode(e.target.value)}
                         placeholder="Subject Code"
                         type="text"
+
                     />
                     <InputBox
                         value={name}
@@ -219,42 +226,50 @@ function CourseForm() {
                         onChange={(e) => setTutorial(e.target.value)}
                         placeholder="Tutorial Hours"
                         type="number"
+                        min="0"
                     />
                     <InputBox
                         value={practical}
                         onChange={(e) => setPractical(e.target.value)}
                         placeholder="Practical Hours"
                         type="number"
+                        min="0"
                     />
                     <InputBox
                         value={credit}
                         onChange={(e) => setCredit(e.target.value)}
                         placeholder="Credit"
                         type="number"
+                        min="0"
                     />
                     <InputBox
                         value={hours}
                         onChange={(e) => setHours(e.target.value)}
                         placeholder="Hours per Week"
                         type="number"
+                        min="0"
                     />
                     <InputBox
                         value={ca}
                         onChange={(e) => setCa(e.target.value)}
                         placeholder="CA"
                         type="number"
+                        min="0"
                     />
                     <InputBox
                         value={es}
                         onChange={(e) => setEs(e.target.value)}
                         placeholder="ES"
                         type="number"
+                        min="0"
                     />
                     <InputBox
                         value={total}
                         onChange={(e) => setTotal(e.target.value)}
                         placeholder="Total"
                         type="number"
+                        min="0"
+                        readOnly /* Make the total input read-only */
                     />
                     <Dropdown
                         className="select-field"

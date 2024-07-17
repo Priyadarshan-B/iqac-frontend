@@ -157,6 +157,7 @@ function UnitForm() {
 
     return (
         <div className="unit-form">
+             <div className="title">Unit Form</div>
             <ToastContainer />
             <form onSubmit={handleSubmit}>
                 <div className="flex-box">
@@ -219,6 +220,7 @@ function UnitForm() {
                     onChange={(e) => setHours(e.target.value)}
                     placeholder="Hours"
                     type="number"
+                    min="0"
                 />
                 <button type="submit" className="button-sub">Submit</button>
                 </div>

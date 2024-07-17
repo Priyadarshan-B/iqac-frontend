@@ -243,6 +243,7 @@ function CoPoMap() {
 
     return (
         <div className="co-po-map">
+            <div className="title">CO_PO Form</div>
              <ToastContainer />
             <form onSubmit={handleSubmit}>
                  <div className="flex-box">
