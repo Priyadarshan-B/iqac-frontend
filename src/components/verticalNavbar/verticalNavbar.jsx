@@ -6,6 +6,7 @@ import CollectionsBookmarkIcon from '@mui/icons-material/CollectionsBookmark';
 import School from '@mui/icons-material/School';
 import Description from '@mui/icons-material/Description';
 import SaveAsIcon from '@mui/icons-material/SaveAs';
+import LayersIcon from '@mui/icons-material/Layers'; // Import icon for Units
 
 function VerticalNavbar({ onClose }) {
   const [activeLink, setActiveLink] = useState(null);
@@ -88,8 +89,11 @@ function VerticalNavbar({ onClose }) {
           </div>
         </div>
       )}
-      <div className={`menu-item ${activeLink === '/syllabusentry' ? 'active' : ''}`} onClick={() => handleLinkClick('/syllabusentry')}>
+      {/* <div className={`menu-item ${activeLink === '/syllabusentry' ? 'active' : ''}`} onClick={() => handleLinkClick('/syllabusentry')}>
         <Link to="/syllabusentry" className="link-style"><DashboardRoundedIcon className='nav-icons' />Syllabus Entry</Link>
+      </div> */}
+      <div className={`menu-item ${activeLink === '/unit' ? 'active' : ''}`} onClick={() => handleLinkClick('/unit')}>
+        <Link to="/unit" className="link-style"><DashboardRoundedIcon className='nav-icons' />Syllabus</Link>
       </div>
     </div>
   );

@@ -3,6 +3,8 @@ import apiHost from "../../utils/api";
 import Dropdown from "../../components/dropdown/dropdown";
 import { jsPDF } from "jspdf";
 import "jspdf-autotable";
+import './units.css';
+
 
 function Units() {
     const [regulation, setRegulation] = useState([]);
@@ -150,7 +152,9 @@ function Units() {
     };
 
     return (
+        
         <div className="unit-table">
+           <p className="title">Syllabus download</p> 
             <Dropdown
                 className="select-field"
                 options={regulation}
