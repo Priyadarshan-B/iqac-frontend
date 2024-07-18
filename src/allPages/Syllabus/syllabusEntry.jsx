@@ -2,9 +2,12 @@ import React, { useState, useEffect } from "react";
 import apiHost from "../../utils/api";
 import Button from "../../components/Button/button";
 import Dropdown from "../../components/dropdown/dropdown";
+import InputBox from "../../components/InputBox/inputbox";
 import "./syllabusentry.css";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import AddCircleTwoToneIcon from '@mui/icons-material/AddCircleTwoTone';
+import RemoveCircleTwoToneIcon from '@mui/icons-material/RemoveCircleTwoTone';
 
 const SyllabusEntry = () => {
   const [degree, setDegree] = useState('');
@@ -29,6 +32,10 @@ const SyllabusEntry = () => {
   const [key, setKey] = useState(0);  
   const [objective, setObjective] = useState("");
   const [description, setDescription] = useState("");
+  const [co, setCo] = useState([]);
+  const [po, setPo] = useState([]);
+  const [dropdownSets, setDropdownSets] = useState([{ co: null, po: null, level: "" }]);
+
 
   useEffect(() => {
     fetch(`${apiHost}/api/rf/dropdown/regulation`)
@@ -52,6 +59,8 @@ const SyllabusEntry = () => {
         setSemester(options);
       })
       .catch((error) => console.error("Error fetching semester dropdown:", error));
+      fetchPoPso();
+
   }, []);
 
   const handleDropdownToggle = (dropdownName) => {
@@ -111,11 +120,26 @@ const SyllabusEntry = () => {
 
   const handleCourseChange = (selectedCourse) => {
     setCourseId(selectedCourse.value);
+    console.log(selectedCourse.value)
+    // console.log(courseId)
     setCourseLabel(selectedCourse.label);
+    console.log(selectedCourse.label)
     fetch(`${apiHost}/api/rf/syllabus?course=${selectedCourse.value}`)
       .then((response) => response.json())
       .then((data) => setSyllabus(data))
       .catch((error) => console.error("Error fetching syllabus data:", error));
+      // handleCourseCoPoChange();
+      fetch(`${apiHost}/api/rf/course-outcome?course=${selectedCourse.value}`)
+      .then((response) => response.json())
+      .then((data) => {
+          const options = data.map((item) => ({
+              value: item.id,
+              label: item.course_outcome,
+          }));
+          setCo(options);
+      })
+      .catch((error) => console.error("Error fetching outcome dropdown", error));
+
   };
 
   const handleAddCourseOutcome = () => {
@@ -191,17 +215,17 @@ const SyllabusEntry = () => {
             });
             console.log("Data submitted successfully");
             // Reset the form fields and dropdown selections
-            setRegulationId(null);
-            setDegree([]);
-            setDegreeId(null);
-            setBranch([]);
-            setSelectedBranchId(null);
-            setSemester([]);
-            setSemesterId(null);
-            setCourse([]);
-            setCourseId(null);
-            setObjective("");
-            setDescription("");
+            // setRegulationId(null);
+            // setDegree([]);
+            // setDegreeId(null);
+            // setBranch([]);
+            // setSelectedBranchId(null);
+            // setSemester([]);
+            // setSemesterId(null);
+            // setCourse([]);
+            // setCourseId(null);
+            // setObjective("");
+            // setDescription("");
 
             // Refetch the dropdown data and force re-render
             setKey(prevKey => prevKey + 1);
@@ -218,6 +242,123 @@ const SyllabusEntry = () => {
         console.error("Error submitting data:", error);
     }
 };
+
+const handleCourseCoPoChange = (selectedCoCourse) => {
+  // setCourseId(selectedCoCourse);
+  // console.log(selectedCoCourse.value)
+  // fetch(`${apiHost}/api/rf/course-outcome?course=${selectedCoCourse.value}`)
+
+  //     .then((response) => response.json())
+  //     .then((data) => {
+  //         const options = data.map((item) => ({
+  //             value: item.id,
+  //             label: item.course_outcome,
+  //         }));
+  //         setCo(options);
+  //     })
+  //     .catch((error) => console.error("Error fetching outcome dropdown", error));
+};
+const handleDropdownChange = (index, field, value) => {
+  const updatedDropdownSets = [...dropdownSets];
+  updatedDropdownSets[index][field] = value;
+  setDropdownSets(updatedDropdownSets);
+};
+const handleRemoveDropdown = (index) => {
+  const updatedDropdownSets = dropdownSets.filter((_, i) => i !== index);
+  setDropdownSets(updatedDropdownSets);
+};
+const fetchPoPso = () => {
+  fetch(`${apiHost}/api/rf/po-pso`)
+      .then((response) => response.json())
+      .then((data) => {
+          const options = data.map((item) => ({
+              value: item.id,
+              label: item.name,
+          }));
+          setPo(options);
+      })
+      .catch((error) => console.error("Error fetching po dropdown:", error));
+};
+
+
+const handleCoPoSubmit = (event) => {
+  event.preventDefault();
+
+  // Validate form data
+  // if (!regulationId || !degreeId || !selectedBranchId || !semesterId || !courseId) {
+  //     toast.error("Please fill in all the fields before submitting.", {
+  //         position: 'bottom-right'
+  //     });
+  //     return;
+  // }
+
+  const dataToSend = dropdownSets.map(({ co, po, level }) => ({
+      course_outcome: co ? co.value : "",
+      program_outcome: po ? po.value : "",
+      mapping_level: level,
+  }));
+console.log(dataToSend)
+  // Send data to backend
+  fetch(`${apiHost}/api/rf/co-po-mapping`, {
+      method: "POST",
+      headers: {
+          "Content-Type": "application/json",
+      },
+      body: JSON.stringify(dataToSend),
+  })
+      .then((response) => {
+          if (!response.ok) {
+              throw new Error("Network response was not ok");
+
+          }
+          toast.success("Data submitted successfully", {
+            position: 'bottom-right'
+        });
+          return response.json();
+          
+      })
+      .then((data) => {
+          toast.success("Data submitted successfully", {
+              position: 'bottom-right'
+          });
+
+          // Reset form using refs
+          // if (regulationRef.current) regulationRef.current.select.clearValue();
+          // if (degreeRef.current) degreeRef.current.select.clearValue();
+          // if (branchRef.current) branchRef.current.select.clearValue();
+          // if (semesterRef.current) semesterRef.current.select.clearValue();
+          // if (courseRef.current) courseRef.current.select.clearValue();
+          // setDropdownSets([{ co: null, po: null, level: "" }]);
+
+          // Clear state values
+          // setRegulationId(null);
+          // setDegreeId(null);
+          // setSelectedBranchId(null);
+          // setSemesterId(null);
+          // setCourseId(null);
+          // setCo([]);
+          // setPo([]);
+
+          // Reset dropdown options
+          // setRegulation([]);
+          // setDegree([]);
+          // setBranch([]);
+          // setSemester([]);
+          // setCourse([]);
+
+          // Re-fetch data to refresh dropdown options
+          // fetchRegulations();
+          // fetchSemesters();
+          // fetchPoPso();
+      })
+      .catch((error) => {
+          toast.error("Error submitting data", {
+              position: 'bottom-right'
+          });
+          console.error("Error sending data to backend:", error);
+      });
+};
+
 
   return (
     <div className='dashboard-container'>
@@ -307,35 +448,47 @@ const SyllabusEntry = () => {
             className="dropdown-section"
             onClick={() => handleDropdownToggle('poMapping')}
           >
-            Course Objective Entry & PO Mapping
+            Course Outcome & Program Outcome
           </div>
           {showDropdown === 'poMapping' && (
-            <div className="dropdown-content">
-              {poMappings.map((mapping, index) => (
-                <div key={mapping.id} className="po-mapping-item">
-                  <span className='font-in-dropdown'>PO Mapping {index + 1}</span>
-                  <textarea
-                    className="po-mapping-textarea"
-                    value={mapping.value1}
-                    onChange={(e) =>
-                      handlePoMappingChange(mapping.id, 'value1', e.target.value)
-                    }
-                  />
-                  <textarea
-                    className="po-mapping-textarea"
-                    value={mapping.value2}
-                    onChange={(e) =>
-                      handlePoMappingChange(mapping.id, 'value2', e.target.value)
-                    }
-                  />
-                  <div className="po-mapping-buttons">
-                    <Button label='Update' onClick={() => console.log('Update clicked')} />
-                    <Button label='Delete' onClick={() => handleDeletePoMapping(mapping.id)} />
-                  </div>
+            <div className="additional-dropdowns">
+            {dropdownSets.map((set, index) => (
+                <div key={index} className="dropdown-set">
+                    <div className="flex-box">
+                        <Dropdown
+                            className="select-field"
+                            options={co}
+                            placeholder="CO"
+                            value={set.co}
+                            onChange={(e) => handleDropdownChange(index, "co", e)}
+                        />
+                        <Dropdown
+                            className="select-field"
+                            options={po}
+                            placeholder="PO"
+                            value={set.po}
+                            onChange={(e) => handleDropdownChange(index, "po", e)}
+                        />
+                        <InputBox
+                            className="input-field"
+                            placeholder="Mapping Level"
+                            value={set.level}
+                            onChange={(e) => handleDropdownChange(index, "level", e.target.value)}
+                        />
+                        {/* <button type="button" onClick={() => handleRemoveDropdown(index)}>
+                            Remove
+                        </button> */}
+                        <RemoveCircleTwoToneIcon style={{
+                            cursor:'pointer',
+                            color:'black'
+                        }} onClick={() => handleRemoveDropdown(index)} />
+                    </div>
+                    <button type="submit" className="button-sub" onClick={handleCoPoSubmit}>
+                    Submit
+                </button>
                 </div>
-              ))}
-              <Button label='Add PO Mapping' onClick={handleAddPoMapping} />
-            </div>
+            ))}
+        </div>
           )}
         </div>
         <div className='division-background'>
