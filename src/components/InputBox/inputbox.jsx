@@ -15,6 +15,7 @@ export default function InputBox(props) {
                 value={value}
                 onChange={onChange}
                 disabled = {disabled}
+                required
             />
         </div>
     );
