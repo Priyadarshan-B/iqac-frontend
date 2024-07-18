@@ -4,7 +4,7 @@ import Dropdown from "../../components/dropdown/dropdown";
 import { jsPDF } from "jspdf";
 import "jspdf-autotable";
 import './units.css';
-
+import Button from "../../components/Button/button";
 
 function Units() {
     const [regulation, setRegulation] = useState([]);
@@ -148,45 +148,60 @@ function Units() {
                 item.hours,
             ]),
         });
-        doc.save("syllabus.pdf");
+        doc.save(`${courseLabel}`);
     };
 
     return (
-        
         <div className="unit-table">
-           <p className="title">Syllabus download</p> 
-            <Dropdown
-                className="select-field"
-                options={regulation}
-                onChange={handleRegulationChange}
-                placeholder="Regulation"
-            />
-            <Dropdown
-                className="select-field"
-                options={degree}
-                onChange={handleDegreeChange}
-                placeholder="Degree"
-            />
-            <Dropdown
-                className="select-field"
-                options={branch}
-                onChange={handleBranchChange}
-                placeholder="Branch"
-            />
-            <Dropdown
-                className="select-field"
-                options={semester}
-                onChange={handleSemesterChange}
-                placeholder="Semester"
-            />
-            <Dropdown
-                className="select-field"
-                options={course}
-                onChange={handleCourseChange}
-                placeholder="Course"
-            />
+            <div className="dropdown-container">
+                <div className="dropdown-item">
+                {/* <span className='font'>Regulation</span> */}
+                    <Dropdown
+                        className="select-field"
+                        options={regulation}
+                        onChange={handleRegulationChange}
+                        placeholder="Select Regulation"
+                    />
+                </div>
+                <div className="dropdown-item">
+                {/* <span className='font'>Degree</span> */}
+                    <Dropdown
+                        className="select-field"
+                        options={degree}
+                        onChange={handleDegreeChange}
+                        placeholder="Select Degree"
+                    />
+                </div>
+                <div className="dropdown-item">
+                {/* <span className='font'>Branch</span> */}
+                    <Dropdown
+                        className="select-field"
+                        options={branch}
+                        onChange={handleBranchChange}
+                        placeholder="Select Branch"
+                    />
+                </div>
+                <div className="dropdown-item">
+                {/* <span className='font'>Semester</span> */}
+                    <Dropdown
+                        className="select-field"
+                        options={semester}
+                        onChange={handleSemesterChange}
+                        placeholder="Select Semester"
+                    />
+                </div>
+                <div className="dropdown-item">
+                {/* <span className='font'>Course</span> */}
+                    <Dropdown
+                        className="select-field"
+                        options={course}
+                        onChange={handleCourseChange}
+                        placeholder="Select Course"
+                    />
+                </div>
+            </div>
             {syllabus.length > 0 && (
-                <div>
+                <div className="table-container">
                     <table>
                         <thead>
                             <tr>
@@ -207,7 +222,7 @@ function Units() {
                             ))}
                         </tbody>
                     </table>
-                    <button onClick={handlePrintPDF}>Print as PDF</button>
+                    <Button onClick={handlePrintPDF} label="Print as PDF" />
                 </div>
             )}
         </div>

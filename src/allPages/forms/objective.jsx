@@ -19,7 +19,7 @@ function ObjectiveForm() {
     const [courseId, setCourseId] = useState(null);
     const [objective, setObjective] = useState("");
     const [description, setDescription] = useState("");
-    const [key, setKey] = useState(0);  // Add a key state to force re-render
+    const [key, setKey] = useState(0);  
 
     const fetchDropdownData = () => {
         fetch(`${apiHost}/api/rf/dropdown/regulation`)

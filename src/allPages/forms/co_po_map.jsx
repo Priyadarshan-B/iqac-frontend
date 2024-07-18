@@ -5,7 +5,8 @@ import apiHost from "../../utils/api";
 import './co_po_map.css';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-
+import AddCircleTwoToneIcon from '@mui/icons-material/AddCircleTwoTone';
+import RemoveCircleTwoToneIcon from '@mui/icons-material/RemoveCircleTwoTone';
 function CoPoMap() {
     const [regulation, setRegulation] = useState([]);
     const [regulationId, setRegulationId] = useState(null);
@@ -232,7 +233,9 @@ function CoPoMap() {
 
     return (
         <div className="co-po-map">
-            <div className="title">CO_PO Form</div>
+            <div className="title">
+                Course Outcome and Program Outcome Form
+                </div>
             <ToastContainer />
             <form onSubmit={handleSubmit}>
                 <div className="flex-box">
@@ -276,9 +279,13 @@ function CoPoMap() {
                         ref={courseRef}
                         value={courseId}
                     />
-                    <button type="button" className="add" onClick={handleAddDropdown}>
+                    {/* <button type="button" className="add" onClick={handleAddDropdown}>
                         Add Dropdown
-                    </button>
+                    </button> */}
+                    <AddCircleTwoToneIcon style={{
+                        cursor:'pointer',
+                        color:'black'
+                    }} onClick={handleAddDropdown}/>
                 </div>
                 <div className="additional-dropdowns">
                     {dropdownSets.map((set, index) => (
@@ -304,9 +311,13 @@ function CoPoMap() {
                                     value={set.level}
                                     onChange={(e) => handleDropdownChange(index, "level", e.target.value)}
                                 />
-                                <button type="button" onClick={() => handleRemoveDropdown(index)}>
+                                {/* <button type="button" onClick={() => handleRemoveDropdown(index)}>
                                     Remove
-                                </button>
+                                </button> */}
+                                <RemoveCircleTwoToneIcon style={{
+                                    cursor:'pointer',
+                                    color:'black'
+                                }} onClick={() => handleRemoveDropdown(index)} />
                             </div>
                         </div>
                     ))}

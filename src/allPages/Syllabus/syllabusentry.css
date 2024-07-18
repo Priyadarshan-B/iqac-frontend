@@ -54,6 +54,8 @@
     background-color: var(--background);
     border-radius: 8px;
     margin: 0px 20px 0px 20px;
+    width: 100%;
+    justify-content: left;
 }
 
 .syllabus-entry>div {
@@ -94,31 +96,31 @@
     background-color: #0056b3;
 }
 
-.syllabus-entry label {
+/* .syllabus-entry label {
     margin-right: 10px;
     font-size: 14px;
-}
+} */
 
 .syllabus-entry .dropdown-section {
     border-radius: 4px;
-    padding: 10px;
+    padding: 20px;
     padding-left: 20px;
     margin-bottom: 10px;
     font-weight: 600;
 }
 
-.font {
+/* .font {
     font-weight: 600;
-}
+} */
 
-.font-in-dropdown {
+/* .font-in-dropdown {
     font-weight: 500;
-    padding: 2px;
-}
-
+    padding: 20px;
+} */
+/* 
 .dropdown-content {
-    padding: 0px 20px 20px 15px;
-}
+    padding: 20px 20px 20px 20px;
+} */
 
 .course-outcome-buttons,
 .po-mapping-buttons,
