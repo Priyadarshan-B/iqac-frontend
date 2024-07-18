@@ -21,6 +21,7 @@
     display: flex;
     flex-direction: column;
     gap: 15px;
+    margin-left: 100px;
 }
 
 /* Input field style */

@@ -158,7 +158,7 @@ function CoPoMap() {
 
     const handleSubmit = (event) => {
         event.preventDefault();
-
+    
         // Validate form data
         if (!regulationId || !degreeId || !selectedBranchId || !semesterId || !courseId) {
             toast.error("Please fill in all the fields before submitting.", {
@@ -166,13 +166,13 @@ function CoPoMap() {
             });
             return;
         }
-
+    
         const dataToSend = dropdownSets.map(({ co, po, level }) => ({
             course_outcome: co ? co.value : "",
             program_outcome: po ? po.value : "",
             mapping_level: level,
         }));
-
+    
         // Send data to backend
         fetch(`${apiHost}/api/rf/co-po-mapping`, {
             method: "POST",
@@ -191,7 +191,7 @@ function CoPoMap() {
                 toast.success("Data submitted successfully", {
                     position: 'bottom-right'
                 });
-
+    
                 // Reset form using refs
                 if (regulationRef.current) regulationRef.current.select.clearValue();
                 if (degreeRef.current) degreeRef.current.select.clearValue();
@@ -199,7 +199,23 @@ function CoPoMap() {
                 if (semesterRef.current) semesterRef.current.select.clearValue();
                 if (courseRef.current) courseRef.current.select.clearValue();
                 setDropdownSets([{ co: null, po: null, level: "" }]);
-
+    
+                // Clear state values
+                setRegulationId(null);
+                setDegreeId(null);
+                setSelectedBranchId(null);
+                setSemesterId(null);
+                setCourseId(null);
+                setCo([]);
+                setPo([]);
+    
+                // Reset dropdown options
+                setRegulation([]);
+                setDegree([]);
+                setBranch([]);
+                setSemester([]);
+                setCourse([]);
+    
                 // Re-fetch data to refresh dropdown options
                 fetchRegulations();
                 fetchSemesters();
@@ -212,6 +228,7 @@ function CoPoMap() {
                 console.error("Error sending data to backend:", error);
             });
     };
+    
 
     return (
         <div className="co-po-map">
