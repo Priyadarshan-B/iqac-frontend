@@ -22,9 +22,9 @@ function CourseForm() {
     const [regulationId, setRegulationId] = useState(null);
     const [degreeId, setDegreeId] = useState(null);
     const [branchId, setBranchId] = useState(null);
-    const [semesterId, setSemesterId] = useState(null);
 
     const [courseRows, setCourseRows] = useState([{
+        semester: "",
         code: "",
         name: "",
         lecture: "",
@@ -138,7 +138,7 @@ function CourseForm() {
 
         try {
             const dataToSend = courseRows.map(row => ({
-                semester: semesterId,
+                semester: row.semester,
                 branch: branchId,
                 code: row.code,
                 name: row.name,
@@ -173,8 +173,8 @@ function CourseForm() {
                 setRegulationId(null);
                 setDegreeId(null);
                 setBranchId(null);
-                setSemesterId(null);
                 setCourseRows([{
+                    semester: "",
                     code: "",
                     name: "",
                     lecture: "",
@@ -208,6 +208,7 @@ function CourseForm() {
 
     const handleAddRow = () => {
         setCourseRows([...courseRows, {
+            semester: "",
             code: "",
             name: "",
             lecture: "",
@@ -260,16 +261,9 @@ function CourseForm() {
                         onChange={(selectedBranch) => setBranchId(selectedBranch.value)}
                         placeholder="Branch"
                     />
-                    {/* <Dropdown
-                        className="select-field"
-                        options={semester}
-                        value={semester.find(option => option.value === semesterId) || null}
-                        onChange={(selectedSemester) => setSemesterId(selectedSemester.value)}
-                        placeholder="Semester"
-                    /> */}
                 </div>
 
-                {regulationId && degreeId && branchId && semesterId && (
+                {regulationId && degreeId && branchId && (
                     <table className="course-form-table">
                         <thead>
                             <tr>
@@ -291,15 +285,16 @@ function CourseForm() {
                         <tbody>
                             {courseRows.map((row, index) => (
                                 <tr key={index}>
-                                    <td><Dropdown
-                        className="select-field"
-                        options={semester}
-                        value={semester.find(option => option.value === semesterId) || null}
-                        onChange={(selectedSemester) => setSemesterId(selectedSemester.value)}
-                        placeholder="Semester"
-                    /></td>
                                     <td>
-                                        
+                                        <Dropdown
+                                            className="select-field"
+                                            options={semester}
+                                            value={semester.find(option => option.value === row.semester) || null}
+                                            onChange={(selectedSemester) => handleInputChange(index, 'semester', selectedSemester.value)}
+                                            placeholder="Semester"
+                                        />
+                                    </td>
+                                    <td>
                                         <InputBox
                                             value={row.code}
                                             onChange={(e) => handleInputChange(index, 'code', e.target.value)}
@@ -405,12 +400,13 @@ function CourseForm() {
                                 </tr>
                             ))}
                         </tbody>
-                         <AddCircleTwoToneIcon style={{
+                        
+                    </table>
+                )}
+                 <AddCircleTwoToneIcon style={{
                         cursor:'pointer',
                         color:'black'
                     }} onClick={handleAddRow}/>
-                    </table>
-                )}
                 
                 <div className="form-buttons">
                     
