@@ -4,32 +4,32 @@ import Button from "../../components/Button/button";
 import Dropdown from "../../components/dropdown/dropdown";
 import InputBox from "../../components/InputBox/inputbox";
 import "./syllabusentry.css";
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
-import AddCircleTwoToneIcon from '@mui/icons-material/AddCircleTwoTone';
-import RemoveCircleTwoToneIcon from '@mui/icons-material/RemoveCircleTwoTone';
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import AddCircleTwoToneIcon from "@mui/icons-material/AddCircleTwoTone";
+import RemoveCircleTwoToneIcon from "@mui/icons-material/RemoveCircleTwoTone";
 
-const SyllabusEntry = () => {   
-  const [degree, setDegree] = useState('');
+const SyllabusEntry = () => {
+  const [degree, setDegree] = useState("");
   const [degreeId, setDegreeId] = useState(null);
   const [degreeLabel, setDegreeLabel] = useState("");
-  const [branch, setBranch] = useState('');
+  const [branch, setBranch] = useState("");
   const [branchId, setBranchId] = useState(null);
   const [branchLabel, setBranchLabel] = useState("");
-  const [regulation, setRegulation] = useState('');
+  const [regulation, setRegulation] = useState("");
   const [regulationId, setRegulationId] = useState(null);
   const [regulationLabel, setRegulationLabel] = useState("");
-  const [course, setCourse] = useState('');
+  const [course, setCourse] = useState("");
   const [courseId, setCourseId] = useState(null);
   const [courseLabel, setCourseLabel] = useState("");
   const [semester, setSemester] = useState([]);
   const [semesterLabel, setSemesterLabel] = useState("");
-  const [showDropdown, setShowDropdown] = useState('');
+  const [showDropdown, setShowDropdown] = useState("");
   const [courseOutcomes, setCourseOutcomes] = useState([]);
   const [poMappings, setPoMappings] = useState([]);
   const [courseContent, setCourseContent] = useState([]);
   const [syllabus, setSyllabus] = useState([]);
-  const [key, setKey] = useState(0);  
+  const [key, setKey] = useState(0);
   const [objective, setObjective] = useState("");
   const [description, setDescription] = useState("");
   const [co, setCo] = useState([]);
@@ -37,9 +37,12 @@ const SyllabusEntry = () => {
   const [unit, setUnit] = useState("");
   const [unitname, setUnitname] = useState("");
   const [hours, setHours] = useState("");
-  const [units, setUnits] = useState([{ unit: "", unitname: "", description: "", hours: "" }]);
-  const [dropdownSets, setDropdownSets] = useState([{ co: null, po: null, level: "" }]);
-
+  const [units, setUnits] = useState([
+    { unit: "", unitname: "", description: "", hours: "" },
+  ]);
+  const [dropdownSets, setDropdownSets] = useState([
+    { co: null, po: null, level: "" },
+  ]);
 
   useEffect(() => {
     fetch(`${apiHost}/api/rf/dropdown/regulation`)
@@ -51,7 +54,9 @@ const SyllabusEntry = () => {
         }));
         setRegulation(options);
       })
-      .catch((error) => console.error("Error fetching regulation dropdown:", error));
+      .catch((error) =>
+        console.error("Error fetching regulation dropdown:", error)
+      );
 
     fetch(`${apiHost}/api/rf/dropdown/semester`)
       .then((response) => response.json())
@@ -62,21 +67,24 @@ const SyllabusEntry = () => {
         }));
         setSemester(options);
       })
-      .catch((error) => console.error("Error fetching semester dropdown:", error));
-      fetchPoPso();
-
+      .catch((error) =>
+        console.error("Error fetching semester dropdown:", error)
+      );
+    fetchPoPso();
   }, []);
 
   const handleDropdownToggle = (dropdownName) => {
     setShowDropdown((prevDropdown) =>
-      prevDropdown === dropdownName ? '' : dropdownName
+      prevDropdown === dropdownName ? "" : dropdownName
     );
   };
 
   const handleRegulationChange = (selectedRegulation) => {
     setRegulationId(selectedRegulation.value);
     setRegulationLabel(selectedRegulation.label);
-    fetch(`${apiHost}/api/rf/dropdown/degree?regulation=${selectedRegulation.value}`)
+    fetch(
+      `${apiHost}/api/rf/dropdown/degree?regulation=${selectedRegulation.value}`
+    )
       .then((response) => response.json())
       .then((data) => {
         const options = data.map((item) => ({
@@ -85,7 +93,9 @@ const SyllabusEntry = () => {
         }));
         setDegree(options);
       })
-      .catch((error) => console.error("Error fetching degree dropdown:", error));
+      .catch((error) =>
+        console.error("Error fetching degree dropdown:", error)
+      );
   };
 
   const handleDegreeChange = (selectedDegree) => {
@@ -100,7 +110,9 @@ const SyllabusEntry = () => {
         }));
         setBranch(options);
       })
-      .catch((error) => console.error("Error fetching branch dropdown:", error));
+      .catch((error) =>
+        console.error("Error fetching branch dropdown:", error)
+      );
   };
 
   const handleBranchChange = (selectedBranch) => {
@@ -110,7 +122,9 @@ const SyllabusEntry = () => {
 
   const handleSemesterChange = (selectedSemester) => {
     setSemesterLabel(selectedSemester.label);
-    fetch(`${apiHost}/api/rf/dropdown/course?branch=${branchId}&semester=${selectedSemester.value}`)
+    fetch(
+      `${apiHost}/api/rf/dropdown/course?branch=${branchId}&semester=${selectedSemester.value}`
+    )
       .then((response) => response.json())
       .then((data) => {
         const options = data.map((item) => ({
@@ -119,51 +133,53 @@ const SyllabusEntry = () => {
         }));
         setCourse(options);
       })
-      .catch((error) => console.error("Error fetching course dropdown:", error));
+      .catch((error) =>
+        console.error("Error fetching course dropdown:", error)
+      );
   };
 
   const handleCourseChange = (selectedCourse) => {
     setCourseId(selectedCourse.value);
-    console.log(selectedCourse.value)
+    console.log(selectedCourse.value);
     // console.log(courseId)
     setCourseLabel(selectedCourse.label);
-    console.log(selectedCourse.label)
+    console.log(selectedCourse.label);
     fetch(`${apiHost}/api/rf/syllabus?course=${selectedCourse.value}`)
       .then((response) => response.json())
       .then((data) => setSyllabus(data))
       .catch((error) => console.error("Error fetching syllabus data:", error));
-      // handleCourseCoPoChange();
-      fetch(`${apiHost}/api/rf/course-outcome?course=${selectedCourse.value}`)
+    // handleCourseCoPoChange();
+    fetch(`${apiHost}/api/rf/course-outcome?course=${selectedCourse.value}`)
       .then((response) => response.json())
       .then((data) => {
-          const options = data.map((item) => ({
-              value: item.id,
-              label: item.course_outcome,
-          }));
-          setCo(options);
+        const options = data.map((item) => ({
+          value: item.id,
+          label: item.course_outcome,
+        }));
+        setCo(options);
       })
-      .catch((error) => console.error("Error fetching outcome dropdown", error));
-
+      .catch((error) =>
+        console.error("Error fetching outcome dropdown", error)
+      );
   };
 
+  
   const handleAddCourseOutcome = () => {
-    setCourseOutcomes([...courseOutcomes, { id: Date.now(), value: '' }]);
+    setCourseOutcomes([...courseOutcomes, { objective: "", description: "" }]);
   };
 
-  const handleCourseOutcomeChange = (id, value) => {
-    setCourseOutcomes(
-      courseOutcomes.map((outcome) =>
-        outcome.id === id ? { ...outcome, value } : outcome
-      )
-    );
+  const handleCourseOutcomeChange = (index, field, value) => {
+    const updatedCourseOutcomes = [...courseOutcomes];
+    updatedCourseOutcomes[index][field] = value;
+    setCourseOutcomes(updatedCourseOutcomes);
   };
 
-  const handleDeleteCourseOutcome = (id) => {
-    setCourseOutcomes(courseOutcomes.filter((outcome) => outcome.id !== id));
+  const handleDeleteCourseOutcome = (index) => {
+    const updatedCourseOutcomes = courseOutcomes.filter((_, i) => i !== index);
+    setCourseOutcomes(updatedCourseOutcomes);
   };
-
   const handleAddPoMapping = () => {
-    setPoMappings([...poMappings, { id: Date.now(), value1: '', value2: '' }]);
+    setPoMappings([...poMappings, { id: Date.now(), value1: "", value2: "" }]);
   };
 
   const handlePoMappingChange = (id, field, value) => {
@@ -173,14 +189,6 @@ const SyllabusEntry = () => {
       )
     );
   };
-
-  // const handleDeletePoMapping = (id) => {
-  //   setPoMappings(poMappings.filter((mapping) => mapping.id !== id));
-  // };
-
-  // const handleAddCourseContent = () => {
-  //   setCourseContent([...courseContent, { id: Date.now(), unitTitle: '', hours: 0, details: '' }]);
-  // };
 
   const handleCourseContentChange = (id, field, value) => {
     setCourseContent(
@@ -193,240 +201,170 @@ const SyllabusEntry = () => {
   const handleDeleteCourseContent = (id) => {
     setCourseContent(courseContent.filter((content) => content.id !== id));
   };
-  const handleSubmit = async (e) => {
+  const handleSubmitCourseOutcomes = async (e) => {
     e.preventDefault();
-
     try {
-        const dataToSend = {
-            course: courseId,
-            co_obj_id: objective,
-            description: description,
-        };
-
-        console.log("Data to be sent:", dataToSend);
-
-        const response = await fetch(`${apiHost}/api/rf/course-objective`, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify(dataToSend),
+      const dataToSend = courseOutcomes.map((outcome) => ({
+        course: courseId,
+        objective: outcome.objective,
+        description: outcome.description
+      }));
+      console.log("Data to be sent:", dataToSend);
+      const response = await fetch(`${apiHost}/api/rf/course-objective`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(dataToSend)
+      });
+      if (response.ok) {
+        toast.success("Objectives submitted successfully", {
+          position: "bottom-right"
         });
-
-        if (response.ok) {
-            toast.success("Objective submitted successfully", {
-                position: 'bottom-right'
-            });
-            console.log("Data submitted successfully");
-            // Reset the form fields and dropdown selections
-            // setRegulationId(null);
-            // setDegree([]);
-            // setDegreeId(null);
-            // setBranch([]);
-            // setSelectedBranchId(null);
-            // setSemester([]);
-            // setSemesterId(null);
-            // setCourse([]);
-            // setCourseId(null);
-            // setObjective("");
-            // setDescription("");
-
-            // Refetch the dropdown data and force re-render
-            setKey(prevKey => prevKey + 1);
-        } else {
-            toast.error("Failed to submit objective", {
-                position: 'bottom-right'
-            });
-            console.error("Failed to submit data");
-        }
+        console.log("Data submitted successfully");
+        setCourseOutcomes([{ objective: "", description: "" }]);
+      } else {
+        toast.error("Failed to submit objectives", {
+          position: "bottom-right"
+        });
+        console.error("Failed to submit data");
+      }
     } catch (error) {
-        toast.error("Error submitting objective", {
-            position: 'bottom-right'
-        });
-        console.error("Error submitting data:", error);
+      toast.error("Error submitting objectives", {
+        position: "bottom-right"
+      });
+      console.error("Error submitting data:", error);
     }
-};
+  };
+  const handleDropdownChange = (index, field, value) => {
+    const updatedDropdownSets = [...dropdownSets];
+    updatedDropdownSets[index][field] = value;
+    setDropdownSets(updatedDropdownSets);
+  };
+  const handleRemoveDropdown = (index) => {
+    const updatedDropdownSets = dropdownSets.filter((_, i) => i !== index);
+    setDropdownSets(updatedDropdownSets);
+  };
+  
+  const handleAddDropdown = () => {
+    setDropdownSets([...dropdownSets, { co: null, po: null, level: "" }]);
+  };
 
-const handleCourseCoPoChange = (selectedCoCourse) => {
-  // setCourseId(selectedCoCourse);
-  // console.log(selectedCoCourse.value)
-  // fetch(`${apiHost}/api/rf/course-outcome?course=${selectedCoCourse.value}`)
-
-  //     .then((response) => response.json())
-  //     .then((data) => {
-  //         const options = data.map((item) => ({
-  //             value: item.id,
-  //             label: item.course_outcome,
-  //         }));
-  //         setCo(options);
-  //     })
-  //     .catch((error) => console.error("Error fetching outcome dropdown", error));
-};
-const handleDropdownChange = (index, field, value) => {
-  const updatedDropdownSets = [...dropdownSets];
-  updatedDropdownSets[index][field] = value;
-  setDropdownSets(updatedDropdownSets);
-};
-const handleRemoveDropdown = (index) => {
-  const updatedDropdownSets = dropdownSets.filter((_, i) => i !== index);
-  setDropdownSets(updatedDropdownSets);
-};
-const fetchPoPso = () => {
-  fetch(`${apiHost}/api/rf/po-pso`)
+  const fetchPoPso = () => {
+    fetch(`${apiHost}/api/rf/po-pso`)
       .then((response) => response.json())
       .then((data) => {
-          const options = data.map((item) => ({
-              value: item.id,
-              label: item.name,
-          }));
-          setPo(options);
+        const options = data.map((item) => ({
+          value: item.id,
+          label: item.name,
+        }));
+        setPo(options);
       })
       .catch((error) => console.error("Error fetching po dropdown:", error));
-};
+  };
 
+  const handleCoPoSubmit = (event) => {
+    event.preventDefault();
 
-const handleCoPoSubmit = (event) => {
-  event.preventDefault();
-
-  // Validate form data
-  // if (!regulationId || !degreeId || !selectedBranchId || !semesterId || !courseId) {
-  //     toast.error("Please fill in all the fields before submitting.", {
-  //         position: 'bottom-right'
-  //     });
-  //     return;
-  // }
-
-  const dataToSend = dropdownSets.map(({ co, po, level }) => ({
+    const dataToSend = dropdownSets.map(({ co, po, level }) => ({
       course_outcome: co ? co.value : "",
       program_outcome: po ? po.value : "",
-      mapping_level: level,
-  }));
-console.log(dataToSend)
-  // Send data to backend
-  fetch(`${apiHost}/api/rf/co-po-mapping`, {
-      method: "POST",
-      headers: {
-          "Content-Type": "application/json",
-      },
-      body: JSON.stringify(dataToSend),
-  })
-      .then((response) => {
-          if (!response.ok) {
-              throw new Error("Network response was not ok");
-
-          }
-          toast.success("Data submitted successfully", {
-            position: 'bottom-right'
-        });
-          return response.json();
-          
-      })
-      .then((data) => {
-          toast.success("Data submitted successfully", {
-              position: 'bottom-right'
-          });
-
-          // Reset form using refs
-          // if (regulationRef.current) regulationRef.current.select.clearValue();
-          // if (degreeRef.current) degreeRef.current.select.clearValue();
-          // if (branchRef.current) branchRef.current.select.clearValue();
-          // if (semesterRef.current) semesterRef.current.select.clearValue();
-          // if (courseRef.current) courseRef.current.select.clearValue();
-          // setDropdownSets([{ co: null, po: null, level: "" }]);
-
-          // Clear state values
-          // setRegulationId(null);
-          // setDegreeId(null);
-          // setSelectedBranchId(null);
-          // setSemesterId(null);
-          // setCourseId(null);
-          // setCo([]);
-          // setPo([]);
-
-          // Reset dropdown options
-          // setRegulation([]);
-          // setDegree([]);
-          // setBranch([]);
-          // setSemester([]);
-          // setCourse([]);
-
-          // Re-fetch data to refresh dropdown options
-          // fetchRegulations();
-          // fetchSemesters();
-          // fetchPoPso();
-      })
-      .catch((error) => {
-          toast.error("Error submitting data", {
-              position: 'bottom-right'
-          });
-          console.error("Error sending data to backend:", error);
-      });
-};
-
-const handleAddUnit = () => {
-  setUnits([...units, { unit: "", unitname: "", description: "", hours: "" }]);
-};
-
-const handleUnitChange = (index, field, value) => {
-  const updatedUnits = [...units];
-  updatedUnits[index][field] = value;
-  setUnits(updatedUnits);
-};
-
-const handleDeleteUnit = (index) => {
-  setUnits(units.filter((_, i) => i !== index));
-};
-const handleSubmitUnit = async (e) => {
-  e.preventDefault();
-
-  try {
-    const dataToSend = units.map(unit => ({
-      course: courseId,
-      unit: unit.unit,
-      unitname: unit.unitname,
-      description: unit.description,
-      hours: unit.hours,
+      mapping_level: parseInt(level),
     }));
-
-    console.log("Data to be sent:", dataToSend);
-
-    const response = await fetch(`${apiHost}/api/rf/course-unit`, {
+    console.log(dataToSend);
+    fetch(`${apiHost}/api/rf/co-po-mapping`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify(dataToSend),
-    });
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
+        toast.success("Data submitted successfully", {
+          position: "bottom-right",
+        });
+        return response.json();
+      })
+      .then((data) => {
+        toast.success("Data submitted successfully", {
+          position: "bottom-right",
+        });
+      })
+      .catch((error) => {
+        toast.error("Error submitting data", {
+          position: "bottom-right",
+        });
+        console.error("Error sending data to backend:", error);
+      });
+  };
 
-    if (response.ok) {
-      toast.success("Units submitted successfully", {
-        position: 'bottom-right'
+  const handleAddUnit = () => {
+    setUnits([
+      ...units,
+      { unit: "", unitname: "", description: "", hours: "" },
+    ]);
+  };
+
+  const handleUnitChange = (index, field, value) => {
+    const updatedUnits = [...units];
+    updatedUnits[index][field] = value;
+    setUnits(updatedUnits);
+  };
+
+  const handleDeleteUnit = (index) => {
+    setUnits(units.filter((_, i) => i !== index));
+  };
+  const handleSubmitUnit = async (e) => {
+    e.preventDefault();
+
+    try {
+      const dataToSend = units.map((unit) => ({
+        course: courseId,
+        unit: unit.unit,
+        unit_name: unit.unitname,
+        description: unit.description,
+        hours: parseInt(unit.hours),
+      }));
+
+      console.log("Data to be sent:", dataToSend);
+
+      const response = await fetch(`${apiHost}/api/rf/course-unit`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(dataToSend),
       });
-      console.log("Data submitted successfully");
-      setUnits([{ unit: "", unitname: "", description: "", hours: "" }]); // Reset units to default
-    } else {
-      toast.error("Failed to submit units", {
-        position: 'bottom-right'
+
+      if (response.ok) {
+        toast.success("Units submitted successfully", {
+          position: "bottom-right",
+        });
+        console.log("Data submitted successfully");
+        setUnits([{ unit: "", unitname: "", description: "", hours: "" }]);
+      } else {
+        toast.error("Failed to submit units", {
+          position: "bottom-right",
+        });
+        console.error("Failed to submit data");
+      }
+    } catch (error) {
+      toast.error("Error submitting units", {
+        position: "bottom-right",
       });
-      console.error("Failed to submit data");
+      console.error("Error submitting data:", error);
     }
-  } catch (error) {
-    toast.error("Error submitting units", {
-      position: 'bottom-right'
-    });
-    console.error("Error submitting data:", error);
-  }
-};
-
-
-
+  };
 
   return (
-    <div className='dashboard-container'>
+    <div className="dashboard-container">
       <div className="syllabus-entry">
-        <div className='select-info'>
-          <div className='each-info-select'>
-            <span className='font'>Regulation</span>
+        <div className="select-info">
+          <div className="each-info-select">
+            <span className="font">Regulation</span>
             <Dropdown
               className="syllabus-entry-select"
               options={regulation}
@@ -434,8 +372,8 @@ const handleSubmitUnit = async (e) => {
               placeholder="Regulation"
             />
           </div>
-          <div className='each-info-select'>
-            <span className='font'>Degree</span>
+          <div className="each-info-select">
+            <span className="font">Degree</span>
             <Dropdown
               className="syllabus-entry-select"
               options={degree}
@@ -443,8 +381,8 @@ const handleSubmitUnit = async (e) => {
               placeholder="Degree"
             />
           </div>
-          <div className='each-info-select'>
-            <span className='font'>Branch</span>
+          <div className="each-info-select">
+            <span className="font">Branch</span>
             <Dropdown
               className="syllabus-entry-select"
               options={branch}
@@ -452,8 +390,8 @@ const handleSubmitUnit = async (e) => {
               placeholder="Branch"
             />
           </div>
-          <div className='each-info-select'>
-            <span className='font'>Semester</span>
+          <div className="each-info-select">
+            <span className="font">Semester</span>
             <Dropdown
               className="syllabus-entry-select"
               options={semester}
@@ -461,8 +399,8 @@ const handleSubmitUnit = async (e) => {
               placeholder="Semester"
             />
           </div>
-          <div className='each-info-select'>
-            <span className='font'>Course</span>
+          <div className="each-info-select">
+            <span className="font">Course</span>
             <Dropdown
               className="syllabus-entry-select"
               options={course}
@@ -471,135 +409,144 @@ const handleSubmitUnit = async (e) => {
             />
           </div>
         </div>
-        <div className='division-background'>
-          <div
-            className="dropdown-section"
-            onClick={() => handleDropdownToggle('courseObjective')}
-          >
-            Course Objective Entry
-          </div>
-            {showDropdown === 'courseObjective' && (
-              <div className="dropdown-content">
-                {courseOutcomes.map((outcome, index) => (
-                  <div key={outcome.id} className="course-outcome-item">
-                    <span className='font-in-dropdown'>Course Objective {index + 1}</span>
-                    <input
-                      className="course-outcome-textarea"
-                      value={objective}
-                      onChange={(e) => setObjective(e.target.value)}
-                    />
-                    <input
-                      className="course-outcome-textarea"
-                      value={description}
-                      onChange={(e) => setDescription(e.target.value)}
-                    />
-                    <div className="course-outcome-buttons">
-                      <Button label='Update' onClick={handleSubmit} />
-                      <Button label='Delete' onClick={() => handleDeleteCourseOutcome(outcome.id)} />
-                    </div>
-                  </div>
-              ))}
-
-              <Button label='Add Outcome' onClick={handleAddCourseOutcome} />
+        <div className="division-background">
+        <form onSubmit={handleSubmitCourseOutcomes} className="course-outcomes-form">
+          <h2>Course Objectives</h2>
+          {courseOutcomes.map((outcome, index) => (
+            <div key={index} className="course-outcome">
+              <InputBox
+                className="input-box"
+                type="text"
+                value={outcome.objective}
+                onChange={(e) =>
+                  handleCourseOutcomeChange(index, "objective", e.target.value)
+                }
+                placeholder="Enter Objective"
+              />
+              <InputBox
+                className="input-box"
+                type="text"
+                value={outcome.description}
+                onChange={(e) =>
+                  handleCourseOutcomeChange(index, "description", e.target.value)
+                }
+                placeholder="Enter Description"
+              />
+              <Button
+                onClick={() => handleDeleteCourseOutcome(index)}
+                label="Delete"
+             />
+                {/* <RemoveCircleTwoToneIcon /> */}
+             
             </div>
-          )}
+          ))}
+          <Button
+            label="Add"
+            onClick={handleAddCourseOutcome}
+          />
+          <Button 
+          label="Submit"
+          type="submit"/>
+           
+        </form>
         </div>
-        <div className='division-background'>
+  <div className="division-background">
+        <h2>Course Outcome & Program Outcome</h2>
+        <form onSubmit={handleCoPoSubmit}>
+        {dropdownSets.map((set, index) => (
+            <div key={index}>
+                <Dropdown
+                    label="CO"
+                    options={co}
+                    value={set.co}
+                    onChange={(value) => handleDropdownChange(index, "co", value)}
+                />
+                <Dropdown
+                    label="PO"
+                    options={po}
+                    value={set.po}
+                    onChange={(value) => handleDropdownChange(index, "po", value)}
+                />
+                <InputBox
+                    label="Level"
+                    value={set.level}
+                    onChange={(e) => handleDropdownChange(index, "level", e.target.value)}
+                />
+                <Button
+                    // type="button"
+                    // buttonStyle="btn--danger--solid"
+                    onClick={() => handleRemoveDropdown(index)}
+                
+                    // <RemoveCircleTwoToneIcon />
+                    label=" Delete"/>
+        
+            </div>
+        ))}
+        <button
+            type="button"
+            buttonStyle="btn--success--solid"
+            onClick={handleAddDropdown}
+        >
+             Add
+        </button>
+        <button type="submit" buttonStyle="btn--primary--solid">Submit</button>
+    </form>
+    </div>
+
+        <div className="division-background">
           <div
             className="dropdown-section"
-            onClick={() => handleDropdownToggle('poMapping')}
+            onClick={() => handleDropdownToggle("courseContent")}
           >
-            Course Outcome & Program Outcome
-          </div>
-          {showDropdown === 'poMapping' && (
-            <div className="additional-dropdowns">
-            {dropdownSets.map((set, index) => (
-                <div key={index} className="dropdown-set">
-                    <div className="flex-box">
-                        <Dropdown
-                            className="select-field"
-                            options={co}
-                            placeholder="CO"
-                            value={set.co}
-                            onChange={(e) => handleDropdownChange(index, "co", e)}
-                        />
-                        <Dropdown
-                            className="select-field"
-                            options={po}
-                            placeholder="PO"
-                            value={set.po}
-                            onChange={(e) => handleDropdownChange(index, "po", e)}
-                        />
-                        <InputBox
-                            className="input-field"
-                            placeholder="Mapping Level"
-                            value={set.level}
-                            onChange={(e) => handleDropdownChange(index, "level", e.target.value)}
-                        />
-                        {/* <button type="button" onClick={() => handleRemoveDropdown(index)}>
-                            Remove
-                        </button> */}
-                        <RemoveCircleTwoToneIcon style={{
-                            cursor:'pointer',
-                            color:'black'
-                        }} onClick={() => handleRemoveDropdown(index)} />
-                    </div>
-                    <button type="submit" className="button-sub" onClick={handleCoPoSubmit}>
-                    Submit
-                </button>
-                </div>
-            ))}
-        </div>
-          )}
-        </div>
-        <div className='division-background'>
-          <div
-            className="dropdown-section"
-            onClick={() => handleDropdownToggle('courseContent')}
-          >
-            Course Content Entry
+            Course Unit Entry
           </div>
           <h2>Units</h2>
-      <form onSubmit={handleSubmitUnit}>
-        {units.map((unit, index) => (
-          <div key={index}>
-            <InputBox
-              placeholder="Unit"
-              type="text"
-              value={unit.unit}
-              onChange={(e) => handleUnitChange(index, "unit", e.target.value)}
-            />
-            <InputBox
-              placeholder="Unit Name"
-              type="text"
-              value={unit.unitname}
-              onChange={(e) => handleUnitChange(index, "unitname", e.target.value)}
-            />
-            <InputBox
-              placeholder="Description"
-              value={unit.description}
-              onChange={(e) => handleUnitChange(index, "description", e.target.value)}
-            />
-            <InputBox
-              placeholder="Hours"
-              type="text"
-              value={unit.hours}
-              onChange={(e) => handleUnitChange(index, "hours", e.target.value)}
-            />
-            <button type="button" onClick={() => handleDeleteUnit(index)}>
-              <RemoveCircleTwoToneIcon />
-              {/* Delete */}
+          <form onSubmit={handleSubmitUnit}>
+            {units.map((unit, index) => (
+              <div key={index}>
+                <InputBox
+                  placeholder="Unit"
+                  type="text"
+                  value={unit.unit}
+                  onChange={(e) =>
+                    handleUnitChange(index, "unit", e.target.value)
+                  }
+                />
+                <InputBox
+                  placeholder="Unit Name"
+                  type="text"
+                  value={unit.unitname}
+                  onChange={(e) =>
+                    handleUnitChange(index, "unitname", e.target.value)
+                  }
+                />
+                <InputBox
+                  placeholder="Description"
+                  value={unit.description}
+                  type="text"
+                  onChange={(e) =>
+                    handleUnitChange(index, "description", e.target.value)
+                  }
+                />
+                <InputBox
+                  placeholder="Hours"
+                  type="number"
+                  value={unit.hours}
+                  onChange={(e) =>
+                    handleUnitChange(index, "hours", e.target.value)
+                  }
+                />
+                <button type="button" onClick={() => handleDeleteUnit(index)}>
+                  <RemoveCircleTwoToneIcon />
+                </button>
+              </div>
+            ))}
+            <button type="button" onClick={handleAddUnit}>
+              <AddCircleTwoToneIcon />
             </button>
-          </div>
-        ))}
-        <button type="button" onClick={handleAddUnit}>
-          <AddCircleTwoToneIcon />
-          {/* Add */}
-        </button>
-        <button type="submit">Submit Units</button>
-      </form>          
+            <button type="submit">Submit Units</button>
+          </form>
         </div>
-        
       </div>
     </div>
   );
