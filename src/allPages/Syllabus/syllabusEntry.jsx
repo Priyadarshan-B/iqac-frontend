@@ -9,7 +9,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import AddCircleTwoToneIcon from '@mui/icons-material/AddCircleTwoTone';
 import RemoveCircleTwoToneIcon from '@mui/icons-material/RemoveCircleTwoTone';
 
-const SyllabusEntry = () => {
+const SyllabusEntry = () => {   
   const [degree, setDegree] = useState('');
   const [degreeId, setDegreeId] = useState(null);
   const [degreeLabel, setDegreeLabel] = useState("");
@@ -34,6 +34,9 @@ const SyllabusEntry = () => {
   const [description, setDescription] = useState("");
   const [co, setCo] = useState([]);
   const [po, setPo] = useState([]);
+  const [unit, setUnit] = useState("");
+  const [unitname, setUnitname] = useState("");
+  const [hours, setHours] = useState("");
   const [dropdownSets, setDropdownSets] = useState([{ co: null, po: null, level: "" }]);
 
 

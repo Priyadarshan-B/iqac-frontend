@@ -4,7 +4,7 @@ import './OneCredit.css'
 function OneCredit() {
   return (
     <div>
-      One Credit Courses
+      One Credit 
     </div>
   )
 }
