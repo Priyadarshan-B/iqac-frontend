@@ -37,6 +37,7 @@ const SyllabusEntry = () => {
   const [unit, setUnit] = useState("");
   const [unitname, setUnitname] = useState("");
   const [hours, setHours] = useState("");
+  const [units, setUnits] = useState([{ unit: "", unitname: "", description: "", hours: "" }]);
   const [dropdownSets, setDropdownSets] = useState([{ co: null, po: null, level: "" }]);
 
 
@@ -173,13 +174,13 @@ const SyllabusEntry = () => {
     );
   };
 
-  const handleDeletePoMapping = (id) => {
-    setPoMappings(poMappings.filter((mapping) => mapping.id !== id));
-  };
+  // const handleDeletePoMapping = (id) => {
+  //   setPoMappings(poMappings.filter((mapping) => mapping.id !== id));
+  // };
 
-  const handleAddCourseContent = () => {
-    setCourseContent([...courseContent, { id: Date.now(), unitTitle: '', hours: 0, details: '' }]);
-  };
+  // const handleAddCourseContent = () => {
+  //   setCourseContent([...courseContent, { id: Date.now(), unitTitle: '', hours: 0, details: '' }]);
+  // };
 
   const handleCourseContentChange = (id, field, value) => {
     setCourseContent(
@@ -362,6 +363,63 @@ console.log(dataToSend)
       });
 };
 
+const handleAddUnit = () => {
+  setUnits([...units, { unit: "", unitname: "", description: "", hours: "" }]);
+};
+
+const handleUnitChange = (index, field, value) => {
+  const updatedUnits = [...units];
+  updatedUnits[index][field] = value;
+  setUnits(updatedUnits);
+};
+
+const handleDeleteUnit = (index) => {
+  setUnits(units.filter((_, i) => i !== index));
+};
+const handleSubmitUnit = async (e) => {
+  e.preventDefault();
+
+  try {
+    const dataToSend = units.map(unit => ({
+      course: courseId,
+      unit: unit.unit,
+      unitname: unit.unitname,
+      description: unit.description,
+      hours: unit.hours,
+    }));
+
+    console.log("Data to be sent:", dataToSend);
+
+    const response = await fetch(`${apiHost}/api/rf/course-unit`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(dataToSend),
+    });
+
+    if (response.ok) {
+      toast.success("Units submitted successfully", {
+        position: 'bottom-right'
+      });
+      console.log("Data submitted successfully");
+      setUnits([{ unit: "", unitname: "", description: "", hours: "" }]); // Reset units to default
+    } else {
+      toast.error("Failed to submit units", {
+        position: 'bottom-right'
+      });
+      console.error("Failed to submit data");
+    }
+  } catch (error) {
+    toast.error("Error submitting units", {
+      position: 'bottom-right'
+    });
+    console.error("Error submitting data:", error);
+  }
+};
+
+
+
 
   return (
     <div className='dashboard-container'>
@@ -501,41 +559,45 @@ console.log(dataToSend)
           >
             Course Content Entry
           </div>
-          {showDropdown === 'courseContent' && (
-            <div className="dropdown-content">
-              {courseContent.map((content, index) => (
-                <div key={content.id} className="course-content-item">
-                  <span className='font-in-dropdown'>Course Content {index + 1}</span>
-                  <textarea
-                    className="course-content-textarea"
-                    value={content.unitTitle}
-                    onChange={(e) =>
-                      handleCourseContentChange(content.id, 'unitTitle', e.target.value)
-                    }
-                  />
-                  <textarea
-                    className="course-content-textarea"
-                    value={content.hours}
-                    onChange={(e) =>
-                      handleCourseContentChange(content.id, 'hours', e.target.value)
-                    }
-                  />
-                  <textarea
-                    className="course-content-textarea"
-                    value={content.details}
-                    onChange={(e) =>
-                      handleCourseContentChange(content.id, 'details', e.target.value)
-                    }
-                  />
-                  <div className="course-content-buttons">
-                    <Button label='Update' onClick={() => console.log('Update clicked')} />
-                    <Button label='Delete' onClick={() => handleDeleteCourseContent(content.id)} />
-                  </div>
-                </div>
-              ))}
-              <Button label='Add Course Content' onClick={handleAddCourseContent} />
-            </div>
-          )}
+          <h2>Units</h2>
+      <form onSubmit={handleSubmitUnit}>
+        {units.map((unit, index) => (
+          <div key={index}>
+            <InputBox
+              placeholder="Unit"
+              type="text"
+              value={unit.unit}
+              onChange={(e) => handleUnitChange(index, "unit", e.target.value)}
+            />
+            <InputBox
+              placeholder="Unit Name"
+              type="text"
+              value={unit.unitname}
+              onChange={(e) => handleUnitChange(index, "unitname", e.target.value)}
+            />
+            <InputBox
+              placeholder="Description"
+              value={unit.description}
+              onChange={(e) => handleUnitChange(index, "description", e.target.value)}
+            />
+            <InputBox
+              placeholder="Hours"
+              type="text"
+              value={unit.hours}
+              onChange={(e) => handleUnitChange(index, "hours", e.target.value)}
+            />
+            <button type="button" onClick={() => handleDeleteUnit(index)}>
+              <RemoveCircleTwoToneIcon />
+              {/* Delete */}
+            </button>
+          </div>
+        ))}
+        <button type="button" onClick={handleAddUnit}>
+          <AddCircleTwoToneIcon />
+          {/* Add */}
+        </button>
+        <button type="submit">Submit Units</button>
+      </form>          
         </div>
         
       </div>
