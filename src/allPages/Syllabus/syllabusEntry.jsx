@@ -11,6 +11,7 @@
   import CloseFullscreenIcon from '@mui/icons-material/CloseFullscreen';
   import ArrowDropUpIcon from '@mui/icons-material/ArrowDropUp';
   import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
+import { ForkLeft } from "@mui/icons-material";
 
   const SyllabusEntry = () => {
     const [degree, setDegree] = useState("");
@@ -461,6 +462,22 @@ const handleShowUnitContent=()=>{
           <ToastContainer/>
              
            <form onSubmit={handleSubmitCourseOutcomes} className="course-outcomes-form">
+            
+            <div style={{ 
+              display: 'flex', 
+              margin:'10px 10px 10px 30px'
+               }}>
+           <AddCircleTwoToneIcon style={{
+                        cursor:'pointer',
+                        color:'black',
+                        
+                    }} onClick={handleAddCourseOutcome}/>
+                    {/* <button 
+                    onClick={handleAddCourseOutcome}
+                    label="Delete"
+                />  */}
+                    
+                    </div>
            
            
               {courseOutcomes.map((outcome, index) => (
@@ -483,21 +500,30 @@ const handleShowUnitContent=()=>{
                     }
                     placeholder="Enter Description"
                   />
-                  <Button
+                  {/* <button className="button-add"
                     onClick={() => handleDeleteCourseOutcome(index)}
                     label="Delete"
-                />
-                    {/* <RemoveCircleTwoToneIcon /> */}
+                /> */}
+                <div 
+                style={{ 
+                  display: 'flex', 
+                  margin:'10px 10px 10px 30px'
+                   }}>
+                      <RemoveCircleTwoToneIcon 
+                                style={{ cursor: 'pointer', color: 'black' }} 
+                              onClick={() => handleDeleteCourseOutcome(index)} 
+                                        />
+                                        {/* <div>
+                                         <button type="submit" className="button-submit">Submit</button>
+                                         </div> */}
+                                         </div>
            
                 </div>
               ))}
-              <Button
-                label="Add"
-                onClick={handleAddCourseOutcome}
-              />
-              <Button
-              label="Submit"
-              type="submit"/>
+                
+
+              
+             <button type="submit" className="button-submit">Submit</button>
            
             </form>
          </div>}

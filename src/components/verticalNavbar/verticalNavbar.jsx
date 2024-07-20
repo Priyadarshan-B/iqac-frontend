@@ -70,31 +70,32 @@ function VerticalNavbar({ onClose }) {
             <Link to="/mainform/branchform" className="forms-submenu-link">Branch</Link>
           </div>
           <div className="forms-submenu-item">
-            <Link to="/mainform/courseform" className="forms-submenu-link">Course</Link>
-          </div>
-          <div className="forms-submenu-item">
             <Link to="/mainform/categoryform" className="forms-submenu-link">Course Category</Link>
           </div>
           <div className="forms-submenu-item">
-            <Link to="/mainform/unitform" className="forms-submenu-link">Course Unit</Link>
+            <Link to="/mainform/courseform" className="forms-submenu-link">Curriculum Entry</Link>
           </div>
+         
+          {/* <div className="forms-submenu-item">
+            <Link to="/mainform/unitform" className="forms-submenu-link">Course Unit</Link>
+          </div> */}
           <div className="forms-submenu-item">
             <Link to="/mainform/outcomeform" className="forms-submenu-link">Course Outcome</Link>
           </div>
-          <div className="forms-submenu-item">
+          {/* <div className="forms-submenu-item">
             <Link to="/mainform/objectiveform" className="forms-submenu-link">Course Objective</Link>
-          </div>
-          <div className="forms-submenu-item">
+          </div> */}
+          {/* <div className="forms-submenu-item">
             <Link to="/mainform/copomap" className="forms-submenu-link">Program Outcome</Link>
-          </div>
+          </div> */}
         </div>
       )}
       <div className={`menu-item ${activeLink === '/syllabusentry' ? 'active' : ''}`} onClick={() => handleLinkClick('/syllabusentry')}>
         <Link to="/syllabusentry" className="link-style"><DashboardRoundedIcon className='nav-icons' />Syllabus Entry</Link>
       </div>
-      <div className={`menu-item ${activeLink === '/unit' ? 'active' : ''}`} onClick={() => handleLinkClick('/unit')}>
+      {/* <div className={`menu-item ${activeLink === '/unit' ? 'active' : ''}`} onClick={() => handleLinkClick('/unit')}>
         <Link to="/unit" className="link-style"><DashboardRoundedIcon className='nav-icons' />Syllabus</Link>
-      </div>
+      </div> */}
     </div>
   );
 }
