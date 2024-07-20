@@ -61,8 +61,13 @@ function AppLayout() {
                 <Route path="/syllabusentry" element={<SyllabusEntry />} />
                 <Route path="/markentry/attendance" element={<Attendance />} />
                 <Route path="/markentry/report" element={<Report />} />
-                <Route path="/markentry/report/:courseCode" element={<SubjectDetailsPage />} />
+                <Route path="/markentry/report/absentees" element={<Report />} />
+                <Route path="/markentry/report/failReport" element={<Report />} />
+                <Route path="/markentry/report/markReport" element={<Report />} />
                 <Route path="/mainform/regulationform" element={<RegulationForm />} />
+                <Route path="/markentry/report/absentees/list" element={<SubjectDetailsPage />} />
+                <Route path="/markentry/report/failureReport/list" element={<SubjectDetailsPage />} />
+                <Route path="/markentry/report/markReport/list" element={<SubjectDetailsPage />} />
                 <Route path="/mainform/degreeform" element={<DegreeForm />} />
                 <Route path="/mainform/branchform" element={<BranchForm />} />
                 <Route path="/mainform/courseform" element={<CourseForm />} />

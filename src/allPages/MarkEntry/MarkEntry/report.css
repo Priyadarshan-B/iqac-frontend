@@ -2,9 +2,10 @@
 
 .dropdown-container {
     display: flex;
-    align-items: center;
-    justify-content: space-between;
+    gap:10px;
    padding: 10px;
+   justify-content:center;
+   align-items:center;
   width: 96%;
   background-color: white;
   border-radius: 10px;
