@@ -223,6 +223,11 @@ const SyllabusEntry = () => {
         });
         console.log("Data submitted successfully");
         setCourseOutcomes([{ objective: "", description: "" }]);
+        setObjective("");
+        setDescription("");
+        setDropdownSets([]);
+        setDropdownSets("")
+        handleCourseChange({ value: courseId, label: courseLabel });
       } else {
         toast.error("Failed to submit objectives", {
           position: "bottom-right"
@@ -281,11 +286,12 @@ const SyllabusEntry = () => {
     })
       .then((response) => {
         if (!response.ok) {
+          toast.error("Failed to submit objective", {
+            position: 'bottom-right',
+       });
           throw new Error("Network response was not ok");
         }
-        toast.success("Data submitted successfully", {
-          position: "bottom-right",
-        });
+       
         return response.json();
       })
       .then((data) => {
@@ -362,6 +368,7 @@ const SyllabusEntry = () => {
   return (
     <div className="dashboard-container">
       <div className="syllabus-entry">
+   
         <div className="select-info">
           <div className="each-info-select">
             <span className="font">Regulation</span>
@@ -410,6 +417,7 @@ const SyllabusEntry = () => {
           </div>
         </div>
         <div className="division-background">
+        <ToastContainer/>
         <form onSubmit={handleSubmitCourseOutcomes} className="course-outcomes-form">
           <h2>Course Objectives</h2>
           {courseOutcomes.map((outcome, index) => (
@@ -451,6 +459,7 @@ const SyllabusEntry = () => {
         </form>
         </div>
   <div className="division-background">
+  <ToastContainer/>
         <h2>Course Outcome & Program Outcome</h2>
         <form onSubmit={handleCoPoSubmit}>
         {dropdownSets.map((set, index) => (
@@ -494,6 +503,7 @@ const SyllabusEntry = () => {
     </div>
 
         <div className="division-background">
+        <ToastContainer/>
           <div
             className="dropdown-section"
             onClick={() => handleDropdownToggle("courseContent")}
