@@ -3,12 +3,14 @@ import apiHost from "../../utils/api";
 import Dropdown from "../../components/dropdown/dropdown";
 import Button from "../../components/Button/button";
 import InputBox from "../../components/InputBox/inputbox";
-import '../dashboard/Dashboard.css'
-import '../MarkEntry/SubjectAllocation/facultymap.css'
+import '../dashboard/Dashboard.css';
+import '../MarkEntry/SubjectAllocation/facultymap.css';
 import './course.css';
-import  '../forms/degree.css'
+import  '../forms/degree.css';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import AddCircleTwoToneIcon from '@mui/icons-material/AddCircleTwoTone';
+import RemoveCircleTwoToneIcon from '@mui/icons-material/RemoveCircleTwoTone';
 
 function CourseForm() {
     const [regulation, setRegulation] = useState([]);
@@ -20,19 +22,21 @@ function CourseForm() {
     const [regulationId, setRegulationId] = useState(null);
     const [degreeId, setDegreeId] = useState(null);
     const [branchId, setBranchId] = useState(null);
-    const [semesterId, setSemesterId] = useState(null);
 
-    const [code, setCode] = useState("");
-    const [name, setName] = useState("");
-    const [lecture, setLecture] = useState("");
-    const [tutorial, setTutorial] = useState("");
-    const [practical, setPractical] = useState("");
-    const [credit, setCredit] = useState("");
-    const [hours, setHours] = useState("");
-    const [ca, setCa] = useState("");
-    const [es, setEs] = useState("");
-    const [total, setTotal] = useState("");
-    const [category, setCategory] = useState("");
+    const [courseRows, setCourseRows] = useState([{
+        semester: "",
+        code: "",
+        name: "",
+        lecture: "",
+        tutorial: "",
+        practical: "",
+        credit: "",
+        hours: "",
+        ca: "",
+        es: "",
+        total: "",
+        category: ""
+    }]);
 
     const fetchRegulations = () => {
         fetch(`${apiHost}/api/rf/dropdown/regulation`)
@@ -122,30 +126,32 @@ function CourseForm() {
     };
 
     useEffect(() => {
-        if (ca && es) {
-            setTotal(parseInt(ca) + parseInt(es));
-        }
-    }, [ca, es]);
+        const updatedRows = courseRows.map((row) => ({
+            ...row,
+            total: row.ca && row.es ? parseInt(row.ca) + parseInt(row.es) : ""
+        }));
+        setCourseRows(updatedRows);
+    }, [courseRows.map(row => row.ca), courseRows.map(row => row.es)]);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
 
         try {
-            const dataToSend = {
-                semester: semesterId,
+            const dataToSend = courseRows.map(row => ({
+                semester: row.semester,
                 branch: branchId,
-                code: code,
-                name: name,
-                lecture_hours: parseInt(lecture),
-                tutorial_hours: parseInt(tutorial),
-                practical_hours: parseInt(practical),
-                credit: parseInt(credit),
-                hours_per_week: parseInt(hours),
-                ca: parseInt(ca),
-                es: parseInt(es),
-                total: parseInt(total),
-                category: category,
-            };
+                code: row.code,
+                name: row.name,
+                lecture_hours: parseInt(row.lecture),
+                tutorial_hours: parseInt(row.tutorial),
+                practical_hours: parseInt(row.practical),
+                credit: parseInt(row.credit),
+                hours_per_week: parseInt(row.hours),
+                ca: parseInt(row.ca),
+                es: parseInt(row.es),
+                total: parseInt(row.total),
+                category: row.category,
+            }));
 
             console.log("Data to be sent:", dataToSend);
 
@@ -167,18 +173,20 @@ function CourseForm() {
                 setRegulationId(null);
                 setDegreeId(null);
                 setBranchId(null);
-                setSemesterId(null);
-                setCode("");
-                setName("");
-                setLecture("");
-                setTutorial("");
-                setPractical("");
-                setCredit("");
-                setHours("");
-                setCa("");
-                setEs("");
-                setTotal("");
-                setCategory("");
+                setCourseRows([{
+                    semester: "",
+                    code: "",
+                    name: "",
+                    lecture: "",
+                    tutorial: "",
+                    practical: "",
+                    credit: "",
+                    hours: "",
+                    ca: "",
+                    es: "",
+                    total: "",
+                    category: ""
+                }]);
 
                 // Re-fetch the dropdown options
                 fetchRegulations();
@@ -196,6 +204,34 @@ function CourseForm() {
             });
             console.error("Error submitting data:", error);
         }
+    };
+
+    const handleAddRow = () => {
+        setCourseRows([...courseRows, {
+            semester: "",
+            code: "",
+            name: "",
+            lecture: "",
+            tutorial: "",
+            practical: "",
+            credit: "",
+            hours: "",
+            ca: "",
+            es: "",
+            total: "",
+            category: ""
+        }]);
+    };
+
+    const handleRemoveRow = (index) => {
+        const updatedRows = courseRows.filter((_, i) => i !== index);
+        setCourseRows(updatedRows);
+    };
+
+    const handleInputChange = (index, field, value) => {
+        const updatedRows = [...courseRows];
+        updatedRows[index][field] = value;
+        setCourseRows(updatedRows);
     };
 
     return (
@@ -225,91 +261,160 @@ function CourseForm() {
                         onChange={(selectedBranch) => setBranchId(selectedBranch.value)}
                         placeholder="Branch"
                     />
-                    <Dropdown
-                        className="select-field"
-                        options={semester}
-                        value={semester.find(option => option.value === semesterId) || null}
-                        onChange={(selectedSemester) => setSemesterId(selectedSemester.value)}
-                        placeholder="Semester"
-                    />
-                    <InputBox
-                        value={code}
-                        onChange={(e) => setCode(e.target.value)}
-                        placeholder="Subject Code"
-                        type="text"
-                    />
-                    <InputBox
-                        value={name}
-                        onChange={(e) => setName(e.target.value)}
-                        placeholder="Subject Name"
-                        type="text"
-                    />
-                    <InputBox
-                        value={lecture}
-                        onChange={(e) => setLecture(e.target.value)}
-                        placeholder="Lecture Hours"
-                        type="number"
-                        min="0"
-                    />
-                    <InputBox
-                        value={tutorial}
-                        onChange={(e) => setTutorial(e.target.value)}
-                        placeholder="Tutorial Hours"
-                        type="number"
-                        min="0"
-                    />
-                    <InputBox
-                        value={practical}
-                        onChange={(e) => setPractical(e.target.value)}
-                        placeholder="Practical Hours"
-                        type="number"
-                        min="0"
-                    />
-                    <InputBox
-                        value={credit}
-                        onChange={(e) => setCredit(e.target.value)}
-                        placeholder="Credit"
-                        type="number"
-                        min="0"
-                    />
-                    <InputBox
-                        value={hours}
-                        onChange={(e) => setHours(e.target.value)}
-                        placeholder="Hours per Week"
-                        type="number"
-                        min="0"
-                    />
-                    <InputBox
-                        value={ca}
-                        onChange={(e) => setCa(e.target.value)}
-                        placeholder="CA"
-                        type="number"
-                        min="0"
-                    />
-                    <InputBox
-                        value={es}
-                        onChange={(e) => setEs(e.target.value)}
-                        placeholder="ES"
-                        type="number"
-                        min="0"
-                    />
-                    <InputBox
-                        value={total}
-                        onChange={(e) => setTotal(e.target.value)}
-                        placeholder="Total"
-                        type="number"
-                        min="0"
-                        readOnly
-                    />
-                    <Dropdown
-                        className="select-field"
-                        options={courseCategory}
-                        value={courseCategory.find(option => option.value === category) || null}
-                        onChange={(selectedCategory) => setCategory(selectedCategory.value)}
-                        placeholder="Category"
-                    />
-                    <button type="submit" className="button-sub">Submit</button>
                 </div>
+
+                {regulationId && degreeId && branchId && (
+                    <table className="course-form-table">
+                        <thead>
+                            <tr>
+                                <th>Semester</th>
+                                <th>Course Code</th>
+                                <th>Course</th>
+                                <th>L</th>
+                                <th>T</th>
+                                <th>P</th>
+                                <th>C</th>
+                                <th>Hours/Week</th>
+                                <th>CA</th>
+                                <th>ES</th>
+                                <th>Total</th>
+                                <th>Category</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {courseRows.map((row, index) => (
+                                <tr key={index}>
+                                    <td>
+                                        <Dropdown
+                                            className="select-field"
+                                            options={semester}
+                                            value={semester.find(option => option.value === row.semester) || null}
+                                            onChange={(selectedSemester) => handleInputChange(index, 'semester', selectedSemester.value)}
+                                            placeholder="Semester"
+                                        />
+                                    </td>
+                                    <td>
+                                        <InputBox
+                                            value={row.code}
+                                            onChange={(e) => handleInputChange(index, 'code', e.target.value)}
+                                            placeholder="Code Id"
+                                            type="text"
+                                        />
+                                    </td>
+                                    <td>
+                                        <InputBox
+                                            value={row.name}
+                                            onChange={(e) => handleInputChange(index, 'name', e.target.value)}
+                                            placeholder="Course"
+                                            type="text"
+                                        />
+                                    </td>
+                                    <td>
+                                        <InputBox
+                                            value={row.lecture}
+                                            onChange={(e) => handleInputChange(index, 'lecture', e.target.value)}
+                                            placeholder="L"
+                                            type="number"
+                                            min="0"
+                                        />
+                                    </td>
+                                    <td>
+                                        <InputBox
+                                            value={row.tutorial}
+                                            onChange={(e) => handleInputChange(index, 'tutorial', e.target.value)}
+                                            placeholder="T"
+                                            type="number"
+                                            min="0"
+                                        />
+                                    </td>
+                                    <td>
+                                        <InputBox
+                                            value={row.practical}
+                                            onChange={(e) => handleInputChange(index, 'practical', e.target.value)}
+                                            placeholder="P"
+                                            type="number"
+                                            min="0"
+                                        />
+                                    </td>
+                                    <td>
+                                        <InputBox
+                                            value={row.credit}
+                                            onChange={(e) => handleInputChange(index, 'credit', e.target.value)}
+                                            placeholder="C"
+                                            type="number"
+                                            min="0"
+                                        />
+                                    </td>
+                                    <td>
+                                        <InputBox
+                                            value={row.hours}
+                                            onChange={(e) => handleInputChange(index, 'hours', e.target.value)}
+                                            placeholder="Hours/Week"
+                                            type="number"
+                                            min="0"
+                                        />
+                                    </td>
+                                    <td>
+                                        <InputBox
+                                            value={row.ca}
+                                            onChange={(e) => handleInputChange(index, 'ca', e.target.value)}
+                                            placeholder="CA"
+                                            type="number"
+                                            min="0"
+                                        />
+                                    </td>
+                                    <td>
+                                        <InputBox
+                                            value={row.es}
+                                            onChange={(e) => handleInputChange(index, 'es', e.target.value)}
+                                            placeholder="ES"
+                                            type="number"
+                                            min="0"
+                                        />
+                                    </td>
+                                    <td>
+                                        <InputBox
+                                            value={row.total}
+                                            placeholder="Total"
+                                            type="number"
+                                            min="0"
+                                            readOnly
+                                        />
+                                    </td>
+                                    <td>
+                                        <Dropdown
+                                            className="select-field"
+                                            options={courseCategory}
+                                            value={courseCategory.find(option => option.value === row.category) || null}
+                                            onChange={(selectedCategory) => handleInputChange(index, 'category', selectedCategory.value)}
+                                            placeholder="Category"
+                                        />
+                                    </td>
+                                    <td>
+                                        <RemoveCircleTwoToneIcon 
+                                            style={{ cursor: 'pointer', color: 'black' }} 
+                                            onClick={() => handleRemoveRow(index)} 
+                                        />
+                                    </td>
+                                </tr>
+                            ))}
+                        </tbody>
+                        
+                    </table>
+                )}
+                 <AddCircleTwoToneIcon style={{
+                        cursor:'pointer',
+                        color:'black'
+                    }} onClick={handleAddRow}/>
+                
+                <div className="form-buttons">
+                    
+                   <button type="submit" className="button-sub">Submit</button>
+                </div>
+           
+
+                
             </form>
         </div>
     );

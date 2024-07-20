@@ -13,7 +13,7 @@
     padding: 20px;
     border-radius: 10px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    max-width: 600px;
+    max-width: 1000px;
     width: 100%;
     margin-top: 15px;
  
@@ -22,15 +22,15 @@
 
 
 /* Input box styling */
-.course-form input[type="text"],
+/* .course-form input[type="text"],
 .course-form input[type="number"] {
-    margin-bottom: 15px;
+    /* margin-bottom: 15px;
     padding: 8px;
     border: 1px solid #ccc;
     border-radius: 4px;
-    width: 97%;
-    font-size: 16px;
-}
+    /* width: 97%; */
+    /* font-size: 16px; */
+/* }  */
 
  .button-sub {
     padding: 10px 20px;
@@ -41,7 +41,8 @@
     font-size: 16px;
     cursor: pointer;
     margin-top: 10px;
-    text-align: center;
+    /* text-align: center;
+    width:100%; */
    }
 
 
@@ -54,20 +55,71 @@
     gap: 15px;
 }
 
-/* Responsive design */
-/* @media (max-width: 768px) {
-    .course-form-container {
-        padding: 15px;
-        max-width: 100%;
-    }
+.course-form-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 15px;
+    margin-bottom: 15px;
+}
 
-    .course-form-container .select-field,
-    .course-form-container input[type="text"],
-    .course-form-container input[type="number"] {
-        font-size: 14px;
-    }
+.course-form-table th,
+.course-form-table td {
+    border: 1px solid #ccc;
+    padding: 8px;
+    text-align: center;
+    /* margin: 200px; */
+}
 
-    .course-form-container .button {
-        font-size: 14px;
-    }
+.course-form-table th {
+    background-color: #f5f5f5;
+    font-weight: bold;
+}
+
+.course-form-table tbody tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+.course-form-table input[type="text"],
+.course-form-table input[type="number"] {
+    width: 100%;
+    padding: 6px;
+    box-sizing: border-box;
+    border: none;
+    background: none;
+    text-align: center;
+}
+
+.course-form-table input[type="text"]:focus,
+.course-form-table input[type="number"]:focus {
+    outline: none;
+    border-bottom: 2px solid #007bff;
+}
+
+/* .course-form-table .select-field {
+    width: 10%;
+    padding: 6px;
+    box-sizing: border-box;
+    border: none;
+    background: none;
 } */
+
+/* .course-form-table .select-field:focus {
+    outline: none;
+    border-bottom: 2px solid #007bff;
+} */
+
+/* Responsive design */
+@media (max-width: 768px) {
+    .course-form-table th,
+    .course-form-table td {
+        font-size: 14px;
+        padding: 6px;
+    }
+
+    .course-form-table input[type="text"],
+    .course-form-table input[type="number"] {
+        font-size: 14px;
+        padding: 4px;
+    }
+}
+
