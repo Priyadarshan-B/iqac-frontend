@@ -69,9 +69,7 @@ function VerticalNavbar({ onClose }) {
           <div className="forms-submenu-item">
             <Link to="/mainform/branchform" className="forms-submenu-link">Branch</Link>
           </div>
-          <div className="forms-submenu-item">
-            <Link to="/mainform/categoryform" className="forms-submenu-link">Course Category</Link>
-          </div>
+          
           <div className="forms-submenu-item">
             <Link to="/mainform/courseform" className="forms-submenu-link">Curriculum Entry</Link>
           </div>
@@ -79,6 +77,9 @@ function VerticalNavbar({ onClose }) {
           {/* <div className="forms-submenu-item">
             <Link to="/mainform/unitform" className="forms-submenu-link">Course Unit</Link>
           </div> */}
+          <div className="forms-submenu-item">
+            <Link to="/mainform/categoryform" className="forms-submenu-link">Course Category</Link>
+          </div>
           <div className="forms-submenu-item">
             <Link to="/mainform/outcomeform" className="forms-submenu-link">Course Outcome</Link>
           </div>

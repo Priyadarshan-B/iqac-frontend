@@ -459,10 +459,10 @@ const handleShowUnitContent=()=>{
          {showcontent &&
          
          <div>
-          <ToastContainer/>
-             
-           <form onSubmit={handleSubmitCourseOutcomes} className="course-outcomes-form">
-            
+        
+        <ToastContainer/>
+           <form onSubmit={handleSubmitCourseOutcomes} >
+          
             <div style={{ 
               display: 'flex', 
               margin:'10px 10px 10px 30px'
@@ -517,6 +517,7 @@ const handleShowUnitContent=()=>{
                                          <button type="submit" className="button-submit">Submit</button>
                                          </div> */}
                                          </div>
+                                         
            
                 </div>
               ))}
@@ -541,45 +542,84 @@ const handleShowUnitContent=()=>{
           {showCoPocontent &&
           <form onSubmit={handleCoPoSubmit}>
     <ToastContainer/>
+    <div style={{ 
+              display: 'flex', 
+              margin:'10px 10px 10px 30px'
+               }}>
+           <AddCircleTwoToneIcon style={{
+                        cursor:'pointer',
+                        color:'black',
+                        
+                    }} onClick={handleAddDropdown}/>
+                    {/* <button 
+                    onClick={handleAddCourseOutcome}
+                    label="Delete"
+                />  */}
+                    
+                    </div>
            
           {dropdownSets.map((set, index) => (
-              <div key={index}>
+              <div key={index} >
+                <div className="flex-boxco">
+                 
                   <Dropdown
+                 
                       label="CO"
                       options={co}
                       value={set.co}
                       onChange={(value) => handleDropdownChange(index, "co", value)}
                   />
                   <Dropdown
+                     
                       label="PO"
                       options={po}
                       value={set.po}
                       onChange={(value) => handleDropdownChange(index, "po", value)}
                   />
-                  <InputBox
-                      label="Level"
+                 
+                 
+                  {/* <InputBox
+                     className="input-box"
+                     placeholder="Mapping Level"
+                    //  type="text"
+                      // label="Level"
                       value={set.level}
                       onChange={(e) => handleDropdownChange(index, "level", e.target.value)}
-                  />
-                  <Button
-                      // type="button"
-                      // buttonStyle="btn--danger--solid"
-                      onClick={() => handleRemoveDropdown(index)}
-                  
-                      // <RemoveCircleTwoToneIcon />
-                      label=" Delete"/>
-          
+                  /> */}
+                  <InputBox
+                    className="copo"
+                    placeholder="Mapping Level"
+                    value={set.level}
+                    onChange={(e) => handleDropdownChange(index, "level", e.target.value)}
+                    type="number"
+                    min="0"
+                    />
+                    
+                    <div 
+                style={{ 
+                  display: 'flex', 
+                  margin:'10px 10px 10px 30px'
+                   }}>
+                      <RemoveCircleTwoToneIcon 
+                                style={{ cursor: 'pointer', color: 'black' }} 
+                              onClick={() => handleRemoveDropdown(index)} 
+                                        />
+                                        {/* <div>
+                                         <button type="submit" className="button-submit">Submit</button>
+                                         </div> */}
+                                         </div>
+          </div>
+         
               </div>
           ))}
-          <button
-              type="button"
-              buttonStyle="btn--success--solid"
-              onClick={handleAddDropdown}
-          >
-              Add
-          </button>
-          <button type="submit" buttonStyle="btn--primary--solid">Submit</button>
-      </form>}
+          
+          
+          <button type="submit" className="button-submit">Submit</button>
+           
+         
+          
+      </form>
+      }
       </div>
 
           <div className="division-background" 
@@ -637,7 +677,7 @@ const handleShowUnitContent=()=>{
               <button type="button" onClick={handleAddUnit}>
                 <AddCircleTwoToneIcon />
               </button>
-              <button type="submit">Submit Units</button>
+              <button type="submit" className="button-submit">Submit</button>
             </form>}
           </div>
         </div>

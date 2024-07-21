@@ -51,17 +51,7 @@
 
 
 
-/* .syllabus-entry button {
-    padding: 8px 16px;
-    background-color: #007bff;
-    color: #fff;
-    border: none;
-    border-radius: 4px;
-    font-size: 14px;
-    cursor: pointer;
-    margin: 20px  ;
-    /* margin-left: 2px; */
-/* } */ 
+
 .button-submit{
     padding: 8px 16px;
     background-color: #007bff;
@@ -125,19 +115,21 @@
 
 
 
-.course-outcome-buttons,
+/* .course-outcome-buttons,
 .po-mapping-buttons,
 .course-content-buttons {
     display: flex;
-}
+} */
 
-.course-outcome-textarea,
+/* .course-outcome-textarea,
 .course-content-textarea {
     width: 100%;
     resize: vertical;
     margin-right: 10px;
-}
-.course-outcome input[type="text"] {
+} */
+.course-outcome input[type="text"]
+
+ {
     width: 97%;
     padding: 10px;
     border: 1px solid #ccc;
@@ -150,54 +142,24 @@
 
 
 
-
-
-
-
-
-
-
-
-.course-outcome-item,
-.po-mapping-item {
-    display: flex;
-    align-items: center;
-    margin-bottom: 10px;
-}
-
-
-.po-mapping-input {
-    flex: 1;
-    padding: 8px 12px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    font-size: 14px;
-    margin-right: 10px;
-}
-
-
-
 .po-mapping-buttons button:hover {
     background-color: #0056b3;
 }
 
-.course-content-item {
-    display: flex;
-    flex-direction: column;
-    margin-bottom: 10px;
-}
 
-.course-content-input,
-.course-content-textarea {
-    padding: 8px 12px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    font-size: 14px;
-    margin-bottom: 5px;
-}
+
 
 
 
 .course-content-buttons button:hover {
     background-color: #0056b3;
+}
+.flex-boxco{
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    width: 97%;
+    margin: 5px 10px 15px 20px;
+    
+
 }
