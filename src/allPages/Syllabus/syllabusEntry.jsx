@@ -389,11 +389,13 @@ const SyllabusEntry = () => {
         `${apiHost}/api/rf/course-objective?course=${courseId}`
       );
       const courseObjectives = await responseObjectives.json();
+      console.log(courseObjectives)
 
       const responseOutcomes = await fetch(
         `${apiHost}/api/rf/co-po-mapping?course=${courseId}`
       );
       const programOutcomes = await responseOutcomes.json();
+      console.log(programOutcomes)
 
       const responseUnit = await fetch(
         `${apiHost}/api/rf/course-unit?course=${courseId}`
@@ -463,7 +465,7 @@ const SyllabusEntry = () => {
         lines.forEach((line) => {
           doc.text(line, 10, yPos);
           yPos += 10;
-          checkAddPage();s
+          checkAddPage();
         });
       });
 
