@@ -159,14 +159,12 @@ const SyllabusEntry = () => {
   const handleCourseChange = (selectedCourse) => {
     setCourseId(selectedCourse.value);
     console.log(selectedCourse.value);
-    // console.log(courseId)
     setCourseLabel(selectedCourse.label);
     console.log(selectedCourse.label);
     fetch(`${apiHost}/api/rf/syllabus?course=${selectedCourse.value}`)
       .then((response) => response.json())
       .then((data) => setSyllabus(data))
       .catch((error) => console.error("Error fetching syllabus data:", error));
-    // handleCourseCoPoChange();
     fetch(`${apiHost}/api/rf/course-outcome?course=${selectedCourse.value}`)
       .then((response) => response.json())
       .then((data) => {
@@ -465,7 +463,7 @@ const SyllabusEntry = () => {
         lines.forEach((line) => {
           doc.text(line, 10, yPos);
           yPos += 10;
-          checkAddPage();
+          checkAddPage();s
         });
       });
 
@@ -716,9 +714,6 @@ const SyllabusEntry = () => {
                         style={{ cursor: "pointer", color: "black" }}
                         onClick={() => handleRemoveDropdown(index)}
                       />
-                      {/* <div>
-                                         <button type="submit" className="button-submit">Submit</button>
-                                         </div> */}
                     </div>
                   </div>
                 </div>
