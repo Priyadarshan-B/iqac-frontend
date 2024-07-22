@@ -30,7 +30,7 @@ const SyllabusEntry = () => {
   const [semester, setSemester] = useState([]);
   const [semesterLabel, setSemesterLabel] = useState("");
   const [showDropdown, setShowDropdown] = useState("");
-  const [courseOutcomes, setCourseOutcomes] = useState([{objective:"",description:""}]);
+  const [courseOutcomes, setCourseOutcomes] = useState([]);
   const [poMappings, setPoMappings] = useState([]);
   const [courseContent, setCourseContent] = useState([]);
   const [syllabus, setSyllabus] = useState([]);
@@ -159,14 +159,12 @@ const SyllabusEntry = () => {
   const handleCourseChange = (selectedCourse) => {
     setCourseId(selectedCourse.value);
     console.log(selectedCourse.value);
-    // console.log(courseId)
     setCourseLabel(selectedCourse.label);
     console.log(selectedCourse.label);
     fetch(`${apiHost}/api/rf/syllabus?course=${selectedCourse.value}`)
       .then((response) => response.json())
       .then((data) => setSyllabus(data))
       .catch((error) => console.error("Error fetching syllabus data:", error));
-    // handleCourseCoPoChange();
     fetch(`${apiHost}/api/rf/course-outcome?course=${selectedCourse.value}`)
       .then((response) => response.json())
       .then((data) => {
@@ -391,11 +389,13 @@ const SyllabusEntry = () => {
         `${apiHost}/api/rf/course-objective?course=${courseId}`
       );
       const courseObjectives = await responseObjectives.json();
+      console.log(courseObjectives)
 
       const responseOutcomes = await fetch(
         `${apiHost}/api/rf/co-po-mapping?course=${courseId}`
       );
       const programOutcomes = await responseOutcomes.json();
+      console.log(programOutcomes)
 
       const responseUnit = await fetch(
         `${apiHost}/api/rf/course-unit?course=${courseId}`
@@ -503,18 +503,10 @@ const SyllabusEntry = () => {
 
       // Save the PDF
       doc.save("syllabus.pdf");
-      toast.success("PDF downloaded successfully!",{
-        position: "bottom-right",
-
-      });
-      
+      toast.success("PDF downloaded successfully!");
     } catch (error) {
-      toast.error("An error occurred while downloading the PDF.",{
-        position: "bottom-right",
-
-      });
       console.error("Error fetching and downloading PDF:", error);
-     
+      toast.error("An error occurred while downloading the PDF.");
     }
   };
 
@@ -589,8 +581,21 @@ const SyllabusEntry = () => {
             <div>
               <ToastContainer />
               <form onSubmit={handleSubmitCourseOutcomes}>
-                 
-                 {console.log(courseOutcomes)}
+                <div
+                  style={{
+                    display: "flex",
+                    margin: "20px 10px 10px 30px",
+                  }}
+                >
+                  <AddCircleTwoToneIcon
+                    style={{
+                      cursor: "pointer",
+                      color: "black",
+                    }}
+                    onClick={handleAddCourseOutcome}
+                  />
+                </div>
+
                 {courseOutcomes.map((outcome, index) => (
                   <div key={index} className="course-outcome">
                     <InputBox
@@ -633,21 +638,6 @@ const SyllabusEntry = () => {
                   </div>
                 ))}
 
-                  <div
-                  style={{
-                    display: "flex",
-                    margin: "20px 10px 10px 30px",
-                  }}
-                >
-                  <AddCircleTwoToneIcon
-                    style={{
-                      cursor: "pointer",
-                      color: "black",
-                    }}
-                    onClick={handleAddCourseOutcome}
-                  />
-                </div>
-
                 <button type="submit" className="button-submit">
                   Submit
                 </button>
@@ -671,7 +661,20 @@ const SyllabusEntry = () => {
           {showCoPocontent && (
             <form onSubmit={handleCoPoSubmit}>
               <ToastContainer />
-              
+              <div
+                style={{
+                  display: "flex",
+                  margin: "10px 10px 10px 30px",
+                }}
+              >
+                <AddCircleTwoToneIcon
+                  style={{
+                    cursor: "pointer",
+                    color: "black",
+                  }}
+                  onClick={handleAddDropdown}
+                />
+              </div>
 
               {dropdownSets.map((set, index) => (
                 <div key={index}>
@@ -713,28 +716,10 @@ const SyllabusEntry = () => {
                         style={{ cursor: "pointer", color: "black" }}
                         onClick={() => handleRemoveDropdown(index)}
                       />
-                      {/* <div>
-                                         <button type="submit" className="button-submit">Submit</button>
-                                         </div> */}
                     </div>
                   </div>
                 </div>
               ))}
-
-            <div
-                style={{
-                  display: "flex",
-                  margin: "10px 10px 10px 30px",
-                }}
-              >
-                <AddCircleTwoToneIcon
-                  style={{
-                    cursor: "pointer",
-                    color: "black",
-                  }}
-                  onClick={handleAddDropdown}
-                />
-              </div>
 
               <button type="submit" className="button-submit">
                 Submit

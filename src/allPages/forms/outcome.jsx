@@ -138,10 +138,11 @@ function OutcomeForm() {
         e.preventDefault();
 
         try {
-            const dataToSend = {
+            const dataToSend = outcomes.map(outcome => ({
                 course: courseId,
-                outcomes: outcomes,
-            };
+                co_id: outcome.co,
+                description: outcome.description,
+            }));
 
             console.log("Data to be sent:", dataToSend);
 
