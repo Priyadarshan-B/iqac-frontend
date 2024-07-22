@@ -30,7 +30,7 @@ const SyllabusEntry = () => {
   const [semester, setSemester] = useState([]);
   const [semesterLabel, setSemesterLabel] = useState("");
   const [showDropdown, setShowDropdown] = useState("");
-  const [courseOutcomes, setCourseOutcomes] = useState([]);
+  const [courseOutcomes, setCourseOutcomes] = useState([{objective:"",description:""}]);
   const [poMappings, setPoMappings] = useState([]);
   const [courseContent, setCourseContent] = useState([]);
   const [syllabus, setSyllabus] = useState([]);
@@ -503,10 +503,18 @@ const SyllabusEntry = () => {
 
       // Save the PDF
       doc.save("syllabus.pdf");
-      toast.success("PDF downloaded successfully!");
+      toast.success("PDF downloaded successfully!",{
+        position: "bottom-right",
+
+      });
+      
     } catch (error) {
+      toast.error("An error occurred while downloading the PDF.",{
+        position: "bottom-right",
+
+      });
       console.error("Error fetching and downloading PDF:", error);
-      toast.error("An error occurred while downloading the PDF.");
+     
     }
   };
 
@@ -581,21 +589,8 @@ const SyllabusEntry = () => {
             <div>
               <ToastContainer />
               <form onSubmit={handleSubmitCourseOutcomes}>
-                <div
-                  style={{
-                    display: "flex",
-                    margin: "10px 10px 10px 30px",
-                  }}
-                >
-                  <AddCircleTwoToneIcon
-                    style={{
-                      cursor: "pointer",
-                      color: "black",
-                    }}
-                    onClick={handleAddCourseOutcome}
-                  />
-                </div>
-
+                 
+                 {console.log(courseOutcomes)}
                 {courseOutcomes.map((outcome, index) => (
                   <div key={index} className="course-outcome">
                     <InputBox
@@ -638,6 +633,21 @@ const SyllabusEntry = () => {
                   </div>
                 ))}
 
+                  <div
+                  style={{
+                    display: "flex",
+                    margin: "10px 10px 10px 30px",
+                  }}
+                >
+                  <AddCircleTwoToneIcon
+                    style={{
+                      cursor: "pointer",
+                      color: "black",
+                    }}
+                    onClick={handleAddCourseOutcome}
+                  />
+                </div>
+
                 <button type="submit" className="button-submit">
                   Submit
                 </button>
@@ -661,20 +671,7 @@ const SyllabusEntry = () => {
           {showCoPocontent && (
             <form onSubmit={handleCoPoSubmit}>
               <ToastContainer />
-              <div
-                style={{
-                  display: "flex",
-                  margin: "10px 10px 10px 30px",
-                }}
-              >
-                <AddCircleTwoToneIcon
-                  style={{
-                    cursor: "pointer",
-                    color: "black",
-                  }}
-                  onClick={handleAddDropdown}
-                />
-              </div>
+              
 
               {dropdownSets.map((set, index) => (
                 <div key={index}>
@@ -723,6 +720,21 @@ const SyllabusEntry = () => {
                   </div>
                 </div>
               ))}
+
+            <div
+                style={{
+                  display: "flex",
+                  margin: "10px 10px 10px 30px",
+                }}
+              >
+                <AddCircleTwoToneIcon
+                  style={{
+                    cursor: "pointer",
+                    color: "black",
+                  }}
+                  onClick={handleAddDropdown}
+                />
+              </div>
 
               <button type="submit" className="button-submit">
                 Submit

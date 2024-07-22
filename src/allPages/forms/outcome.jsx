@@ -5,6 +5,8 @@ import apiHost from "../../utils/api";
 import './outcome.css';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import AddCircleTwoToneIcon from "@mui/icons-material/AddCircleTwoTone";
+import RemoveCircleTwoToneIcon from "@mui/icons-material/RemoveCircleTwoTone";
 
 function OutcomeForm() {
     const [regulation, setRegulation] = useState([]);
@@ -17,8 +19,7 @@ function OutcomeForm() {
     const [semesterId, setSemesterId] = useState(null);
     const [course, setCourse] = useState([]);
     const [courseId, setCourseId] = useState(null);
-    const [co, setCo] = useState("");
-    const [description, setDescription] = useState("");
+    const [outcomes, setOutcomes] = useState([{ co: "", description: "" }]);
 
     const fetchRegulations = () => {
         fetch(`${apiHost}/api/rf/dropdown/regulation`)
@@ -118,14 +119,28 @@ function OutcomeForm() {
         }
     };
 
+    const handleOutcomeChange = (index, field, value) => {
+        const newOutcomes = [...outcomes];
+        newOutcomes[index][field] = value;
+        setOutcomes(newOutcomes);
+    };
+
+    const handleAddOutcome = () => {
+        setOutcomes([...outcomes, { co: "", description: "" }]);
+    };
+
+    const handleRemoveOutcome = (index) => {
+        const newOutcomes = outcomes.filter((_, i) => i !== index);
+        setOutcomes(newOutcomes);
+    };
+
     const handleSubmit = async (e) => {
         e.preventDefault();
 
         try {
             const dataToSend = {
                 course: courseId,
-                co_id: co,
-                description: description,
+                outcomes: outcomes,
             };
 
             console.log("Data to be sent:", dataToSend);
@@ -150,8 +165,7 @@ function OutcomeForm() {
                 setSelectedBranchId(null);
                 setSemesterId(null);
                 setCourseId(null);
-                setCo("");
-                setDescription("");
+                setOutcomes([{ co: "", description: "" }]);
 
                 // Re-fetch the dropdown options
                 fetchRegulations();
@@ -211,20 +225,38 @@ function OutcomeForm() {
                         onChange={(selectedCourse) => setCourseId(selectedCourse.value)}
                         placeholder="Course"
                     />
-                    <InputBox
-                        className="input-box"
-                        value={co}
-                        onChange={(e) => setCo(e.target.value)}
-                        placeholder="CO Id"
-                        type="text"
-                    />
-                    <InputBox
-                        className="input-box"
-                        value={description}
-                        onChange={(e) => setDescription(e.target.value)}
-                        placeholder="Description"
-                        type="text"
-                    />
+                    {outcomes.map((outcome, index) => (
+                        <div key={index} className="flex-box">
+                            <InputBox
+                                className="input-box"
+                                value={outcome.co}
+                                onChange={(e) => handleOutcomeChange(index, 'co', e.target.value)}
+                                placeholder="CO Id"
+                                type="text"
+                            />
+                            <InputBox
+                                className="input-box"
+                                value={outcome.description}
+                                onChange={(e) => handleOutcomeChange(index, 'description', e.target.value)}
+                                placeholder="Description"
+                                type="text"
+                            />
+                            {outcomes.length > 1 && (
+                                <div className="icon-container">
+                                    <RemoveCircleTwoToneIcon
+                                        style={{ cursor: "pointer" }}
+                                        onClick={() => handleRemoveOutcome(index)}
+                                    />
+                                </div>
+                            )}
+                        </div>
+                    ))}
+                    <div className="icon-container-bottom">
+                        <AddCircleTwoToneIcon
+                            style={{ cursor: "pointer" }}
+                            onClick={handleAddOutcome}
+                        />
+                    </div>
                     <button type="submit" className="button-sub">Submit</button>
                 </div>
             </form>
