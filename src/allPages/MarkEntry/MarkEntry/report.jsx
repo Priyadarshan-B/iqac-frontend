@@ -114,7 +114,7 @@ function Report() {
   };
 
   const getMarkList = (course_id) => {
-    console.log("getting marklist ....")
+    console.log("getting marklist ...")
     axios.get(`${apiHost}/getMarkList?semester=${selectedSemester.value}
 &type=${selectedTestType.value}&course=${course_id}`).then((response) => {
       navigate('/markentry/report/markReport/list', { state: response.data })

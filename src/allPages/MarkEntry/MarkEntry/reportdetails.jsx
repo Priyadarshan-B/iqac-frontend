@@ -2,12 +2,16 @@ import React, { useState, useEffect } from 'react';
 import { useLocation, useParams } from 'react-router-dom';
 import * as XLSX from 'xlsx';
 import './Subject.css';
-
+import Dropdown from '../../../components/dropdown/dropdown';
+import apiHost from '../../../utils/api';
 function SubjectDetailsPage() {
   const { branch } = useParams();
   const [subjectDetails, setSubjectDetails] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
   const { state } = useLocation()
+  const [departmentOptions, setDepartmentOptions] = useState([]);
+  const [department, setDepartment] = useState(undefined)
+  console.log(useLocation())
   const studentList = state
   useEffect(() => {
     fetchSubjectDetails(branch)
@@ -18,7 +22,6 @@ function SubjectDetailsPage() {
         console.error('Error fetching subject details:', error);
       });
   }, [branch]);
-
   const fetchSubjectDetails = async (branch) => {
     return {
       name: "Subject",
@@ -42,21 +45,16 @@ function SubjectDetailsPage() {
   const handleSearch = (e) => {
     setSearchTerm(e.target.value);
   };
-  /*
-    const filteredStudents = studentList.filter(student => {
-      const studentDetails = Object.values(student);
-      return studentDetails.some(detail =>
-        detail.toString().toLowerCase().includes(searchTerm.toLowerCase())
-      );
-    });
-    */
+
+  console.log(studentList)
+
 
   const downloadTableAsExcel = () => {
     const tableData = [
       studentList.length > 0 ? Object.keys(studentList[0]) : null
     ];
 
-    studentList.forEach((student, index) => {
+    filteredStudents.forEach((student, index) => {
       tableData.push(
         Object.values(student)
       );
@@ -70,9 +68,10 @@ function SubjectDetailsPage() {
 
   return (
     <div className="subject-details-container">
+
       {subjectDetails && (
         <div className="table-container">
-          <div className='row'>
+          <div className='row'  >
             <input
               type="text"
               placeholder="Search ..."
@@ -80,6 +79,7 @@ function SubjectDetailsPage() {
               onChange={handleSearch}
               style={{ padding: '10px', borderRadius: '5px', border: '1px solid #ccc' }}
             />
+
             <button
               onClick={downloadTableAsExcel}
               style={{
