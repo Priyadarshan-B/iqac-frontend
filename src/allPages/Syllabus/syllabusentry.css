@@ -2,7 +2,7 @@
 
 .select-info {
     background-color: var(--background-1);
-    padding: 30px 10px 30px 10px;
+    padding: 20px 10px 20px 10px;
     display: flex;
     gap: 20px;
     align-items: center;
@@ -15,12 +15,12 @@
 
 .each-info-select {
     display: flex;
-    align-items: center;
-    justify-content: center;
+    flex-direction: column;
     gap: 10px;
    width: 100%;
 
 }
+
 
 .division-background {
     background-color: var(--background-1);
@@ -29,6 +29,17 @@
     justify-content: center;
     border-radius: 5px;
     box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.input-box{
+    flex: 1;
+    width: 100%;
+}
+
+.input-flex{
+    display: flex;
+    width: 100%;
+    gap: 10px;
 }
 
 .syllabus-entry {
@@ -79,7 +90,7 @@
     /* margin-top: 10px; */
     border: black;
     border-radius: 4px;
-    margin: 10px 10px 10px 500px;
+    margin: 10px 10px 10px 50px;
     background-color: #007bff;
     color: #fff;
     
@@ -130,13 +141,11 @@
 .course-outcome input[type="text"]
 
  {
-    width: 97%;
-    padding: 10px;
+    width: 100%;
     border: 1px solid #ccc;
     border-radius: 5px;
     box-sizing: border-box;
     font-size: 16px;
-    margin: 5px 10px 15px 20px;
    
 }
 
@@ -158,8 +167,12 @@
     display: flex;
     flex-direction: column;
     gap: 15px;
-    width: 97%;
-    margin: 5px 10px 15px 20px;
+    width: 100%;
     
 
+}
+
+form{
+    padding: 20px;
+    box-sizing: border-box;
 }

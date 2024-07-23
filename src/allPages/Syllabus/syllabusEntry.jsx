@@ -562,6 +562,7 @@ const SyllabusEntry = () => {
             />
           </div>
         </div>
+      
 
         <div
           className="division-background"
@@ -587,32 +588,38 @@ const SyllabusEntry = () => {
 
                 {courseOutcomes.map((outcome, index) => (
                   <div key={index} className="course-outcome">
-                    <InputBox
-                      className="input-box"
-                      type="text"
-                      value={outcome.objective}
-                      onChange={(e) =>
-                        handleCourseOutcomeChange(
-                          index,
-                          "objective",
-                          e.target.value
-                        )
-                      }
-                      placeholder="Enter Objective"
-                    />
-                    <InputBox
-                      className="input-box"
-                      type="text"
-                      value={outcome.description}
-                      onChange={(e) =>
-                        handleCourseOutcomeChange(
-                          index,
-                          "description",
-                          e.target.value
-                        )
-                      }
-                      placeholder="Enter Description"
-                    />
+                    <div className="input-flex">
+                      <div style={{width:"50%"}}>
+                        <InputBox
+                          className="input-box"
+                          type="text"
+                          value={outcome.objective}
+                          onChange={(e) =>
+                            handleCourseOutcomeChange(
+                              index,
+                              "objective",
+                              e.target.value
+                            )
+                          }
+                          placeholder="Enter Objective"
+                        />
+                      </div>
+                      <div style={{width:"50%"}}>
+                      <InputBox
+                        className="input-box"
+                        type="text"
+                        value={outcome.description}
+                        onChange={(e) =>
+                          handleCourseOutcomeChange(
+                            index,
+                            "description",
+                            e.target.value
+                          )
+                        }
+                        placeholder="Enter Description"
+                      />
+                      </div>
+                    </div> 
                     <div
                       style={{
                         display: "flex",
@@ -669,22 +676,24 @@ const SyllabusEntry = () => {
               {dropdownSets.map((set, index) => (
                 <div key={index}>
                   <div className="flex-boxco">
-                    <Dropdown
-                      label="CO"
-                      options={co}
-                      value={set.co}
-                      onChange={(value) =>
-                        handleDropdownChange(index, "co", value)
-                      }
-                    />
-                    <Dropdown
-                      label="PO"
-                      options={po}
-                      value={set.po}
-                      onChange={(value) =>
-                        handleDropdownChange(index, "po", value)
-                      }
-                    />
+                    <div className="input-flex">
+                      <Dropdown
+                        label="CO"
+                        options={co}
+                        value={set.co}
+                        onChange={(value) =>
+                          handleDropdownChange(index, "co", value)
+                        }
+                      />
+                      <Dropdown
+                        label="PO"
+                        options={po}
+                        value={set.po}
+                        onChange={(value) =>
+                          handleDropdownChange(index, "po", value)
+                        }
+                      />
+                    </div>
                     <InputBox
                       className="copo"
                       placeholder="Mapping Level"
@@ -696,34 +705,26 @@ const SyllabusEntry = () => {
                       min="0"
                     />
 
-                    <div
-                      style={{
-                        display: "flex",
-                        margin: "10px 10px 10px 10px",
-                      }}
-                    >
-                      <RemoveCircleTwoToneIcon
-                        style={{ cursor: "pointer", color: "black" }}
-                        onClick={() => handleRemoveDropdown(index)}
-                      />
-                    </div>
+                      <button className="button-drop" 
+                                 style={{ cursor: 'pointer', 
+                                   }} 
+                              onClick={() => handleRemoveDropdown(index)}
+                                     >
+                                       Drop
+                                </button>
+ 
+                  
                   </div>
                 </div>
               ))}
-              <div
-                style={{
-                  display: "flex",
-                  margin: "10px 10px 10px 30px",
-                }}
-              >
-                <AddCircleTwoToneIcon
-                  style={{
-                    cursor: "pointer",
-                    color: "black",
-                  }}
-                  onClick={handleAddDropdown}
-                />
-              </div>
+              <button  className="button-add"
+                          style={{ cursor: 'pointer', 
+                          display:"flex", }} 
+                           onClick={handleAddDropdown}
+                                     >
+                                        Add
+                                 </button>
+                      
 
               <button type="submit" className="button-submit">
                 Submit
@@ -750,39 +751,51 @@ const SyllabusEntry = () => {
               <ToastContainer />
 
               {units.map((unit, index) => (
-                <div key={index}>
-                  <InputBox
-                    placeholder="Unit"
-                    type="text"
-                    value={unit.unit}
-                    onChange={(e) =>
-                      handleUnitChange(index, "unit", e.target.value)
-                    }
-                  />
-                  <InputBox
-                    placeholder="Unit Name"
-                    type="text"
-                    value={unit.unitname}
-                    onChange={(e) =>
-                      handleUnitChange(index, "unitname", e.target.value)
-                    }
-                  />
-                  <InputBox
-                    placeholder="Description"
-                    value={unit.description}
-                    type="text"
-                    onChange={(e) =>
-                      handleUnitChange(index, "description", e.target.value)
-                    }
-                  />
-                  <InputBox
-                    placeholder="Hours"
-                    type="number"
-                    value={unit.hours}
-                    onChange={(e) =>
-                      handleUnitChange(index, "hours", e.target.value)
-                    }
-                  />
+                <div key={index} style={{gap:"10px", display:"flex", flexDirection:"column"}}>
+                  <div className="input-flex">
+                    <div style={{width:"50%"}}>
+                      <InputBox
+                        placeholder="Unit"
+                        type="text"
+                        value={unit.unit}
+                        onChange={(e) =>
+                          handleUnitChange(index, "unit", e.target.value)
+                        }
+                      />
+                    </div>
+                    <div style={{width:"50%"}}>
+                      <InputBox
+                        placeholder="Unit Name"
+                        type="text"
+                        value={unit.unitname}
+                        onChange={(e) =>
+                          handleUnitChange(index, "unitname", e.target.value)
+                        }
+                      />
+                    </div>
+                  </div>
+                  <div className="input-flex">
+                    <div style={{width:"50%"}}>
+                      <InputBox
+                        placeholder="Description"
+                        value={unit.description}
+                        type="text"
+                        onChange={(e) =>
+                          handleUnitChange(index, "description", e.target.value)
+                        }
+                      />
+                    </div>
+                    <div style={{width:"50%"}}>
+                      <InputBox
+                        placeholder="Hours"
+                        type="number"
+                        value={unit.hours}
+                        onChange={(e) =>
+                          handleUnitChange(index, "hours", e.target.value)
+                        }
+                      />
+                    </div>
+                  </div>
                   <button type="button" onClick={() => handleDeleteUnit(index)}>
                     <RemoveCircleTwoToneIcon />
                   </button>
@@ -797,6 +810,7 @@ const SyllabusEntry = () => {
             </form>
           )}
         </div>
+        
       </div>
       <div>
         <button onClick={handleFetchAndDownloadPDF}>PDF</button>
