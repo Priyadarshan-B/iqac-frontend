@@ -8,6 +8,11 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import AddCircleTwoToneIcon from "@mui/icons-material/AddCircleTwoTone";
 import RemoveCircleTwoToneIcon from "@mui/icons-material/RemoveCircleTwoTone";
+import CloseFullscreenIcon from "@mui/icons-material/CloseFullscreen";
+import ArrowDropUpIcon from "@mui/icons-material/ArrowDropUp";
+import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
+import { ForkLeft } from "@mui/icons-material";
+import jsPDF from "jspdf";
 
 const SyllabusEntry = () => {
   const [degree, setDegree] = useState("");
@@ -25,7 +30,9 @@ const SyllabusEntry = () => {
   const [semester, setSemester] = useState([]);
   const [semesterLabel, setSemesterLabel] = useState("");
   const [showDropdown, setShowDropdown] = useState("");
-  const [courseOutcomes, setCourseOutcomes] = useState([]);
+  const [courseOutcomes, setCourseOutcomes] = useState([{
+    objectives:"",description:""
+  }]);
   const [poMappings, setPoMappings] = useState([]);
   const [courseContent, setCourseContent] = useState([]);
   const [syllabus, setSyllabus] = useState([]);
@@ -43,6 +50,19 @@ const SyllabusEntry = () => {
   const [dropdownSets, setDropdownSets] = useState([
     { co: null, po: null, level: "" },
   ]);
+  const [showcontent, setShowContent] = useState(false);
+  const [showCoPocontent, setShowCoPoContent] = useState(false);
+  const [showunitcontent, setShowUnitContent] = useState(false);
+
+  const handleShowContent = () => {
+    setShowContent((prevShowContent) => !prevShowContent);
+  };
+  const handleShowCoPoContent = () => {
+    setShowCoPoContent((prevShowCoPoContent) => !prevShowCoPoContent);
+  };
+  const handleShowUnitContent = () => {
+    setShowUnitContent((prevShowUnitContent) => !prevShowUnitContent);
+  };
 
   useEffect(() => {
     fetch(`${apiHost}/api/rf/dropdown/regulation`)
@@ -141,14 +161,12 @@ const SyllabusEntry = () => {
   const handleCourseChange = (selectedCourse) => {
     setCourseId(selectedCourse.value);
     console.log(selectedCourse.value);
-    // console.log(courseId)
     setCourseLabel(selectedCourse.label);
     console.log(selectedCourse.label);
     fetch(`${apiHost}/api/rf/syllabus?course=${selectedCourse.value}`)
       .then((response) => response.json())
       .then((data) => setSyllabus(data))
       .catch((error) => console.error("Error fetching syllabus data:", error));
-    // handleCourseCoPoChange();
     fetch(`${apiHost}/api/rf/course-outcome?course=${selectedCourse.value}`)
       .then((response) => response.json())
       .then((data) => {
@@ -163,7 +181,6 @@ const SyllabusEntry = () => {
       );
   };
 
-  
   const handleAddCourseOutcome = () => {
     setCourseOutcomes([...courseOutcomes, { objective: "", description: "" }]);
   };
@@ -207,31 +224,36 @@ const SyllabusEntry = () => {
       const dataToSend = courseOutcomes.map((outcome) => ({
         course: courseId,
         objective: outcome.objective,
-        description: outcome.description
+        description: outcome.description,
       }));
       console.log("Data to be sent:", dataToSend);
       const response = await fetch(`${apiHost}/api/rf/course-objective`, {
         method: "POST",
         headers: {
-          "Content-Type": "application/json"
+          "Content-Type": "application/json",
         },
-        body: JSON.stringify(dataToSend)
+        body: JSON.stringify(dataToSend),
       });
       if (response.ok) {
         toast.success("Objectives submitted successfully", {
-          position: "bottom-right"
+          position: "bottom-right",
         });
         console.log("Data submitted successfully");
         setCourseOutcomes([{ objective: "", description: "" }]);
+        setObjective("");
+        setDescription("");
+        setDropdownSets([]);
+        setDropdownSets("");
+        handleCourseChange({ value: courseId, label: courseLabel });
       } else {
         toast.error("Failed to submit objectives", {
-          position: "bottom-right"
+          position: "bottom-right",
         });
         console.error("Failed to submit data");
       }
     } catch (error) {
       toast.error("Error submitting objectives", {
-        position: "bottom-right"
+        position: "bottom-right",
       });
       console.error("Error submitting data:", error);
     }
@@ -245,7 +267,7 @@ const SyllabusEntry = () => {
     const updatedDropdownSets = dropdownSets.filter((_, i) => i !== index);
     setDropdownSets(updatedDropdownSets);
   };
-  
+
   const handleAddDropdown = () => {
     setDropdownSets([...dropdownSets, { co: null, po: null, level: "" }]);
   };
@@ -281,17 +303,20 @@ const SyllabusEntry = () => {
     })
       .then((response) => {
         if (!response.ok) {
+          toast.error("Failed to submit objective", {
+            position: "bottom-right",
+          });
           throw new Error("Network response was not ok");
         }
-        toast.success("Data submitted successfully", {
-          position: "bottom-right",
-        });
+
         return response.json();
       })
       .then((data) => {
         toast.success("Data submitted successfully", {
           position: "bottom-right",
         });
+        console.log(dropdownSets);
+        setDropdownSets([{ co: null, po: null, level: "" }]);
       })
       .catch((error) => {
         toast.error("Error submitting data", {
@@ -359,6 +384,134 @@ const SyllabusEntry = () => {
     }
   };
 
+  const handleFetchAndDownloadPDF = async () => {
+    console.log(courseId);
+    try {
+      const responseObjectives = await fetch(
+        `${apiHost}/api/rf/course-objective?course=${courseId}`
+      );
+      const courseObjectives = await responseObjectives.json();
+      console.log(courseObjectives)
+
+      const responseOutcomes = await fetch(
+        `${apiHost}/api/rf/co-po-mapping?course=${courseId}`
+      );
+      const programOutcomes = await responseOutcomes.json();
+      console.log(programOutcomes)
+
+      const responseUnit = await fetch(
+        `${apiHost}/api/rf/course-unit?course=${courseId}`
+      );
+      const courseUnit = await responseUnit.json();
+
+      const doc = new jsPDF();
+      doc.setFontSize(12);
+      doc.setFont("times", "normal");
+
+      doc.setFontSize(14);
+      doc.setFont("times", "bold");
+      doc.text("Course Objectives", 10, 10);
+
+      doc.setFontSize(12);
+      doc.setFont("times", "normal");
+
+      let yPos = 20;
+
+      const checkAddPage = () => {
+        if (yPos > 270) {
+          doc.addPage();
+          yPos = 10;
+        }
+      };
+
+      courseObjectives.forEach((item) => {
+        const lines = doc.splitTextToSize(`• ${item.description}`, 180);
+        lines.forEach((line) => {
+          doc.text(line, 10, yPos);
+          yPos += 10;
+          checkAddPage();
+        });
+      });
+
+      yPos += 10;
+
+      doc.setFontSize(14);
+      doc.setFont("times", "bold");
+      doc.text("Program Outcomes", 10, yPos);
+      yPos += 10;
+
+      doc.setFontSize(12);
+      doc.setFont("times", "normal");
+
+      programOutcomes.forEach((item) => {
+        const lines = doc.splitTextToSize(`• ${item.program_outcome}`, 180);
+        lines.forEach((line) => {
+          doc.text(line, 10, yPos);
+          yPos += 10;
+          checkAddPage();
+        });
+      });
+
+      yPos += 10;
+
+      doc.setFontSize(14);
+      doc.setFont("times", "bold");
+      doc.text("Course Outcomes", 10, yPos);
+      yPos += 10;
+
+      doc.setFontSize(12);
+      doc.setFont("times", "normal");
+
+      programOutcomes.forEach((item) => {
+        const lines = doc.splitTextToSize(`• ${item.course_outcome}`, 180);
+        lines.forEach((line) => {
+          doc.text(line, 10, yPos);
+          yPos += 10;
+          checkAddPage();
+        });
+      });
+
+      yPos += 10;
+      doc.setFontSize(14);
+      doc.setFont("times", "bold");
+      doc.text("Course Unit", 10, yPos);
+      yPos += 10;
+
+      doc.setFontSize(12);
+      doc.setFont("times", "normal");
+
+      courseUnit.forEach((item) => {
+        const unitText = `UNIT ${item.unit}`;
+        const unitNameText = item.unit_name;
+        const descriptionText = item.description;
+        const hoursText = `${item.hours} Hours`;
+
+        doc.setFont("times", "bold");
+        doc.text(unitText, 10, yPos);
+        yPos += 10;
+
+        doc.text(unitNameText, 10, yPos);
+        yPos += 10;
+
+        doc.setFont("times", "normal");
+        doc.text(descriptionText, 10, yPos);
+        yPos += 10;
+
+        doc.text(hoursText, 10, yPos);
+        yPos += 10;
+
+        checkAddPage();
+      });
+
+      // Save the PDF
+      doc.save("syllabus.pdf");
+      toast.success("PDF downloaded successfully!");
+    } catch (error) {
+      console.error("Error fetching and downloading PDF:", error);
+      toast.error("An error occurred while downloading the PDF.");
+    }
+  };
+
   return (
     <div className="dashboard-container">
       <div className="syllabus-entry">
@@ -409,144 +562,244 @@ const SyllabusEntry = () => {
             />
           </div>
         </div>
-        <div className="division-background">
-        <form onSubmit={handleSubmitCourseOutcomes} className="course-outcomes-form">
-          <h2>Course Objectives</h2>
-          {courseOutcomes.map((outcome, index) => (
-            <div key={index} className="course-outcome">
-              <InputBox
-                className="input-box"
-                type="text"
-                value={outcome.objective}
-                onChange={(e) =>
-                  handleCourseOutcomeChange(index, "objective", e.target.value)
-                }
-                placeholder="Enter Objective"
-              />
-              <InputBox
-                className="input-box"
-                type="text"
-                value={outcome.description}
-                onChange={(e) =>
-                  handleCourseOutcomeChange(index, "description", e.target.value)
-                }
-                placeholder="Enter Description"
-              />
-              <Button
-                onClick={() => handleDeleteCourseOutcome(index)}
-                label="Delete"
-             />
-                {/* <RemoveCircleTwoToneIcon /> */}
-             
-            </div>
-          ))}
-          <Button
-            label="Add"
-            onClick={handleAddCourseOutcome}
-          />
-          <Button 
-          label="Submit"
-          type="submit"/>
-           
-        </form>
-        </div>
-  <div className="division-background">
-        <h2>Course Outcome & Program Outcome</h2>
-        <form onSubmit={handleCoPoSubmit}>
-        {dropdownSets.map((set, index) => (
-            <div key={index}>
-                <Dropdown
-                    label="CO"
-                    options={co}
-                    value={set.co}
-                    onChange={(value) => handleDropdownChange(index, "co", value)}
-                />
-                <Dropdown
-                    label="PO"
-                    options={po}
-                    value={set.po}
-                    onChange={(value) => handleDropdownChange(index, "po", value)}
-                />
-                <InputBox
-                    label="Level"
-                    value={set.level}
-                    onChange={(e) => handleDropdownChange(index, "level", e.target.value)}
-                />
-                <Button
-                    // type="button"
-                    // buttonStyle="btn--danger--solid"
-                    onClick={() => handleRemoveDropdown(index)}
-                
-                    // <RemoveCircleTwoToneIcon />
-                    label=" Delete"/>
-        
-            </div>
-        ))}
-        <button
-            type="button"
-            buttonStyle="btn--success--solid"
-            onClick={handleAddDropdown}
+
+        <div
+          className="division-background"
+          // onClick={handleShowContent}
         >
-             Add
-        </button>
-        <button type="submit" buttonStyle="btn--primary--solid">Submit</button>
-    </form>
-    </div>
+          <div
+            className="dropdown-section"
+            onClick={() => handleDropdownToggle("courseContent")}
+          >
+            <div>Course Objectives</div>
+            {showcontent ? (
+              <ArrowDropUpIcon onClick={handleShowContent} />
+            ) : (
+              <ArrowDropDownIcon onClick={handleShowContent} />
+            )}
+          </div>
+
+          {showcontent && (
+            <div>
+              <ToastContainer />
+              <form onSubmit={handleSubmitCourseOutcomes}>
+                
+
+                {courseOutcomes.map((outcome, index) => (
+                  <div key={index} className="course-outcome">
+                    <InputBox
+                      className="input-box"
+                      type="text"
+                      value={outcome.objective}
+                      onChange={(e) =>
+                        handleCourseOutcomeChange(
+                          index,
+                          "objective",
+                          e.target.value
+                        )
+                      }
+                      placeholder="Enter Objective"
+                    />
+                    <InputBox
+                      className="input-box"
+                      type="text"
+                      value={outcome.description}
+                      onChange={(e) =>
+                        handleCourseOutcomeChange(
+                          index,
+                          "description",
+                          e.target.value
+                        )
+                      }
+                      placeholder="Enter Description"
+                    />
+                    <div
+                      style={{
+                        display: "flex",
+                        margin: "10px 10px 10px 30px",
+                      }}
+                    >
+                      <RemoveCircleTwoToneIcon
+                        style={{ cursor: "pointer", color: "black" }}
+                        onClick={() => handleDeleteCourseOutcome(index)}
+                      />
+                    </div>
+                  </div>
+                ))}
+                <div
+                  style={{
+                    display: "flex",
+                    margin: "20px 10px 10px 30px",
+                  }}
+                >
+                  <AddCircleTwoToneIcon
+                    style={{
+                      cursor: "pointer",
+                      color: "black",
+                    }}
+                    onClick={handleAddCourseOutcome}
+                  />
+                </div>
+
+                <button type="submit" className="button-submit">
+                  Submit
+                </button>
+              </form>
+            </div>
+          )}
+        </div>
+        <div className="division-background">
+          <div
+            className="dropdown-section"
+            onClick={() => handleDropdownToggle("courseContent")}
+          >
+            <div>Course Outcome & Program Outcome</div>
+            {showCoPocontent ? (
+              <ArrowDropUpIcon onClick={handleShowCoPoContent} />
+            ) : (
+              <ArrowDropDownIcon onClick={handleShowCoPoContent} />
+            )}
+          </div>
+
+          {showCoPocontent && (
+            <form onSubmit={handleCoPoSubmit}>
+              <ToastContainer />
+              
+
+              {dropdownSets.map((set, index) => (
+                <div key={index}>
+                  <div className="flex-boxco">
+                    <Dropdown
+                      label="CO"
+                      options={co}
+                      value={set.co}
+                      onChange={(value) =>
+                        handleDropdownChange(index, "co", value)
+                      }
+                    />
+                    <Dropdown
+                      label="PO"
+                      options={po}
+                      value={set.po}
+                      onChange={(value) =>
+                        handleDropdownChange(index, "po", value)
+                      }
+                    />
+                    <InputBox
+                      className="copo"
+                      placeholder="Mapping Level"
+                      value={set.level}
+                      onChange={(e) =>
+                        handleDropdownChange(index, "level", e.target.value)
+                      }
+                      type="number"
+                      min="0"
+                    />
+
+                    <div
+                      style={{
+                        display: "flex",
+                        margin: "10px 10px 10px 10px",
+                      }}
+                    >
+                      <RemoveCircleTwoToneIcon
+                        style={{ cursor: "pointer", color: "black" }}
+                        onClick={() => handleRemoveDropdown(index)}
+                      />
+                    </div>
+                  </div>
+                </div>
+              ))}
+              <div
+                style={{
+                  display: "flex",
+                  margin: "10px 10px 10px 30px",
+                }}
+              >
+                <AddCircleTwoToneIcon
+                  style={{
+                    cursor: "pointer",
+                    color: "black",
+                  }}
+                  onClick={handleAddDropdown}
+                />
+              </div>
+
+              <button type="submit" className="button-submit">
+                Submit
+              </button>
+            </form>
+          )}
+        </div>
 
         <div className="division-background">
           <div
             className="dropdown-section"
             onClick={() => handleDropdownToggle("courseContent")}
           >
-            Course Unit Entry
+            <div>Course Unit Entry</div>
+            {showunitcontent ? (
+              <ArrowDropUpIcon onClick={handleShowUnitContent} />
+            ) : (
+              <ArrowDropDownIcon onClick={handleShowUnitContent} />
+            )}
           </div>
-          <h2>Units</h2>
-          <form onSubmit={handleSubmitUnit}>
-            {units.map((unit, index) => (
-              <div key={index}>
-                <InputBox
-                  placeholder="Unit"
-                  type="text"
-                  value={unit.unit}
-                  onChange={(e) =>
-                    handleUnitChange(index, "unit", e.target.value)
-                  }
-                />
-                <InputBox
-                  placeholder="Unit Name"
-                  type="text"
-                  value={unit.unitname}
-                  onChange={(e) =>
-                    handleUnitChange(index, "unitname", e.target.value)
-                  }
-                />
-                <InputBox
-                  placeholder="Description"
-                  value={unit.description}
-                  type="text"
-                  onChange={(e) =>
-                    handleUnitChange(index, "description", e.target.value)
-                  }
-                />
-                <InputBox
-                  placeholder="Hours"
-                  type="number"
-                  value={unit.hours}
-                  onChange={(e) =>
-                    handleUnitChange(index, "hours", e.target.value)
-                  }
-                />
-                <button type="button" onClick={() => handleDeleteUnit(index)}>
-                  <RemoveCircleTwoToneIcon />
-                </button>
-              </div>
-            ))}
-            <button type="button" onClick={handleAddUnit}>
-              <AddCircleTwoToneIcon />
-            </button>
-            <button type="submit">Submit Units</button>
-          </form>
+
+          {showunitcontent && (
+            <form onSubmit={handleSubmitUnit}>
+              <ToastContainer />
+
+              {units.map((unit, index) => (
+                <div key={index}>
+                  <InputBox
+                    placeholder="Unit"
+                    type="text"
+                    value={unit.unit}
+                    onChange={(e) =>
+                      handleUnitChange(index, "unit", e.target.value)
+                    }
+                  />
+                  <InputBox
+                    placeholder="Unit Name"
+                    type="text"
+                    value={unit.unitname}
+                    onChange={(e) =>
+                      handleUnitChange(index, "unitname", e.target.value)
+                    }
+                  />
+                  <InputBox
+                    placeholder="Description"
+                    value={unit.description}
+                    type="text"
+                    onChange={(e) =>
+                      handleUnitChange(index, "description", e.target.value)
+                    }
+                  />
+                  <InputBox
+                    placeholder="Hours"
+                    type="number"
+                    value={unit.hours}
+                    onChange={(e) =>
+                      handleUnitChange(index, "hours", e.target.value)
+                    }
+                  />
+                  <button type="button" onClick={() => handleDeleteUnit(index)}>
+                    <RemoveCircleTwoToneIcon />
+                  </button>
+                </div>
+              ))}
+              <button type="button" onClick={handleAddUnit}>
+                <AddCircleTwoToneIcon />
+              </button>
+              <button type="submit" className="button-submit">
+                Submit
+              </button>
+            </form>
+          )}
         </div>
+      </div>
+      <div>
+        <button onClick={handleFetchAndDownloadPDF}>PDF</button>
       </div>
     </div>
   );

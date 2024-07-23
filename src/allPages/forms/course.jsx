@@ -9,8 +9,7 @@ import './course.css';
 import  '../forms/degree.css';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import AddCircleTwoToneIcon from '@mui/icons-material/AddCircleTwoTone';
-import RemoveCircleTwoToneIcon from '@mui/icons-material/RemoveCircleTwoTone';
+
 
 function CourseForm() {
     const [regulation, setRegulation] = useState([]);
@@ -236,7 +235,7 @@ function CourseForm() {
 
     return (
         <div className="course-form-container">
-            <div className="title">Course Form</div>
+            <div className="title">Curriculum Form</div>
             <ToastContainer />
             <form onSubmit={handleSubmit} className="course-form">
                 <div className="flex-box">
@@ -392,10 +391,14 @@ function CourseForm() {
                                         />
                                     </td>
                                     <td>
-                                        <RemoveCircleTwoToneIcon 
-                                            style={{ cursor: 'pointer', color: 'black' }} 
-                                            onClick={() => handleRemoveRow(index)} 
-                                        />
+                                    <button  className="button-drop" 
+                                //  style={{ cursor: 'pointer', color: 'black', backgroundColor: 'transparent', border: 'none' }} 
+                              onClick={() => handleRemoveRow(index)}
+                                     >
+                                       Drop
+                                         </button>
+ 
+                                       
                                     </td>
                                 </tr>
                             ))}
@@ -403,10 +406,13 @@ function CourseForm() {
                         
                     </table>
                 )}
-                 <AddCircleTwoToneIcon style={{
-                        cursor:'pointer',
-                        color:'black'
-                    }} onClick={handleAddRow}/>
+               <button  className="button-add"
+                        //   style={{ cursor: 'pointer', color: 'black', backgroundColor: 'transparent', border: 'none' }} 
+                           onClick={handleAddRow}
+                                     >
+                                        Add
+                                 </button>
+
                 
                 <div className="form-buttons">
                     
