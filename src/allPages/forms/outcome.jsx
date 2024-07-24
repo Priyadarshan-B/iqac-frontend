@@ -137,6 +137,14 @@ function OutcomeForm() {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
+        // Check if all fields are filled
+        if (!regulationId || !degreeId || !selectedBranchId || !semesterId || !courseId || outcomes.some(outcome => !outcome.co || !outcome.description)) {
+            toast.error("Please fill all the fields", {
+                position: 'bottom-right'
+            });
+            return;
+        }
+
         try {
             const dataToSend = outcomes.map(outcome => ({
                 course: courseId,
@@ -243,20 +251,20 @@ function OutcomeForm() {
                                 type="text"
                             />
                             {outcomes.length > 1 && (
-                                <div className="icon-container">
-                                    <RemoveCircleTwoToneIcon
-                                        style={{ cursor: "pointer" }}
-                                        onClick={() => handleRemoveOutcome(index)}
-                                    />
+                                <div className="align">
+                                    <button className="button-drop"
+                                        onClick={() => handleRemoveOutcome(index)}>
+                                        Drop
+                                    </button>
                                 </div>
                             )}
                         </div>
                     ))}
-                    <div className="icon-container-bottom">
-                        <AddCircleTwoToneIcon
-                            style={{ cursor: "pointer" }}
-                            onClick={handleAddOutcome}
-                        />
+                    <div className="align">
+                        <button className="button-Add"
+                            onClick={handleAddOutcome}>
+                            Add
+                        </button>
                     </div>
                     <button type="submit" className="button-sub">Submit</button>
                 </div>

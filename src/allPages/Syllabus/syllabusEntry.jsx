@@ -517,7 +517,7 @@ const SyllabusEntry = () => {
       <div className="syllabus-entry">
         <div className="select-info">
           <div className="each-info-select">
-            <span className="font">Regulation</span>
+            {/* <span className="font">Regulation</span> */}
             <Dropdown
               className="syllabus-entry-select"
               options={regulation}
@@ -526,7 +526,7 @@ const SyllabusEntry = () => {
             />
           </div>
           <div className="each-info-select">
-            <span className="font">Degree</span>
+            {/* <span className="font">Degree</span> */}
             <Dropdown
               className="syllabus-entry-select"
               options={degree}
@@ -535,7 +535,7 @@ const SyllabusEntry = () => {
             />
           </div>
           <div className="each-info-select">
-            <span className="font">Branch</span>
+            {/* <span className="font">Branch</span> */}
             <Dropdown
               className="syllabus-entry-select"
               options={branch}
@@ -544,7 +544,7 @@ const SyllabusEntry = () => {
             />
           </div>
           <div className="each-info-select">
-            <span className="font">Semester</span>
+            {/* <span className="font">Semester</span> */}
             <Dropdown
               className="syllabus-entry-select"
               options={semester}
@@ -553,7 +553,7 @@ const SyllabusEntry = () => {
             />
           </div>
           <div className="each-info-select">
-            <span className="font">Course</span>
+            {/* <span className="font">Course</span> */}
             <Dropdown
               className="syllabus-entry-select"
               options={course}
@@ -620,37 +620,33 @@ const SyllabusEntry = () => {
                       />
                       </div>
                     </div> 
-                    <div
-                      style={{
-                        display: "flex",
-                        margin: "10px 10px 10px 30px",
-                      }}
-                    >
-                      <RemoveCircleTwoToneIcon
-                        style={{ cursor: "pointer", color: "black" }}
-                        onClick={() => handleDeleteCourseOutcome(index)}
-                      />
-                    </div>
+                    <div className="align">
+                    <button className="button-drop" 
+                                 style={{ cursor: 'pointer', 
+                                   }} 
+                              onClick={() => handleDeleteCourseOutcome(index)}
+                                     >
+                                       Drop
+                                </button>
+                                </div>
                   </div>
                 ))}
-                <div
-                  style={{
-                    display: "flex",
-                    margin: "20px 10px 10px 30px",
-                  }}
-                >
-                  <AddCircleTwoToneIcon
-                    style={{
-                      cursor: "pointer",
-                      color: "black",
-                    }}
-                    onClick={handleAddCourseOutcome}
-                  />
-                </div>
+                <div className="align">
+             
+                <button  className="button-Add"
+                          style={{ cursor: 'pointer', 
+                          display:"flex", }} 
+                           onClick={handleAddCourseOutcome}
+                                     >
+                                        Add
+                                 </button>
+                               
 
-                <button type="submit" className="button-submit">
+                <button type="submit" className="button-submit"
+                >
                   Submit
                 </button>
+                </div>
               </form>
             </div>
           )}
@@ -678,7 +674,7 @@ const SyllabusEntry = () => {
                   <div className="flex-boxco">
                     <div className="input-flex">
                       <Dropdown
-                        label="CO"
+                        placeholder="CO"
                         options={co}
                         value={set.co}
                         onChange={(value) =>
@@ -686,7 +682,7 @@ const SyllabusEntry = () => {
                         }
                       />
                       <Dropdown
-                        label="PO"
+                        placeholder="PO"
                         options={po}
                         value={set.po}
                         onChange={(value) =>
@@ -704,6 +700,7 @@ const SyllabusEntry = () => {
                       type="number"
                       min="0"
                     />
+                    <div className="align">
 
                       <button className="button-drop" 
                                  style={{ cursor: 'pointer', 
@@ -712,23 +709,29 @@ const SyllabusEntry = () => {
                                      >
                                        Drop
                                 </button>
+                                </div>
  
                   
                   </div>
                 </div>
               ))}
-              <button  className="button-add"
-                          style={{ cursor: 'pointer', 
-                          display:"flex", }} 
-                           onClick={handleAddDropdown}
-                                     >
-                                        Add
-                                 </button>
-                      
+             <div className="align">
+        <button
+          className="button-Add"
+          style={{ cursor: 'pointer' }}
+          onClick={handleAddDropdown}
+        >
+          Add
+        </button>
+     
+      
 
-              <button type="submit" className="button-submit">
-                Submit
-              </button>
+        <button type="submit" className="button-submit">
+          Submit
+        </button>
+        </div>
+     
+             
             </form>
           )}
         </div>
@@ -796,26 +799,43 @@ const SyllabusEntry = () => {
                       />
                     </div>
                   </div>
-                  <button type="button" onClick={() => handleDeleteUnit(index)}>
-                    <RemoveCircleTwoToneIcon />
-                  </button>
+                  <div className="align">
+                  <button className="button-drop" 
+                                 style={{ cursor: 'pointer', 
+                                   }} 
+                              onClick={() => handleDeleteUnit
+                                (index)}
+                                     >
+                                       Drop
+                                </button>
+                                </div>
                 </div>
               ))}
-              <button type="button" onClick={handleAddUnit}>
-                <AddCircleTwoToneIcon />
-              </button>
+              <div className="align">
+              <button  className="button-Add"
+                          style={{ cursor: 'pointer', 
+                          display:"flex", }} 
+                           onClick={handleAddUnit}
+                                     >
+                                        Add
+                                 </button>
               <button type="submit" className="button-submit">
                 Submit
               </button>
+              </div>
             </form>
           )}
         </div>
         
       </div>
-      <div>
+      <div className="division-background">
+      <ToastContainer />
+      
         <button onClick={handleFetchAndDownloadPDF}>PDF</button>
       </div>
     </div>
+
+    
   );
 };
 
