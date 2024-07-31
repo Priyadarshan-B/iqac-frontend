@@ -30,9 +30,12 @@ const SyllabusEntry = () => {
   const [semester, setSemester] = useState([]);
   const [semesterLabel, setSemesterLabel] = useState("");
   const [showDropdown, setShowDropdown] = useState("");
-  const [courseOutcomes, setCourseOutcomes] = useState([{
-    objectives:"",description:""
-  }]);
+  const [courseOutcomes, setCourseOutcomes] = useState([
+    {
+      objectives: "",
+      description: "",
+    },
+  ]);
   const [poMappings, setPoMappings] = useState([]);
   const [courseContent, setCourseContent] = useState([]);
   const [syllabus, setSyllabus] = useState([]);
@@ -391,18 +394,24 @@ const SyllabusEntry = () => {
         `${apiHost}/api/rf/course-objective?course=${courseId}`
       );
       const courseObjectives = await responseObjectives.json();
-      console.log(courseObjectives)
+      console.log(courseObjectives);
 
       const responseOutcomes = await fetch(
         `${apiHost}/api/rf/co-po-mapping?course=${courseId}`
       );
       const programOutcomes = await responseOutcomes.json();
-      console.log(programOutcomes)
+      console.log(programOutcomes);
 
       const responseUnit = await fetch(
         `${apiHost}/api/rf/course-unit?course=${courseId}`
       );
       const courseUnit = await responseUnit.json();
+
+      const responseMatrix = await fetch(
+        `${apiHost}/pdf/matrix?course=${courseId}`
+      );
+      const matrixData = await responseMatrix.json();
+      console.log(matrixData);
 
       const doc = new jsPDF();
       doc.setFontSize(12);
@@ -502,6 +511,107 @@ const SyllabusEntry = () => {
 
         checkAddPage();
       });
+      yPos += 10;
+
+      doc.setFontSize(14);
+      doc.setFont("times", "bold");
+      doc.text("Articulation Matrix", 10, yPos);
+      yPos += 1;
+
+      const columns = [
+        "CO No",
+        "PO1",
+        "PO2",
+        "PO3",
+        "PO4",
+        "PO5",
+        "PO6",
+        "PO7",
+        "PO8",
+        "PO9",
+        "PO10",
+        "PO11",
+        "PO12",
+        "PSO1",
+        "PSO2",
+        "PSO3",
+      ];
+      const columnWidth = 12;
+      const rowHeight = 12;
+      const startX = 10;
+      const startY = yPos + 10;
+
+      doc.setFontSize(8);
+
+      // Draw table header
+      let currentX = startX;
+      columns.forEach((col) => {
+        doc.setFont("times", "bold");
+        doc.text(col, currentX + columnWidth / 2, startY + rowHeight / 2, {
+          align: "center",
+          baseline: "middle",
+        });
+        currentX += columnWidth;
+      });
+
+      // Draw table content
+      doc.setFont("times", "normal");
+      let currentY = startY + rowHeight;
+      matrixData.forEach((item, rowIndex) => {
+        currentX = startX;
+        columns.forEach((col, colIndex) => {
+          const cellValue =
+            colIndex === 0
+              ? item.co_id
+              : item.mappings
+                  .find((m) => m.code_name === col)
+                  ?.mapping_level.toString() || "";
+          doc.text(
+            cellValue,
+            currentX + columnWidth / 2,
+            currentY + rowHeight / 2,
+            { align: "center", baseline: "middle" }
+          );
+          currentX += columnWidth;
+          checkAddPage();
+
+        });
+        currentY += rowHeight;
+        checkAddPage();
+
+      });
+
+      // Draw all vertical lines
+      doc.setLineWidth(0.1);
+      for (let i = 0; i <= columns.length; i++) {
+        doc.line(
+          startX + columnWidth * i,
+          startY,
+          startX + columnWidth * i,
+          startY + rowHeight * (matrixData.length + 1)
+        );
+      }
+
+      // Draw all horizontal lines
+      for (let i = 0; i <= matrixData.length + 1; i++) {
+        doc.line(
+          startX,
+          startY + rowHeight * i,
+          startX + columnWidth * columns.length,
+          startY + rowHeight * i
+        );
+      }
+
+      // Draw outer border
+      doc.setLineWidth(0.5);
+      doc.rect(
+        startX,
+        startY,
+        columnWidth * columns.length,
+        rowHeight * (matrixData.length + 1)
+      );
+
+      checkAddPage();
 
       // Save the PDF
       doc.save("syllabus.pdf");
@@ -562,7 +672,6 @@ const SyllabusEntry = () => {
             />
           </div>
         </div>
-      
 
         <div
           className="division-background"
@@ -584,12 +693,10 @@ const SyllabusEntry = () => {
             <div>
               <ToastContainer />
               <form onSubmit={handleSubmitCourseOutcomes}>
-                
-
                 {courseOutcomes.map((outcome, index) => (
                   <div key={index} className="course-outcome">
                     <div className="input-flex">
-                      <div style={{width:"50%"}}>
+                      <div style={{ width: "50%" }}>
                         <InputBox
                           className="input-box"
                           type="text"
@@ -604,48 +711,45 @@ const SyllabusEntry = () => {
                           placeholder="Enter Objective"
                         />
                       </div>
-                      <div style={{width:"50%"}}>
-                      <InputBox
-                        className="input-box"
-                        type="text"
-                        value={outcome.description}
-                        onChange={(e) =>
-                          handleCourseOutcomeChange(
-                            index,
-                            "description",
-                            e.target.value
-                          )
-                        }
-                        placeholder="Enter Description"
-                      />
+                      <div style={{ width: "50%" }}>
+                        <InputBox
+                          className="input-box"
+                          type="text"
+                          value={outcome.description}
+                          onChange={(e) =>
+                            handleCourseOutcomeChange(
+                              index,
+                              "description",
+                              e.target.value
+                            )
+                          }
+                          placeholder="Enter Description"
+                        />
                       </div>
-                    </div> 
+                    </div>
                     <div className="align">
-                    <button className="button-drop" 
-                                 style={{ cursor: 'pointer', 
-                                   }} 
-                              onClick={() => handleDeleteCourseOutcome(index)}
-                                     >
-                                       Drop
-                                </button>
-                                </div>
+                      <button
+                        className="button-drop"
+                        style={{ cursor: "pointer" }}
+                        onClick={() => handleDeleteCourseOutcome(index)}
+                      >
+                        Drop
+                      </button>
+                    </div>
                   </div>
                 ))}
                 <div className="align">
-             
-                <button  className="button-Add"
-                          style={{ cursor: 'pointer', 
-                          display:"flex", }} 
-                           onClick={handleAddCourseOutcome}
-                                     >
-                                        Add
-                                 </button>
-                               
+                  <button
+                    className="button-Add"
+                    style={{ cursor: "pointer", display: "flex" }}
+                    onClick={handleAddCourseOutcome}
+                  >
+                    Add
+                  </button>
 
-                <button type="submit" className="button-submit"
-                >
-                  Submit
-                </button>
+                  <button type="submit" className="button-submit">
+                    Submit
+                  </button>
                 </div>
               </form>
             </div>
@@ -667,7 +771,6 @@ const SyllabusEntry = () => {
           {showCoPocontent && (
             <form onSubmit={handleCoPoSubmit}>
               <ToastContainer />
-              
 
               {dropdownSets.map((set, index) => (
                 <div key={index}>
@@ -701,37 +804,30 @@ const SyllabusEntry = () => {
                       min="0"
                     />
                     <div className="align">
-
-                      <button className="button-drop" 
-                                 style={{ cursor: 'pointer', 
-                                   }} 
-                              onClick={() => handleRemoveDropdown(index)}
-                                     >
-                                       Drop
-                                </button>
-                                </div>
- 
-                  
+                      <button
+                        className="button-drop"
+                        style={{ cursor: "pointer" }}
+                        onClick={() => handleRemoveDropdown(index)}
+                      >
+                        Drop
+                      </button>
+                    </div>
                   </div>
                 </div>
               ))}
-             <div className="align">
-        <button
-          className="button-Add"
-          style={{ cursor: 'pointer' }}
-          onClick={handleAddDropdown}
-        >
-          Add
-        </button>
-     
-      
+              <div className="align">
+                <button
+                  className="button-Add"
+                  style={{ cursor: "pointer" }}
+                  onClick={handleAddDropdown}
+                >
+                  Add
+                </button>
 
-        <button type="submit" className="button-submit">
-          Submit
-        </button>
-        </div>
-     
-             
+                <button type="submit" className="button-submit">
+                  Submit
+                </button>
+              </div>
             </form>
           )}
         </div>
@@ -754,9 +850,16 @@ const SyllabusEntry = () => {
               <ToastContainer />
 
               {units.map((unit, index) => (
-                <div key={index} style={{gap:"10px", display:"flex", flexDirection:"column"}}>
+                <div
+                  key={index}
+                  style={{
+                    gap: "10px",
+                    display: "flex",
+                    flexDirection: "column",
+                  }}
+                >
                   <div className="input-flex">
-                    <div style={{width:"50%"}}>
+                    <div style={{ width: "50%" }}>
                       <InputBox
                         placeholder="Unit"
                         type="text"
@@ -766,7 +869,7 @@ const SyllabusEntry = () => {
                         }
                       />
                     </div>
-                    <div style={{width:"50%"}}>
+                    <div style={{ width: "50%" }}>
                       <InputBox
                         placeholder="Unit Name"
                         type="text"
@@ -778,7 +881,7 @@ const SyllabusEntry = () => {
                     </div>
                   </div>
                   <div className="input-flex">
-                    <div style={{width:"50%"}}>
+                    <div style={{ width: "50%" }}>
                       <InputBox
                         placeholder="Description"
                         value={unit.description}
@@ -788,7 +891,7 @@ const SyllabusEntry = () => {
                         }
                       />
                     </div>
-                    <div style={{width:"50%"}}>
+                    <div style={{ width: "50%" }}>
                       <InputBox
                         placeholder="Hours"
                         type="number"
@@ -800,47 +903,42 @@ const SyllabusEntry = () => {
                     </div>
                   </div>
                   <div className="align">
-                  <button className="button-drop" 
-                                 style={{ cursor: 'pointer', 
-                                   }} 
-                              onClick={() => handleDeleteUnit
-                                (index)}
-                                     >
-                                       Drop
-                                </button>
-                                </div>
+                    <button
+                      className="button-drop"
+                      style={{ cursor: "pointer" }}
+                      onClick={() => handleDeleteUnit(index)}
+                    >
+                      Drop
+                    </button>
+                  </div>
                 </div>
               ))}
               <div className="align">
-              <button  className="button-Add"
-                          style={{ cursor: 'pointer', 
-                          display:"flex", }} 
-                           onClick={handleAddUnit}
-                                     >
-                                        Add
-                                 </button>
-              <button type="submit" className="button-submit">
-                Submit
-              </button>
+                <button
+                  className="button-Add"
+                  style={{ cursor: "pointer", display: "flex" }}
+                  onClick={handleAddUnit}
+                >
+                  Add
+                </button>
+                <button type="submit" className="button-submit">
+                  Submit
+                </button>
               </div>
             </form>
           )}
         </div>
-        
       </div>
       <div className="division-background">
-      <ToastContainer />
-     <div className='font'>
-          <span >Report Download :</span>
+        <ToastContainer />
+        <div className="font">
+          <span>Report Download :</span>
           <div classname="pdf">
-        <button onClick={handleFetchAndDownloadPDF}>PDF</button>
+            <button onClick={handleFetchAndDownloadPDF}>PDF</button>
+          </div>
+        </div>
       </div>
-      </div>
-      </div>
-      </div>
-    
-
-    
+    </div>
   );
 };
 
