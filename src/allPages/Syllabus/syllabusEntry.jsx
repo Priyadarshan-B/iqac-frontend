@@ -832,19 +832,7 @@ const SyllabusEntry = () => {
       <ToastContainer />
      <div className='font'>
           <span >Report Download :</span>
-          {/* <input
-            className="syllabus-entry-input"
-            type="text"
-            placeholder="Include"
-          /> */}
-          {/* <span>Select any one:</span> */}
-          
-          {/* <label>
-            <input type="radio" name="format" value="pdf" /> PDF
-          </label> */}
-          
-
-        <div classname="pdf">
+          <div classname="pdf">
         <button onClick={handleFetchAndDownloadPDF}>PDF</button>
       </div>
       </div>

@@ -167,7 +167,17 @@ form{
 }
 
 .font {
-    display:flex;
+    display: flex;
     justify-content: space-evenly;
-    gap:10px;
+    gap: 10px;
+    align-items: center; 
+    
+    padding: 10px; /
+  
+}
+
+.pdf {
+    
+    display: flex;
+    align-items: center; 
 }
