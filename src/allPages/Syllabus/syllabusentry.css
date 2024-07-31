@@ -165,3 +165,9 @@ form{
     font-weight: 700;
     margin-right: 10px;
 }
+
+.font {
+    display:flex;
+    justify-content: space-evenly;
+    gap:10px;
+}
