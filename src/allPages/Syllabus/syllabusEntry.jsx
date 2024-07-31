@@ -614,11 +614,15 @@ const SyllabusEntry = () => {
       checkAddPage();
 
       // Save the PDF
-      doc.save("syllabus.pdf");
-      toast.success("PDF downloaded successfully!");
+      doc.save(`${courseLabel}.pdf`);
+      toast.success("PDF downloaded successfully!", {
+        position: "bottom-right",
+      });
     } catch (error) {
       console.error("Error fetching and downloading PDF:", error);
-      toast.error("An error occurred while downloading the PDF.");
+      toast.error("An error occurred while downloading the PDF.",{
+        position:"bottom-right",
+      });
     }
   };
 
