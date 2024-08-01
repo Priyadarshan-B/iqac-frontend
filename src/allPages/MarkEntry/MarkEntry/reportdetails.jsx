@@ -4,15 +4,20 @@ import * as XLSX from 'xlsx';
 import './Subject.css';
 import Dropdown from '../../../components/dropdown/dropdown';
 import apiHost from '../../../utils/api';
+
 function SubjectDetailsPage() {
   const { branch } = useParams();
+  const { state } = useLocation();
+  const query = new URLSearchParams(useLocation().search);
+  const title = query.get('title') || 'Subject Details'; // Get title from query params or default to 'Subject Details'
+
   const [subjectDetails, setSubjectDetails] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
-  const { state } = useLocation()
   const [departmentOptions, setDepartmentOptions] = useState([]);
-  const [department, setDepartment] = useState(undefined)
-  console.log(useLocation())
-  const studentList = state
+  const [department, setDepartment] = useState(undefined);
+
+  const studentList = state;
+
   useEffect(() => {
     fetchSubjectDetails(branch)
       .then(details => {
@@ -22,6 +27,7 @@ function SubjectDetailsPage() {
         console.error('Error fetching subject details:', error);
       });
   }, [branch]);
+
   const fetchSubjectDetails = async (branch) => {
     return {
       name: "Subject",
@@ -30,34 +36,18 @@ function SubjectDetailsPage() {
       students: studentList
     };
   };
-  /*
-    const countFailedSubjects = (marks) => {
-      let failedSubjects = 0;
-      Object.values(marks).forEach(mark => {
-        if (mark < 50) {
-          failedSubjects++;
-        }
-      });
-      return failedSubjects;
-    };
-    */
 
   const handleSearch = (e) => {
     setSearchTerm(e.target.value);
   };
-
-  console.log(studentList)
-
 
   const downloadTableAsExcel = () => {
     const tableData = [
       studentList.length > 0 ? Object.keys(studentList[0]) : null
     ];
 
-    filteredStudents.forEach((student, index) => {
-      tableData.push(
-        Object.values(student)
-      );
+    studentList.forEach((student) => {
+      tableData.push(Object.values(student));
     });
 
     const ws = XLSX.utils.aoa_to_sheet(tableData);
@@ -68,10 +58,10 @@ function SubjectDetailsPage() {
 
   return (
     <div className="subject-details-container">
-
+      <h1>{title}</h1> {/* Display the title here */}
       {subjectDetails && (
         <div className="table-container">
-          <div className='row'  >
+          <div className='row'>
             <input
               type="text"
               placeholder="Search ..."
@@ -79,7 +69,6 @@ function SubjectDetailsPage() {
               onChange={handleSearch}
               style={{ padding: '10px', borderRadius: '5px', border: '1px solid #ccc' }}
             />
-
             <button
               onClick={downloadTableAsExcel}
               style={{
@@ -97,24 +86,17 @@ function SubjectDetailsPage() {
           <table>
             <thead>
               <tr>
-                {
-                  studentList.length > 0 && <th>S.No</th>
-
-                }
-                {
-                  studentList.length > 0 ? Object.keys(studentList[0]).map((student) =>
-                    (<th>{student}</th>)
-                  ) : null
-                }
+                {studentList?.length > 0 && <th>S.No</th>}
+                {studentList?.length > 0 ? Object.keys(studentList[0]).map((header, index) => (
+                  <th key={index}>{header}</th>
+                )) : null}
               </tr>
             </thead>
             <tbody>
-              {studentList.map((student, index) => (
+              {studentList?.map((student, index) => (
                 <tr key={student.rollNumber}>
                   <td>{index + 1}</td>
-                  {
-                    Object.values(student).map((student, i) => (<td>{student}</td>))
-                  }
+                  {Object.values(student).map((value, i) => (<td key={i}>{value}</td>))}
                 </tr>
               ))}
             </tbody>

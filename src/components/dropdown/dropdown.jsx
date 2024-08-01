@@ -7,6 +7,10 @@ const Dropdown = ({ label, options, value, onChange, placeholder, disabled }) =>
     <div className="dropdown">
       <label>{label}</label>
       <Select
+        styles={{
+          width: "20px"
+        }
+        }
         className="dropdown-select"
         options={options}
         value={value}

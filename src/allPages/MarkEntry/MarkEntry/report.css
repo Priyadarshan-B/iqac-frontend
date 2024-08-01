@@ -27,14 +27,7 @@
     margin-top: 20px;
 }
 
-.report-container {
-    background-color: #fff;
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    width: 1375px;
-    margin-bottom: 30px;
-}
+
 
 
 
@@ -88,10 +81,7 @@
 
 
 .dropdown{
-    flex: 1;
-   
-   
-  
+  flex:1;
 }
 
 label{
@@ -100,7 +90,7 @@ label{
 
 .row{
     display: flex;
-    align-items: center;
-    justify-content: space-between;
+   justify-content:space-between; 
 }
+
 
