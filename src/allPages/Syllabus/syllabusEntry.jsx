@@ -30,9 +30,12 @@ const SyllabusEntry = () => {
   const [semester, setSemester] = useState([]);
   const [semesterLabel, setSemesterLabel] = useState("");
   const [showDropdown, setShowDropdown] = useState("");
-  const [courseOutcomes, setCourseOutcomes] = useState([{
-    objectives:"",description:""
-  }]);
+  const [courseOutcomes, setCourseOutcomes] = useState([
+    {
+      objectives: "",
+      description: "",
+    },
+  ]);
   const [poMappings, setPoMappings] = useState([]);
   const [courseContent, setCourseContent] = useState([]);
   const [syllabus, setSyllabus] = useState([]);
@@ -391,18 +394,24 @@ const SyllabusEntry = () => {
         `${apiHost}/api/rf/course-objective?course=${courseId}`
       );
       const courseObjectives = await responseObjectives.json();
-      console.log(courseObjectives)
+      console.log(courseObjectives);
 
       const responseOutcomes = await fetch(
         `${apiHost}/api/rf/co-po-mapping?course=${courseId}`
       );
       const programOutcomes = await responseOutcomes.json();
-      console.log(programOutcomes)
+      console.log(programOutcomes);
 
       const responseUnit = await fetch(
         `${apiHost}/api/rf/course-unit?course=${courseId}`
       );
       const courseUnit = await responseUnit.json();
+
+      const responseMatrix = await fetch(
+        `${apiHost}/pdf/matrix?course=${courseId}`
+      );
+      const matrixData = await responseMatrix.json();
+      console.log(matrixData);
 
       const doc = new jsPDF();
       doc.setFontSize(12);
@@ -502,13 +511,118 @@ const SyllabusEntry = () => {
 
         checkAddPage();
       });
+      yPos += 10;
+
+      doc.setFontSize(14);
+      doc.setFont("times", "bold");
+      doc.text("Articulation Matrix", 10, yPos);
+      yPos += 1;
+
+      const columns = [
+        "CO No",
+        "PO1",
+        "PO2",
+        "PO3",
+        "PO4",
+        "PO5",
+        "PO6",
+        "PO7",
+        "PO8",
+        "PO9",
+        "PO10",
+        "PO11",
+        "PO12",
+        "PSO1",
+        "PSO2",
+        "PSO3",
+      ];
+      const columnWidth = 12;
+      const rowHeight = 12;
+      const startX = 10;
+      const startY = yPos + 10;
+
+      doc.setFontSize(8);
+
+      // Draw table header
+      let currentX = startX;
+      columns.forEach((col) => {
+        doc.setFont("times", "bold");
+        doc.text(col, currentX + columnWidth / 2, startY + rowHeight / 2, {
+          align: "center",
+          baseline: "middle",
+        });
+        currentX += columnWidth;
+      });
+
+      // Draw table content
+      doc.setFont("times", "normal");
+      let currentY = startY + rowHeight;
+      matrixData.forEach((item, rowIndex) => {
+        currentX = startX;
+        columns.forEach((col, colIndex) => {
+          const cellValue =
+            colIndex === 0
+              ? item.co_id
+              : item.mappings
+                  .find((m) => m.code_name === col)
+                  ?.mapping_level.toString() || "";
+          doc.text(
+            cellValue,
+            currentX + columnWidth / 2,
+            currentY + rowHeight / 2,
+            { align: "center", baseline: "middle" }
+          );
+          currentX += columnWidth;
+          checkAddPage();
+
+        });
+        currentY += rowHeight;
+        checkAddPage();
+
+      });
+
+      // Draw all vertical lines
+      doc.setLineWidth(0.1);
+      for (let i = 0; i <= columns.length; i++) {
+        doc.line(
+          startX + columnWidth * i,
+          startY,
+          startX + columnWidth * i,
+          startY + rowHeight * (matrixData.length + 1)
+        );
+      }
+
+      // Draw all horizontal lines
+      for (let i = 0; i <= matrixData.length + 1; i++) {
+        doc.line(
+          startX,
+          startY + rowHeight * i,
+          startX + columnWidth * columns.length,
+          startY + rowHeight * i
+        );
+      }
+
+      // Draw outer border
+      doc.setLineWidth(0.5);
+      doc.rect(
+        startX,
+        startY,
+        columnWidth * columns.length,
+        rowHeight * (matrixData.length + 1)
+      );
+
+      checkAddPage();
 
       // Save the PDF
-      doc.save("syllabus.pdf");
-      toast.success("PDF downloaded successfully!");
+      doc.save(`${courseLabel}.pdf`);
+      toast.success("PDF downloaded successfully!", {
+        position: "bottom-right",
+      });
     } catch (error) {
       console.error("Error fetching and downloading PDF:", error);
-      toast.error("An error occurred while downloading the PDF.");
+      toast.error("An error occurred while downloading the PDF.",{
+        position:"bottom-right",
+      });
     }
   };
 
@@ -517,7 +631,7 @@ const SyllabusEntry = () => {
       <div className="syllabus-entry">
         <div className="select-info">
           <div className="each-info-select">
-            <span className="font">Regulation</span>
+            {/* <span className="font">Regulation</span> */}
             <Dropdown
               className="syllabus-entry-select"
               options={regulation}
@@ -526,7 +640,7 @@ const SyllabusEntry = () => {
             />
           </div>
           <div className="each-info-select">
-            <span className="font">Degree</span>
+            {/* <span className="font">Degree</span> */}
             <Dropdown
               className="syllabus-entry-select"
               options={degree}
@@ -535,7 +649,7 @@ const SyllabusEntry = () => {
             />
           </div>
           <div className="each-info-select">
-            <span className="font">Branch</span>
+            {/* <span className="font">Branch</span> */}
             <Dropdown
               className="syllabus-entry-select"
               options={branch}
@@ -544,7 +658,7 @@ const SyllabusEntry = () => {
             />
           </div>
           <div className="each-info-select">
-            <span className="font">Semester</span>
+            {/* <span className="font">Semester</span> */}
             <Dropdown
               className="syllabus-entry-select"
               options={semester}
@@ -553,7 +667,7 @@ const SyllabusEntry = () => {
             />
           </div>
           <div className="each-info-select">
-            <span className="font">Course</span>
+            {/* <span className="font">Course</span> */}
             <Dropdown
               className="syllabus-entry-select"
               options={course}
@@ -583,67 +697,64 @@ const SyllabusEntry = () => {
             <div>
               <ToastContainer />
               <form onSubmit={handleSubmitCourseOutcomes}>
-                
-
                 {courseOutcomes.map((outcome, index) => (
                   <div key={index} className="course-outcome">
-                    <InputBox
-                      className="input-box"
-                      type="text"
-                      value={outcome.objective}
-                      onChange={(e) =>
-                        handleCourseOutcomeChange(
-                          index,
-                          "objective",
-                          e.target.value
-                        )
-                      }
-                      placeholder="Enter Objective"
-                    />
-                    <InputBox
-                      className="input-box"
-                      type="text"
-                      value={outcome.description}
-                      onChange={(e) =>
-                        handleCourseOutcomeChange(
-                          index,
-                          "description",
-                          e.target.value
-                        )
-                      }
-                      placeholder="Enter Description"
-                    />
-                    <div
-                      style={{
-                        display: "flex",
-                        margin: "10px 10px 10px 30px",
-                      }}
-                    >
-                      <RemoveCircleTwoToneIcon
-                        style={{ cursor: "pointer", color: "black" }}
+                    <div className="input-flex">
+                      <div style={{ width: "50%" }}>
+                        <InputBox
+                          className="input-box"
+                          type="text"
+                          value={outcome.objective}
+                          onChange={(e) =>
+                            handleCourseOutcomeChange(
+                              index,
+                              "objective",
+                              e.target.value
+                            )
+                          }
+                          placeholder="Enter Objective"
+                        />
+                      </div>
+                      <div style={{ width: "50%" }}>
+                        <InputBox
+                          className="input-box"
+                          type="text"
+                          value={outcome.description}
+                          onChange={(e) =>
+                            handleCourseOutcomeChange(
+                              index,
+                              "description",
+                              e.target.value
+                            )
+                          }
+                          placeholder="Enter Description"
+                        />
+                      </div>
+                    </div>
+                    <div className="align">
+                      <button
+                        className="button-drop"
+                        style={{ cursor: "pointer" }}
                         onClick={() => handleDeleteCourseOutcome(index)}
-                      />
+                      >
+                        Drop
+                      </button>
                     </div>
                   </div>
                 ))}
-                <div
-                  style={{
-                    display: "flex",
-                    margin: "20px 10px 10px 30px",
-                  }}
-                >
-                  <AddCircleTwoToneIcon
-                    style={{
-                      cursor: "pointer",
-                      color: "black",
-                    }}
+                <div className="align">
+                  <button
+                    className="button-Add"
+                    style={{ cursor: "pointer", display: "flex" }}
                     onClick={handleAddCourseOutcome}
-                  />
-                </div>
+                  >
+                    Add
+                  </button>
 
-                <button type="submit" className="button-submit">
-                  Submit
-                </button>
+                  <button type="submit" className="button-submit">
+                    Submit
+                  </button>
+                </div>
               </form>
             </div>
           )}
@@ -664,27 +775,28 @@ const SyllabusEntry = () => {
           {showCoPocontent && (
             <form onSubmit={handleCoPoSubmit}>
               <ToastContainer />
-              
 
               {dropdownSets.map((set, index) => (
                 <div key={index}>
                   <div className="flex-boxco">
-                    <Dropdown
-                      label="CO"
-                      options={co}
-                      value={set.co}
-                      onChange={(value) =>
-                        handleDropdownChange(index, "co", value)
-                      }
-                    />
-                    <Dropdown
-                      label="PO"
-                      options={po}
-                      value={set.po}
-                      onChange={(value) =>
-                        handleDropdownChange(index, "po", value)
-                      }
-                    />
+                    <div className="input-flex">
+                      <Dropdown
+                        placeholder="CO"
+                        options={co}
+                        value={set.co}
+                        onChange={(value) =>
+                          handleDropdownChange(index, "co", value)
+                        }
+                      />
+                      <Dropdown
+                        placeholder="PO"
+                        options={po}
+                        value={set.po}
+                        onChange={(value) =>
+                          handleDropdownChange(index, "po", value)
+                        }
+                      />
+                    </div>
                     <InputBox
                       className="copo"
                       placeholder="Mapping Level"
@@ -695,39 +807,31 @@ const SyllabusEntry = () => {
                       type="number"
                       min="0"
                     />
-
-                    <div
-                      style={{
-                        display: "flex",
-                        margin: "10px 10px 10px 10px",
-                      }}
-                    >
-                      <RemoveCircleTwoToneIcon
-                        style={{ cursor: "pointer", color: "black" }}
+                    <div className="align">
+                      <button
+                        className="button-drop"
+                        style={{ cursor: "pointer" }}
                         onClick={() => handleRemoveDropdown(index)}
-                      />
+                      >
+                        Drop
+                      </button>
                     </div>
                   </div>
                 </div>
               ))}
-              <div
-                style={{
-                  display: "flex",
-                  margin: "10px 10px 10px 30px",
-                }}
-              >
-                <AddCircleTwoToneIcon
-                  style={{
-                    cursor: "pointer",
-                    color: "black",
-                  }}
+              <div className="align">
+                <button
+                  className="button-Add"
+                  style={{ cursor: "pointer" }}
                   onClick={handleAddDropdown}
-                />
-              </div>
+                >
+                  Add
+                </button>
 
-              <button type="submit" className="button-submit">
-                Submit
-              </button>
+                <button type="submit" className="button-submit">
+                  Submit
+                </button>
+              </div>
             </form>
           )}
         </div>
@@ -750,56 +854,93 @@ const SyllabusEntry = () => {
               <ToastContainer />
 
               {units.map((unit, index) => (
-                <div key={index}>
-                  <InputBox
-                    placeholder="Unit"
-                    type="text"
-                    value={unit.unit}
-                    onChange={(e) =>
-                      handleUnitChange(index, "unit", e.target.value)
-                    }
-                  />
-                  <InputBox
-                    placeholder="Unit Name"
-                    type="text"
-                    value={unit.unitname}
-                    onChange={(e) =>
-                      handleUnitChange(index, "unitname", e.target.value)
-                    }
-                  />
-                  <InputBox
-                    placeholder="Description"
-                    value={unit.description}
-                    type="text"
-                    onChange={(e) =>
-                      handleUnitChange(index, "description", e.target.value)
-                    }
-                  />
-                  <InputBox
-                    placeholder="Hours"
-                    type="number"
-                    value={unit.hours}
-                    onChange={(e) =>
-                      handleUnitChange(index, "hours", e.target.value)
-                    }
-                  />
-                  <button type="button" onClick={() => handleDeleteUnit(index)}>
-                    <RemoveCircleTwoToneIcon />
-                  </button>
+                <div
+                  key={index}
+                  style={{
+                    gap: "10px",
+                    display: "flex",
+                    flexDirection: "column",
+                  }}
+                >
+                  <div className="input-flex">
+                    <div style={{ width: "50%" }}>
+                      <InputBox
+                        placeholder="Unit"
+                        type="text"
+                        value={unit.unit}
+                        onChange={(e) =>
+                          handleUnitChange(index, "unit", e.target.value)
+                        }
+                      />
+                    </div>
+                    <div style={{ width: "50%" }}>
+                      <InputBox
+                        placeholder="Unit Name"
+                        type="text"
+                        value={unit.unitname}
+                        onChange={(e) =>
+                          handleUnitChange(index, "unitname", e.target.value)
+                        }
+                      />
+                    </div>
+                  </div>
+                  <div className="input-flex">
+                    <div style={{ width: "50%" }}>
+                      <InputBox
+                        placeholder="Description"
+                        value={unit.description}
+                        type="text"
+                        onChange={(e) =>
+                          handleUnitChange(index, "description", e.target.value)
+                        }
+                      />
+                    </div>
+                    <div style={{ width: "50%" }}>
+                      <InputBox
+                        placeholder="Hours"
+                        type="number"
+                        value={unit.hours}
+                        onChange={(e) =>
+                          handleUnitChange(index, "hours", e.target.value)
+                        }
+                      />
+                    </div>
+                  </div>
+                  <div className="align">
+                    <button
+                      className="button-drop"
+                      style={{ cursor: "pointer" }}
+                      onClick={() => handleDeleteUnit(index)}
+                    >
+                      Drop
+                    </button>
+                  </div>
                 </div>
               ))}
-              <button type="button" onClick={handleAddUnit}>
-                <AddCircleTwoToneIcon />
-              </button>
-              <button type="submit" className="button-submit">
-                Submit
-              </button>
+              <div className="align">
+                <button
+                  className="button-Add"
+                  style={{ cursor: "pointer", display: "flex" }}
+                  onClick={handleAddUnit}
+                >
+                  Add
+                </button>
+                <button type="submit" className="button-submit">
+                  Submit
+                </button>
+              </div>
             </form>
           )}
         </div>
       </div>
-      <div>
-        <button onClick={handleFetchAndDownloadPDF}>PDF</button>
+      <div className="division-background">
+        <ToastContainer />
+        <div className="font">
+          <span>Report Download :</span>
+          <div classname="pdf">
+            <button onClick={handleFetchAndDownloadPDF}>PDF</button>
+          </div>
+        </div>
       </div>
     </div>
   );
