@@ -51,7 +51,7 @@ const SyllabusEntry = () => {
     { unit: "", unitname: "", description: "", hours: "" },
   ]);
   const [dropdownSets, setDropdownSets] = useState([
-    { co: null, po: null, level: "" },
+    { co: null, po: null, level: "" }
   ]);
   const [showcontent, setShowContent] = useState(false);
   const [showCoPocontent, setShowCoPoContent] = useState(false);
