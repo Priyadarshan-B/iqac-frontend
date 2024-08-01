@@ -395,44 +395,44 @@ const SyllabusEntry = () => {
       );
       const courseObjectives = await responseObjectives.json();
       console.log(courseObjectives);
-
+  
       const responseOutcomes = await fetch(
         `${apiHost}/api/rf/co-po-mapping?course=${courseId}`
       );
       const programOutcomes = await responseOutcomes.json();
       console.log(programOutcomes);
-
+  
       const responseUnit = await fetch(
         `${apiHost}/api/rf/course-unit?course=${courseId}`
       );
       const courseUnit = await responseUnit.json();
-
+  
       const responseMatrix = await fetch(
         `${apiHost}/pdf/matrix?course=${courseId}`
       );
       const matrixData = await responseMatrix.json();
       console.log(matrixData);
-
+  
       const doc = new jsPDF();
       doc.setFontSize(12);
       doc.setFont("times", "normal");
-
+  
       doc.setFontSize(14);
       doc.setFont("times", "bold");
       doc.text("Course Objectives", 10, 10);
-
+  
       doc.setFontSize(12);
       doc.setFont("times", "normal");
-
+  
       let yPos = 20;
-
+  
       const checkAddPage = () => {
         if (yPos > 270) {
           doc.addPage();
           yPos = 10;
         }
       };
-
+  
       courseObjectives.forEach((item) => {
         const lines = doc.splitTextToSize(`• ${item.description}`, 180);
         lines.forEach((line) => {
@@ -441,17 +441,17 @@ const SyllabusEntry = () => {
           checkAddPage();
         });
       });
-
+  
       yPos += 10;
-
+  
       doc.setFontSize(14);
       doc.setFont("times", "bold");
       doc.text("Program Outcomes", 10, yPos);
       yPos += 10;
-
+  
       doc.setFontSize(12);
       doc.setFont("times", "normal");
-
+  
       programOutcomes.forEach((item) => {
         const lines = doc.splitTextToSize(`• ${item.program_outcome}`, 180);
         lines.forEach((line) => {
@@ -460,17 +460,17 @@ const SyllabusEntry = () => {
           checkAddPage();
         });
       });
-
+  
       yPos += 10;
-
+  
       doc.setFontSize(14);
       doc.setFont("times", "bold");
       doc.text("Course Outcomes", 10, yPos);
       yPos += 10;
-
+  
       doc.setFontSize(12);
       doc.setFont("times", "normal");
-
+  
       programOutcomes.forEach((item) => {
         const lines = doc.splitTextToSize(`• ${item.course_outcome}`, 180);
         lines.forEach((line) => {
@@ -479,45 +479,57 @@ const SyllabusEntry = () => {
           checkAddPage();
         });
       });
-
+  
       yPos += 10;
       doc.setFontSize(14);
       doc.setFont("times", "bold");
       doc.text("Course Unit", 10, yPos);
       yPos += 10;
-
+  
       doc.setFontSize(12);
       doc.setFont("times", "normal");
-
+  
       courseUnit.forEach((item) => {
         const unitText = `UNIT ${item.unit}`;
         const unitNameText = item.unit_name;
         const descriptionText = item.description;
         const hoursText = `${item.hours} Hours`;
-
+  
         doc.setFont("times", "bold");
         doc.text(unitText, 10, yPos);
         yPos += 10;
-
+  
         doc.text(unitNameText, 10, yPos);
         yPos += 10;
-
+  
         doc.setFont("times", "normal");
-        doc.text(descriptionText, 10, yPos);
+  
+        // Wrap description text
+        const wrappedDescription = doc.splitTextToSize(descriptionText, 180);
+        wrappedDescription.forEach((line) => {
+          doc.text(line, 10, yPos);
+          yPos += 10;
+          checkAddPage();
+        });
+  
+        // Wrap hours text if necessary
+        const wrappedHours = doc.splitTextToSize(hoursText, 180);
+        wrappedHours.forEach((line) => {
+          doc.text(line, 10, yPos);
+          yPos += 10;
+          checkAddPage();
+        });
+  
         yPos += 10;
-
-        doc.text(hoursText, 10, yPos);
-        yPos += 10;
-
         checkAddPage();
       });
       yPos += 10;
-
+  
       doc.setFontSize(14);
       doc.setFont("times", "bold");
       doc.text("Articulation Matrix", 10, yPos);
-      yPos += 1;
-
+      yPos += 10;
+  
       const columns = [
         "CO No",
         "PO1",
@@ -540,9 +552,9 @@ const SyllabusEntry = () => {
       const rowHeight = 12;
       const startX = 10;
       const startY = yPos + 10;
-
+  
       doc.setFontSize(8);
-
+  
       // Draw table header
       let currentX = startX;
       columns.forEach((col) => {
@@ -553,7 +565,7 @@ const SyllabusEntry = () => {
         });
         currentX += columnWidth;
       });
-
+  
       // Draw table content
       doc.setFont("times", "normal");
       let currentY = startY + rowHeight;
@@ -574,13 +586,11 @@ const SyllabusEntry = () => {
           );
           currentX += columnWidth;
           checkAddPage();
-
         });
         currentY += rowHeight;
         checkAddPage();
-
       });
-
+  
       // Draw all vertical lines
       doc.setLineWidth(0.1);
       for (let i = 0; i <= columns.length; i++) {
@@ -591,7 +601,7 @@ const SyllabusEntry = () => {
           startY + rowHeight * (matrixData.length + 1)
         );
       }
-
+  
       // Draw all horizontal lines
       for (let i = 0; i <= matrixData.length + 1; i++) {
         doc.line(
@@ -601,7 +611,7 @@ const SyllabusEntry = () => {
           startY + rowHeight * i
         );
       }
-
+  
       // Draw outer border
       doc.setLineWidth(0.5);
       doc.rect(
@@ -610,9 +620,9 @@ const SyllabusEntry = () => {
         columnWidth * columns.length,
         rowHeight * (matrixData.length + 1)
       );
-
+  
       checkAddPage();
-
+  
       // Save the PDF
       doc.save(`${courseLabel}.pdf`);
       toast.success("PDF downloaded successfully!", {
@@ -625,6 +635,7 @@ const SyllabusEntry = () => {
       });
     }
   };
+  
 
   return (
     <div className="dashboard-container">
@@ -712,7 +723,7 @@ const SyllabusEntry = () => {
                               e.target.value
                             )
                           }
-                          placeholder="Enter Objective"
+                          placeholder="Obj_id"
                         />
                       </div>
                       <div style={{ width: "50%" }}>
@@ -727,7 +738,7 @@ const SyllabusEntry = () => {
                               e.target.value
                             )
                           }
-                          placeholder="Enter Description"
+                          placeholder="Enter objective"
                         />
                       </div>
                     </div>
