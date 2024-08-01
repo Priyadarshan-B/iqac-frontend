@@ -494,24 +494,36 @@ const SyllabusEntry = () => {
         const unitNameText = item.unit_name;
         const descriptionText = item.description;
         const hoursText = `${item.hours} Hours`;
-
+      
         doc.setFont("times", "bold");
         doc.text(unitText, 10, yPos);
         yPos += 10;
-
+      
         doc.text(unitNameText, 10, yPos);
         yPos += 10;
-
+      
         doc.setFont("times", "normal");
-        doc.text(descriptionText, 10, yPos);
+      
+        // Wrap description text
+        const wrappedDescription = doc.splitTextToSize(descriptionText, 180);
+        wrappedDescription.forEach((line) => {
+          doc.text(line, 10, yPos);
+          yPos += 10;
+          checkAddPage();
+        });
+      
+        // Wrap hours text if necessary
+        const wrappedHours = doc.splitTextToSize(hoursText, 180);
+        wrappedHours.forEach((line) => {
+          doc.text(line, 10, yPos);
+          yPos += 10;
+          checkAddPage();
+        });
+      
         yPos += 10;
-
-        doc.text(hoursText, 10, yPos);
-        yPos += 10;
-
         checkAddPage();
       });
-      yPos += 10;
+      
 
       doc.setFontSize(14);
       doc.setFont("times", "bold");
