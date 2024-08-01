@@ -1,14 +1,8 @@
-.dashboard-container {
-    margin: 10px;
-    width: calc(100% - 20px);
-    height: calc(100% - 20px);
-    overflow-y: scroll;
-    border-radius: 10px;
-}
+
 
 .select-info {
     background-color: var(--background-1);
-    padding: 30px 10px 30px 10px;
+    padding: 20px 10px 20px 10px;
     display: flex;
     gap: 20px;
     align-items: center;
@@ -18,24 +12,15 @@
 
 }
 
-.report-div {
-    background-color: var(--background-1);
-    padding: 30px 10px 30px 10px;
-    padding-left: 30px;
-    display: flex;
-    align-items: center;
-    gap: 20px;
-    border-radius: 5px;
-    box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
-}
 
 .each-info-select {
     display: flex;
-    align-items: center;
-    justify-content: center;
+    flex-direction: column;
     gap: 10px;
+   width: 100%;
 
 }
+
 
 .division-background {
     background-color: var(--background-1);
@@ -44,6 +29,17 @@
     justify-content: center;
     border-radius: 5px;
     box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.input-box{
+    flex: 1;
+    width: 100%;
+}
+
+.input-flex{
+    display: flex;
+    width: 100%;
+    gap: 10px;
 }
 
 .syllabus-entry {
@@ -61,26 +57,13 @@
     width: 100%;
 }
 
-.syllabus-entry select,
-.syllabus-entry input[type="text"] {
-    padding: 8px 12px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    font-size: 14px;
-    margin-right: 10px;
-    margin-top: 5px;
-    /* Adjusted margin-top */
-}
 
-.syllabus-entry select {
-    width: 200px;
-}
 
-.syllabus-entry input[type="text"] {
-    width: 300px;
-}
 
-.syllabus-entry button {
+
+
+
+.button-submit{
     padding: 8px 16px;
     background-color: #007bff;
     color: #fff;
@@ -88,165 +71,113 @@
     border-radius: 4px;
     font-size: 14px;
     cursor: pointer;
+    /* margin: 20px  ; */
+    /* margin:20px 20px 20px 20px; */
+    /* width: 50%; */
+
 }
 
 .syllabus-entry button:hover {
     background-color: #0056b3;
 }
 
-.syllabus-entry label {
-    margin-right: 10px;
-    font-size: 14px;
-}
+   
+
 
 .syllabus-entry .dropdown-section {
     border-radius: 4px;
-    padding: 10px;
-    padding-left: 20px;
+    padding: 20px;
     margin-bottom: 10px;
     font-weight: 600;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
 }
 
-.font {
-    font-weight: 600;
-}
 
-.font-in-dropdown {
-    font-weight: 500;
-    padding: 2px;
-}
 
-.dropdown-content {
-    padding: 0px 20px 20px 15px;
-}
-
-.course-outcome-buttons,
+/* .course-outcome-buttons,
 .po-mapping-buttons,
 .course-content-buttons {
     display: flex;
-}
+} */
 
-.course-outcome-textarea,
+/* .course-outcome-textarea,
 .course-content-textarea {
-    width: 70%;
+    width: 100%;
     resize: vertical;
     margin-right: 10px;
-}
+} */
+.course-outcome input[type="text"]
 
-.syllabus-entry .dropdown-section h3 {
-    margin-top: 0;
-    margin-bottom: 10px;
+ {
+    width: 100%;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-sizing: border-box;
     font-size: 16px;
-    font-weight: bold;
+   
 }
 
-.syllabus-entry .dropdown-section form {
-    display: flex;
-    flex-direction: column;
-}
 
-.syllabus-entry .dropdown-section input,
-.syllabus-entry .dropdown-section textarea {
-    margin-bottom: 10px;
-    padding: 8px 12px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    font-size: 14px;
-}
-
-.po-mapping-item {
-    display: flex;
-    align-items: center;
-    margin-bottom: 10px;
-}
-
-.po-mapping-input {
-    flex: 1;
-    padding: 8px 12px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    font-size: 14px;
-    margin-right: 10px;
-}
-
-.po-mapping-buttons {
-    margin-left: auto;
-}
-
-.po-mapping-buttons button {
-    padding: 6px 12px;
-    background-color: #007bff;
-    color: #fff;
-    border: none;
-    border-radius: 4px;
-}
-
-.course-outcome-item,
-.po-mapping-item {
-    display: flex;
-    align-items: center;
-    margin-bottom: 10px;
-}
-
-.course-outcome-item span,
-.po-mapping-item span {
-    margin-right: 10px;
-}
-
-.po-mapping-input {
-    flex: 1;
-    padding: 8px 12px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    font-size: 14px;
-    margin-right: 10px;
-}
-
-.po-mapping-buttons {
-    margin-left: auto;
-}
-
-.po-mapping-buttons button {
-    padding: 6px 12px;
-    background-color: #007bff;
-    color: #fff;
-    border: none;
-    border-radius: 4px;
-}
 
 .po-mapping-buttons button:hover {
     background-color: #0056b3;
 }
 
-.course-content-item {
-    display: flex;
-    flex-direction: column;
-    margin-bottom: 10px;
-}
 
-.course-content-input,
-.course-content-textarea {
-    padding: 8px 12px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    font-size: 14px;
-    margin-bottom: 5px;
-}
 
-.course-content-buttons {
-    margin-top: 5px;
-}
 
-.course-content-buttons button {
-    padding: 6px 12px;
-    background-color: #007bff;
-    color: #fff;
-    border: none;
-    border-radius: 4px;
-    margin-right: 5px;
-    cursor: pointer;
-}
+
 
 .course-content-buttons button:hover {
     background-color: #0056b3;
+}
+.flex-boxco{
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    width: 100%;
+
+
+}
+
+form{
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+
+.align{
+    display: flex;
+    justify-content: flex-end; 
+    gap: 10px; 
+    margin-top: 10px;
+}
+.button-Add{
+   
+    padding: 8px 16px;
+    border-radius: 5px;
+    background-color: rgb(56, 157, 229);
+    color: white;
+    text-align: center;
+    border: none;
+    font-weight: 700;
+    margin-right: 10px;
+}
+
+.font {
+    display: flex;
+    justify-content: space-evenly;
+    gap: 10px;
+    align-items: center; 
+    
+    padding: 10px; /
+  
+}
+
+.pdf {
+    
+    display: flex;
+    align-items: center; 
 }

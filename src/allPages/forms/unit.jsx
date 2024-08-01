@@ -2,22 +2,18 @@ import React, { useEffect, useState } from "react";
 import apiHost from "../../utils/api";
 import InputBox from "../../components/InputBox/inputbox";
 import Dropdown from "../../components/dropdown/dropdown";
-import './form.css'
-
+import './unit.css';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 function UnitForm() {
     const [regulation, setRegulation] = useState([]);
     const [regulationId, setRegulationId] = useState(null);
-
     const [degree, setDegree] = useState([]);
     const [degreeId, setDegreeId] = useState(null);
-
     const [branch, setBranch] = useState([]);
     const [selectedBranchId, setSelectedBranchId] = useState(null);
-
     const [semester, setSemester] = useState([]);
-    // const [semesterId, setSemesterId] = useState(null);
-
     const [course, setCourse] = useState([]);
     const [courseId, setCourseId] = useState(null);
     const [unit, setUnit] = useState("");
@@ -25,8 +21,7 @@ function UnitForm() {
     const [description, setDescription] = useState("");
     const [hours, setHours] = useState("");
 
-    useEffect(() => {
-        // Fetch regulations on component mount
+    const fetchRegulations = () => {
         fetch(`${apiHost}/api/rf/dropdown/regulation`)
             .then((response) => response.json())
             .then((data) => {
@@ -39,8 +34,9 @@ function UnitForm() {
             .catch((error) =>
                 console.error("Error fetching regulation dropdown:", error)
             );
+    };
 
-        // Fetch semesters on component mount
+    const fetchSemesters = () => {
         fetch(`${apiHost}/api/rf/dropdown/semester`)
             .then((response) => response.json())
             .then((data) => {
@@ -53,6 +49,11 @@ function UnitForm() {
             .catch((error) =>
                 console.error("Error fetching semester dropdown:", error)
             );
+    };
+
+    useEffect(() => {
+        fetchRegulations();
+        fetchSemesters();
     }, []);
 
     const handleRegulationChange = (selectedRegulation) => {
@@ -93,7 +94,6 @@ function UnitForm() {
 
     const handleBranchChange = (selectedBranch) => {
         setSelectedBranchId(selectedBranch.value);
-        // You can fetch courses based on selected branch here if needed
     };
 
     const handleSemesterChange = (selectedSemester) => {
@@ -123,7 +123,7 @@ function UnitForm() {
 
         try {
             const dataToSend = {
-                course: courseId, // Corrected variable name
+                course: courseId,
                 unit: unit,
                 unit_name: unitname,
                 description: description,
@@ -141,75 +141,109 @@ function UnitForm() {
             });
 
             if (response.ok) {
-                console.log("Data submitted successfully");
+                toast.success("Data submitted successfully", {
+                    position: 'bottom-right'
+                });
+                console.log("Unit submitted successfully");
+
+                // Reset the form fields and dropdown selections
+                setRegulationId(null);
+                setDegreeId(null);
+                setSelectedBranchId(null);
+                setCourseId(null);
+                setUnit("");
+                setUnitname("");
+                setDescription("");
+                setHours("");
+
+                // Re-fetch the dropdown options
+                fetchRegulations();
+                fetchSemesters();
             } else {
+                toast.error("Failed to submit unit", {
+                    position: 'bottom-right'
+                });
                 console.error("Failed to submit data");
             }
         } catch (error) {
+            toast.error("Error submitting unit", {
+                position: 'bottom-right'
+            });
             console.error("Error submitting data:", error);
         }
     };
 
     return (
-        <div>
+        <div className="unit-form">
+            <div className="title">Unit Form</div>
+            <ToastContainer />
             <form onSubmit={handleSubmit}>
-                <Dropdown
-                    className="select-field"
-                    options={regulation}
-                    onChange={handleRegulationChange}
-                    placeholder="Regulation"
-                />
-                <Dropdown
-                    className="select-field"
-                    options={degree}
-                    onChange={handleDegreeChange}
-                    placeholder="Degree"
-                />
-                <Dropdown
-                    className="select-field"
-                    options={branch}
-                    onChange={handleBranchChange}
-                    placeholder="Branch"
-                />
-                <Dropdown
-                    className="select-field"
-                    options={semester}
-                    onChange={handleSemesterChange}
-                    placeholder="Semester"
-                />
-                <Dropdown
-                    className="select-field"
-                    options={course}
-                    onChange={(selectedCourse) =>
-                        setCourseId(selectedCourse.value)
-                    }
-                    placeholder="Course"
-                />
-                <InputBox
-                    value={unit}
-                    onChange={(e) => setUnit(e.target.value)}
-                    placeholder="Unit"
-                    type="text"
-                />
-                <InputBox
-                    value={unitname}
-                    onChange={(e) => setUnitname(e.target.value)}
-                    placeholder="Unit Name"
-                    type="text"
-                />
-                <InputBox
-                    value={description}
-                    onChange={(e) => setDescription(e.target.value)}
-                    placeholder="Unit Description"
-                    type="text"
-                />
-                <InputBox
-                    value={hours}
-                    onChange={(e) => setHours(e.target.value)}
-                    placeholder="Hours"
-                    type="number"
-                />
-                <button type="submit" className="button">Submit</button>
+                <div className="flex-box">
+                    <Dropdown
+                        className="select-field"
+                        options={regulation}
+                        value={regulation.find(option => option.value === regulationId) || null}
+                        onChange={handleRegulationChange}
+                        placeholder="Regulation"
+                    />
+                    <Dropdown
+                        className="select-field"
+                        options={degree}
+                        value={degree.find(option => option.value === degreeId) || null}
+                        onChange={handleDegreeChange}
+                        placeholder="Degree"
+                    />
+                    <Dropdown
+                        className="select-field"
+                        options={branch}
+                        value={branch.find(option => option.value === selectedBranchId) || null}
+                        onChange={handleBranchChange}
+                        placeholder="Branch"
+                    />
+                    <Dropdown
+                        className="select-field"
+                        options={semester}
+                        onChange={handleSemesterChange}
+                        placeholder="Semester"
+                    />
+                    <Dropdown
+                        className="select-field"
+                        options={course}
+                        value={course.find(option => option.value === courseId) || null}
+                        onChange={(selectedCourse) => setCourseId(selectedCourse.value)}
+                        placeholder="Course"
+                    />
+                    <InputBox
+                        className="input-box"
+                        value={unit}
+                        onChange={(e) => setUnit(e.target.value)}
+                        placeholder="Unit"
+                        type="text"
+                    />
+                    <InputBox
+                        className="input-box"
+                        value={unitname}
+                        onChange={(e) => setUnitname(e.target.value)}
+                        placeholder="Unit Name"
+                        type="text"
+                    />
+                    <InputBox
+                        className="input-box"
+                        value={description}
+                        onChange={(e) => setDescription(e.target.value)}
+                        placeholder="Unit Description"
+                        type="text"
+                    />
+                    <InputBox
+                        className="input-box"
+                        value={hours}
+                        onChange={(e) => setHours(e.target.value)}
+                        placeholder="Hours"
+                        type="number"
+                        min="0"
+                    />
+                    <button type="submit" className="button-sub">Submit</button>
+                </div>
             </form>
         </div>
     );

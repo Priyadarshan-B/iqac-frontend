@@ -1,0 +1,96 @@
+
+
+.dropdown-container {
+    display: flex;
+    gap:10px;
+   padding: 10px;
+   justify-content:center;
+   align-items:center;
+  width: 96%;
+  background-color: white;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+   
+  
+}
+
+.dropdowns {
+    display: flex;
+    width: 100%;
+    flex: 1;
+    align-items: center;
+    justify-content: center;
+   
+}
+
+.report {
+    margin-top: 20px;
+}
+
+
+
+
+
+.report-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+}
+
+.report-table th, .report-table td {
+    border: 1px solid #ddd;
+    padding: 13px;
+    text-align: center;
+    width: 100px;
+}
+
+.report-table th {
+    background-color: #f2f2f2;
+}
+
+.pagination {
+    display: flex;
+    justify-content: center;
+    list-style: none;
+    padding: 0;
+}
+
+.pagination .page-item {
+    margin: 0 5px;
+}
+
+.pagination .page-link {
+    padding: 8px 16px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    color: #007bff;
+    cursor: pointer;
+    text-decoration: none;
+}
+
+.pagination .page-item.active .page-link {
+    background-color: #007bff;
+    color: #fff;
+    border: 1px solid #007bff;
+}
+
+.line{
+    text-decoration: none;
+}
+
+
+
+.dropdown{
+  flex:1;
+}
+
+label{
+    display: none;
+}
+
+.row{
+    display: flex;
+   justify-content:space-between; 
+}
+
+

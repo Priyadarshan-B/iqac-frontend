@@ -1,0 +1,68 @@
+
+.form-container {
+    display: flex;
+    /* justify-content: center; */
+    align-items: center;
+    height: 80vh; 
+    background-color: #f5f5f5; 
+}
+
+
+.branch-form {
+    background: #fff; 
+    padding: 20px; 
+    border-radius: 10px; 
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    max-width: 400px; 
+    width: 100%; 
+    margin-left: 100px;
+    
+}
+
+
+.branch-form select-field {
+    width: 100%;
+    padding: 12px; /* Padding inside the field */
+    margin-bottom: 20px; /* Spacing below each field */
+    border: 1px solid #007bff; /* Blue border for select field */
+    border-radius: 5px; /* Rounded corners */
+    box-sizing: border-box;
+    font-size: 16px; /* Font size */
+}
+
+/* Input field style */
+.branch-form input[type="text"] {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ccc; /* Default border for input field */
+    border-radius: 5px;
+    box-sizing: border-box;
+    font-size: 15px;
+   
+}
+
+/* Button style */
+.button-sub button {
+    width: 100%;
+    padding: 10px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+   
+    
+}
+
+.button:hover {
+    background-color: #0056b3; /* Darker blue on hover */
+}
+
+.error-message {
+    color: red; /* Red color for error messages */
+    margin-top: 10px; /* Spacing above error message */
+}
+
+/* Additional styles can be added based on your design requirements */

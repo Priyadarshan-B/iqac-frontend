@@ -57,11 +57,13 @@
 
 .menu-open-icon {
     display: none;
+    z-index: 1;
 }
 
 @media (max-width: 1040px) {
     .menu-open-icon {
         display: block;
+        z-index: 1000;
     }
 
     .iqac-title {
