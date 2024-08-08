@@ -11,7 +11,7 @@ import { TextareaAutosize } from '@mui/base/TextareaAutosize';
 import Button from '.././Button/button'
 import { InputLabel } from '@mui/material';
 
-export default function ModalUnstyled({ openState, modalContent ,icon}) {
+export default function ModalUnstyled({ openState, modalContent ,icon,closeText}) {
   const [open, setOpen] = React.useState(openState ? openState : false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
@@ -32,7 +32,7 @@ export default function ModalUnstyled({ openState, modalContent ,icon}) {
         <ModalContent sx={{ width: 400 }}>
           {modalContent}
           <div style={{ display: "flex", justifyContent: "flex-end" }}>
-            <Button color="black" backgroundColor="white" onClick={handleClose} label={"Cancel"} />
+            <Button color="black" backgroundColor="white" onClick={handleClose} label={closeText} />
 
           </div>
         </ModalContent>

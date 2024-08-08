@@ -3,7 +3,6 @@ import ViewMoreButton from "../../components/Button/viewMore";
 import { useState, useEffect } from "react";
 import React from "react";
 import {
-  MenuItem,
   InputLabel,
   TextareaAutosize,
   Table,
@@ -13,17 +12,16 @@ import {
   TableCell,
   TableHead,
   TableRow,
-  TableContainer
 } from "@mui/material";
 import CircleIcon from '@mui/icons-material/Circle';
 import InfoIcon from '@mui/icons-material/Info';
 import ModalUnstyled from "../../components/Modals/Modal";
 import apiHost from "../../utils/api";
 import axios from 'axios';
-import { useLocation } from "react-router-dom";
 import Select from 'react-select';
 import './hodSemesterPage.css';
 import RotateLeft from "@mui/icons-material/RotateLeft";
+import * as XLSX from 'xlsx'; // Import XLSX library
 
 const InfoModal = ({ status, requestDetails, onClose }) => {
   return (
@@ -34,14 +32,14 @@ const InfoModal = ({ status, requestDetails, onClose }) => {
         <div>
           <h3>Replacement Request Details</h3>
           <p>Request ID: {requestDetails.request_id}</p>
-          <p>Old Faculty ID: {requestDetails.old_faculty_id}</p>
-          <p>New Faculty ID: {requestDetails.new_faculty_id}</p>
-          <p>Course ID: {requestDetails.course_id}</p>
+          <p>Old Faculty : {requestDetails.old_faculty_name}</p>
+          <p>New Faculty : {requestDetails.new_faculty_name}</p>
+          <p>Course : {requestDetails.course_name}</p>
           <p>Status: {requestDetails.status}</p>
           <p>Remarks: {requestDetails.remarks}</p>
-          <p>Created At: {requestDetails.created_at}</p>
         </div>
       )}
+
     </div>
   );
 };
@@ -52,19 +50,49 @@ function HodSemesterPage() {
   const [semester, setSemester] = useState({ value: 1, label: 'Semester 1' });
   const [infoModalOpen, setInfoModalOpen] = useState(false);
   const [currentStatus, setCurrentStatus] = useState('');
-  const [requestDetails, setRequestDetails] = useState(null); // State for replacement request details
+  const [requestDetails, setRequestDetails] = useState(null);
   const branch = 1;
 
   const tableCellFontSize = "14px";
-
+  const semesterTitles = {
+    1: 'S1 Courses',
+    2: 'S2 Courses',
+    3: 'S3 Courses',
+    4: 'S4 Courses',
+    5: 'S5 Courses',
+    6: 'S6 Courses',
+    7: 'S7 Courses',
+    8: 'S8 Courses',
+  };
   useEffect(() => {
     const fetchData = async () => {
       try {
+        console.log("Fetching semester faculty allocation data...");
         const response = await axios.get(`${apiHost}/semesterFacultyAllocation`, {
           params: { semester: semester.value, branch }
         });
-        setSemesterData(response.data);
-        setViewMoreState(new Array(response.data.length).fill(0));
+        console.log("Semester data response:", response.data);
+
+        const updatedSemesterData = await Promise.all(response.data.map(async (data) => {
+          const facultyWithRequests = await Promise.all(data.faculty.map(async (faculty) => {
+            const facultyRequests = await fetchReplacementRequestDetails([faculty.id]);
+            console.log(`Replacement requests for faculty ID ${faculty.id}:`, facultyRequests);
+            return {
+              ...faculty,
+              requests: facultyRequests
+            };
+          }));
+
+          return {
+            ...data,
+            faculty: facultyWithRequests
+          };
+        }));
+
+        setSemesterData(updatedSemesterData);
+        setViewMoreState(new Array(updatedSemesterData.length).fill(0));
+        console.log("Updated semester data:", updatedSemesterData);
+        
       } catch (error) {
         console.error('Error fetching semester data:', error);
       }
@@ -72,6 +100,19 @@ function HodSemesterPage() {
 
     fetchData();
   }, [semester, branch]);
+
+  const fetchReplacementRequestDetails = async (facultyIds) => {
+    try {
+      console.log("Fetching replacement request details for faculty IDs:", facultyIds);
+      const response = await axios.get(`${apiHost}/faculty_replacement_requests`, {
+        params: { facultyIds }
+      });
+      console.log("Replacement request details response:", response.data);
+      return response.data;
+    } catch (error) {
+      console.error('Error fetching replacement request details:', error);
+    }
+  };
 
   const handleViewToggle = (index) => {
     setViewMoreState(prev => {
@@ -83,28 +124,13 @@ function HodSemesterPage() {
 
   const handleSemesterChange = (selectedOption) => {
     setSemester(selectedOption);
-  };
-
-  const fetchReplacementRequestDetails = async (facultyId) => {
-    try {
-      const response = await axios.get(`${apiHost}/faculty_replacement_requests`, {
-        params: { facultyId }
-      });
-      return response.data; // Assuming the API returns the relevant data
-    } catch (error) {
-      console.error('Error fetching replacement request details:', error);
-    }
-  };
-
-  const handleInfoModalOpen = async (status, facultyId) => {
-    const details = await fetchReplacementRequestDetails(facultyId);
-    setCurrentStatus(status);
-    setRequestDetails(details);
-    setInfoModalOpen(true);
+    console.log("Selected semester:", selectedOption);
   };
 
   const handleInfoModalClose = () => {
     setInfoModalOpen(false);
+    setRequestDetails(null);
+    console.log("Closed info modal");
   };
 
   const ReplaceFaculty = ({ courseId, currentFacultyId }) => {
@@ -115,6 +141,7 @@ function HodSemesterPage() {
     useEffect(() => {
       const fetchFacultyData = async () => {
         try {
+          console.log(`Fetching faculty suggestions for course ID: ${courseId} and current faculty ID: ${currentFacultyId}`);
           const response = await axios.get(`${apiHost}/facultySuggestionCourseDetails`, {
             params: { courseId: courseId, facultyRegisterNumber: currentFacultyId }
           });
@@ -123,6 +150,7 @@ function HodSemesterPage() {
             label: faculty.faculty_name
           }));
           setFacultyOptions(options);
+          console.log("Fetched faculty options:", options);
         } catch (error) {
           console.error('Error fetching faculty suggestions:', error);
         }
@@ -133,10 +161,12 @@ function HodSemesterPage() {
 
     const handleFacultyChange = (selectedOption) => {
       setSelectedFacultyId(selectedOption.value);
+      console.log("Selected faculty ID:", selectedOption.value);
     };
 
     const handleSubmit = async () => {
       try {
+        console.log("Submitting replacement request...");
         const response = await axios.post(`${apiHost}/replaceFaculty`, {
           courseId: courseId,
           oldFacultyId: currentFacultyId,
@@ -170,9 +200,47 @@ function HodSemesterPage() {
     );
   };
 
+  const handleOpenInfoModal = (facultyStatus, facultyRequests) => {
+    setCurrentStatus(facultyStatus);
+    setRequestDetails(facultyRequests[0]);
+    setInfoModalOpen(true);
+  };
+
+  const downloadExcel = () => {
+    try {
+      // Prepare the data for Excel
+      const dataToExport = semesterData.flatMap(course => {
+        return course.faculty.map(faculty => ({
+          'Course Name': course.CourseName,
+          'Total Papers': course.totalPapers,
+          'Faculty Name': faculty.facultyName,
+          'Department': faculty.department,
+          'Faculty ID': faculty.facultyId,
+          'Status': faculty.status
+        }));
+      });
+
+      console.log(dataToExport);
+
+      // Create a new workbook
+      const wb = XLSX.utils.book_new();
+
+      // Convert data to a worksheet
+      const ws = XLSX.utils.json_to_sheet(dataToExport);
+
+      // Add the worksheet to the workbook
+      XLSX.utils.book_append_sheet(wb, ws, 'Semester Data');
+
+      // Generate a download
+      XLSX.writeFile(wb, `Semester_${semester.value}_Data.xlsx`);
+    } catch (error) {
+      console.error("Error generating Excel file:", error);
+    }
+  };
+
   return (
     <div>
-      <h1>S1 Courses</h1>
+       <h1>{semesterTitles[semester.value]}</h1> 
       <br />
       <Box sx={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center', marginBottom: '20px' }}>
         <InputLabel id="semester-select" color="primary" sx={{ marginRight: '10px' }}>Select Semester</InputLabel>
@@ -191,6 +259,9 @@ function HodSemesterPage() {
             { value: 8, label: 'Semester 8' },
           ]}
         />
+        <Button onClick={downloadExcel} variant="contained" color="primary" sx={{ marginLeft: '10px' }}>
+          Download Excel
+        </Button>
       </Box>
       <Table sx={{ backgroundColor: "white", marginTop: "20px" }}>
         <TableHead>
@@ -234,20 +305,23 @@ function HodSemesterPage() {
                             <TableCell sx={{ fontSize: tableCellFontSize }} align="center">{faculty.facultyId}</TableCell>
                             <TableCell sx={{ fontSize: tableCellFontSize }} align="center">
                               <div style={{ display: "flex", alignItems: "center", gap: "10px", justifyContent: "center" }}>
-                                <CircleIcon sx={{ color: faculty.status === "active" ? "green" : faculty.status === "pending" ? "orange" : "red" }} />
+                                <CircleIcon sx={{ color: faculty.status === "active" ? "green" : "orange" }} />
                                 <span>{faculty.status}</span>
                               </div>
                             </TableCell>
                             <TableCell sx={{ fontSize: "20px" }} align="center">
-                              {faculty.status === "pending" ? (
-                                <ModalUnstyled
-                                  icon={<InfoIcon />}
-                                  open={infoModalOpen}
-                                  modalContent={<InfoModal status={currentStatus} requestDetails={requestDetails} onClose={handleInfoModalClose} />}
-                                  onOpen={() => handleInfoModalOpen(faculty.status, faculty.id)} // Pass faculty.id
-                                />
+                              {faculty.status !== "active" ? (
+                                <div onClick={() => handleOpenInfoModal(faculty.status, faculty.requests)}>
+                                  <ModalUnstyled
+                                  closeText={"close"}
+                                    icon={<InfoIcon />}
+                                    open={infoModalOpen}
+                                    modalContent={<InfoModal  status={currentStatus} requestDetails={requestDetails} onClose={handleInfoModalClose} />}
+                                  />
+                                </div>
                               ) : (
                                 <ModalUnstyled
+                                closeText={"Cancel"}
                                   icon={<RotateLeft />}
                                   modalContent={<ReplaceFaculty courseId={data.courseId} currentFacultyId={faculty.id} />}
                                 />
