@@ -28,7 +28,7 @@
 
 
 table {
-  width: 100%;
+  width: 100vw;
   border-collapse: collapse;
   margin-bottom: 20px;
   border-radius: 10px;

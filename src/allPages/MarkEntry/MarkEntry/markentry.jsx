@@ -9,12 +9,17 @@ import { ToastContainer, toast } from 'react-toastify';
 import Modal from 'react-modal';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
+import { Table,TablePagination, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, TextField,  Button as MuiButton } from '@mui/material';
 
 
 function Markentry() {
 
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [Open, setOpen] = useState(false);
+
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(5);
+  
 
   const [RegulationOptions, setRegulationOptions] = useState([]);
   const [Regulation, setRegulation] = useState("");
@@ -50,6 +55,17 @@ function Markentry() {
   const [studentsData, setStudentsData] = useState([]);
 
   const [alertMessage, setAlertMessage] = useState("");
+
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage);
+  };
+  
+  const handleChangeRowsPerPage = (event) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
+  };
+  
+
 
   useEffect(() => {
     fetch(`${apiHost}/regulation`)
@@ -333,6 +349,11 @@ function Markentry() {
         }
       })
   }
+  const paginatedStudents = studentsData
+  .filter(student =>
+    student.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    student.register_number.toLowerCase().includes(searchTerm.toLowerCase())
+  ).slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
 
   return (
     <div className="container">
@@ -461,138 +482,127 @@ function Markentry() {
 
         })}
       </div>
-      {studentsData.length > 0 &&
-        <div className="table-container">
-          <InputBox
+      {studentsData.length > 0 && (
+        <TableContainer sx={{height:"100%",overflowX:"unset"}}>
+          <TextField
             type="text"
             placeholder="Student Name/Reg.."
             value={searchTerm}
             onChange={handleSearch}
-          /><br />
-          <table className="table">
-            <thead>
-              <tr>
-                <th>Name</th>
-                <th>Roll Number</th>
-                {courseoutcomes.map((_, i, courseOutcome) => {
-
+            fullWidth
+            margin="normal"
+          />
+          <Table>
+            <TableHead>
+              <TableRow>
+                <TableCell>Name</TableCell>
+                <TableCell>Roll Number</TableCell>
+                {courseoutcomes.map((_, i) => {
                   if (testtype.value == 1 || testtype.value == 3) {
                     if (i < coBound) {
                       return (
-                        <th key={i}>
+                        <TableCell key={i}>
                           COURSE OUTCOME {i + 1} (MAX : {i == coBound - 1 ? courseoutcomes[i] / 2 : courseoutcomes[i]})
-
-                        </th>
-                      )
-
+                        </TableCell>
+                      );
                     }
-                  }
-                  else if (testtype.value == 2 || testtype.value == 4) {
+                  } else if (testtype.value == 2 || testtype.value == 4) {
                     if (i >= coBound - 1) {
                       return (
-                        <th key={i}>
+                        <TableCell key={i}>
                           COURSE OUTCOME {i + 1} (MAX : {i == coBound - 1 ? courseoutcomes[i] / 2 : courseoutcomes[i]})
-                        </th>
-                      )
-
+                        </TableCell>
+                      );
                     }
-                  }
-                  else {
+                  } else {
                     return (
-                      <th key={i}>
+                      <TableCell key={i}>
                         COURSE OUTCOME {i + 1} (MAX : {courseoutcomes[i]})
-                      </th>
-                    )
+                      </TableCell>
+                    );
                   }
                 })}
-                <th>Total</th>
-              </tr>
-            </thead>
-            <tbody>
-
-              {
-                studentsData.filter(student =>
-                  student.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                  student.register_number.toLowerCase().includes(searchTerm.toLowerCase())
-                ).map((student, studentIndex) => {
-
-                  let absent = false;
-
-                  return (
-
-                    <tr key={studentIndex}>
-                      <td>{student.name}</td>
-                      <td>{student.register_number}</td>
-                      {courseoutcomes.map((courseOutcome, markIndex) => {
-
-                        if (testtype.value == 1 || testtype.value == 3) {
-                          if (markIndex < coBound) {
-                            if (updatedMarks['S' + student.id + 'C' + courseOutcomeIds[markIndex].id + 'T' + testtype.value]?.present == 0) {
-                              absent = true
-                            }
-                            else {
-                              absent = false
-                            }
-                            return (
-                              <td key={markIndex}>
-                                <InputBox
-                                  disabled={absent}
-                                  type={absent ? "text" : "number"}
-                                  value={absent ? "AB" : student.marks[markIndex]}
-                                  max={(markIndex == coBound - 1) ? courseOutcome / 2 : courseOutcome}
-                                  onChange={(e) =>
-                                    handleMarkChange(studentIndex, markIndex, e.target.value, (markIndex == coBound - 1) ? courseOutcome / 2 : courseOutcome)
-                                  }
-                                />
-                              </td>
-                            )
+                <TableCell>Total</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {paginatedStudents.map((student, studentIndex) => {
+                let absent = false;
+                return (
+                  <TableRow key={studentIndex}>
+                    <TableCell>{student.name}</TableCell>
+                    <TableCell>{student.register_number}</TableCell>
+                    {courseoutcomes.map((courseOutcome, markIndex) => {
+                      if (testtype.value == 1 || testtype.value == 3) {
+                        if (markIndex < coBound) {
+                          if (updatedMarks['S' + student.id + 'C' + courseOutcomeIds[markIndex].id + 'T' + testtype.value]?.present == 0) {
+                            absent = true;
+                          } else {
+                            absent = false;
                           }
-                        }
-                        else if (testtype.value == 2 || testtype.value == 4) {
-                          if (markIndex >= coBound - 1) {
-                            return (
-                              <td key={markIndex}>
-                                <InputBox
-                                  type="number"
-                                  value={student.marks[markIndex]}
-                                  max={(markIndex == coBound - 1) ? courseOutcome / 2 : courseOutcome}
-                                  onChange={(e) =>
-                                    handleMarkChange(studentIndex, markIndex, e.target.value, (markIndex == coBound - 1) ? courseOutcome / 2 : courseOutcome)
-                                  }
-
-                                />
-                              </td>
-                            )
-                          }
-                        }
-                        else {
                           return (
-                            <td key={markIndex}>
+                            <TableCell key={markIndex}>
+                              <InputBox
+                                disabled={absent}
+                                type={absent ? "text" : "number"}
+                                value={absent ? "AB" : student.marks[markIndex]}
+                                max={(markIndex == coBound - 1) ? courseOutcome / 2 : courseOutcome}
+                                onChange={(e) =>
+                                  handleMarkChange(studentIndex, markIndex, e.target.value, (markIndex == coBound - 1) ? courseOutcome / 2 : courseOutcome)
+                                }
+                              />
+                            </TableCell>
+                          );
+                        }
+                      } else if (testtype.value == 2 || testtype.value == 4) {
+                        if (markIndex >= coBound - 1) {
+                          return (
+                            <TableCell key={markIndex}>
                               <InputBox
                                 type="number"
                                 value={student.marks[markIndex]}
-                                max={courseOutcome}
+                                max={(markIndex == coBound - 1) ? courseOutcome / 2 : courseOutcome}
                                 onChange={(e) =>
-                                  handleMarkChange(studentIndex, markIndex, e.target.value, courseOutcome)
+                                  handleMarkChange(studentIndex, markIndex, e.target.value, (markIndex == coBound - 1) ? courseOutcome / 2 : courseOutcome)
                                 }
-
                               />
-                            </td>
-                          )
+                            </TableCell>
+                          );
                         }
-
-
-                      })}
-                      <td>{absent ? "AB" : calculateTotal(student.marks)}</td>
-
-                    </tr>
-                  )
-                })}
-            </tbody>
-          </table>
-        </div>
-      }
-      {studentsData.length > 0 &&
+                      } else {
+                        return (
+                          <TableCell key={markIndex}>
+                            <InputBox
+                              type="number"
+                              value={student.marks[markIndex]}
+                              max={courseOutcome}
+                              onChange={(e) =>
+                                handleMarkChange(studentIndex, markIndex, e.target.value, courseOutcome)
+                              }
+                            />
+                          </TableCell>
+                        );
+                      }
+                    })}
+                    <TableCell>{absent ? "AB" : calculateTotal(student.marks)}</TableCell>
+                  </TableRow>
+                );
+              })}
+            </TableBody>
+          </Table>
+          <TablePagination
+          rowsPerPageOptions={[5, 10, 25]}
+          component="div"
+          count={studentsData.length}
+          rowsPerPage={rowsPerPage}
+          page={page}
+          onPageChange={handleChangePage}
+          onRowsPerPageChange={handleChangeRowsPerPage}
+        />
+     
+        </TableContainer>
+      )}
+     {paginatedStudents.length > 0 &&
         <div className="Marks-Submit-Button">
           <Button onClick={updateMarks} label={"Submit"} />
           <Modal
@@ -641,5 +651,4 @@ function Markentry() {
 }
 
 export default Markentry;
-
 

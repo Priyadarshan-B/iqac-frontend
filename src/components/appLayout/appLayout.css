@@ -9,6 +9,8 @@
     flex: 10;
     display: flex;
     flex-direction: row;
+    padding:1%;
+   
 }
 
 .h-navbar {
@@ -22,10 +24,11 @@
 .v-navbar {
     width: 235px;
     height: 92vh;
+ 
     /* display: flex;
     flex: 1; */
-    background-color: var(--background-1);
     overflow-y: scroll;
+    background-color: var(--background-1);
     overflow-x: hidden;
 }
 

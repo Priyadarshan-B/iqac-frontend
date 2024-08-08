@@ -1,0 +1,8 @@
+table tr:hover{
+    background-color: rgba(244, 244, 244, 0.551);
+    cursor: pointer;
+}
+.disableHover :hover{
+    background-color: white;
+}
+

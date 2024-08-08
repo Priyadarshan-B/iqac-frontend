@@ -117,12 +117,7 @@
 
 
 
-@media screen and (max-width: 600px) {
-  th, td {
-    display: block;
-    width: 90%;
-  }
-}
+
 
 .Marks-Submit-Button{
   display: flex;

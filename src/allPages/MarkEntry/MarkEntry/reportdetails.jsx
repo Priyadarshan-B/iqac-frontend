@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation, useParams } from 'react-router-dom';
 import * as XLSX from 'xlsx';
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, TablePagination } from '@mui/material';
 import './Subject.css';
-import Dropdown from '../../../components/dropdown/dropdown';
 import apiHost from '../../../utils/api';
 
 function SubjectDetailsPage() {
@@ -13,8 +13,8 @@ function SubjectDetailsPage() {
 
   const [subjectDetails, setSubjectDetails] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
-  const [departmentOptions, setDepartmentOptions] = useState([]);
-  const [department, setDepartment] = useState(undefined);
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
 
   const studentList = state;
 
@@ -40,6 +40,21 @@ function SubjectDetailsPage() {
   const handleSearch = (e) => {
     setSearchTerm(e.target.value);
   };
+
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage);
+  };
+
+  const handleChangeRowsPerPage = (event) => {
+    setRowsPerPage(+event.target.value);
+    setPage(0);
+  };
+
+  const filteredStudents = studentList.filter((student) =>
+    Object.values(student).some((value) =>
+      value.toString().toLowerCase().includes(searchTerm.toLowerCase())
+    )
+  );
 
   const downloadTableAsExcel = () => {
     const tableData = [
@@ -83,24 +98,37 @@ function SubjectDetailsPage() {
               Download as Excel
             </button>
           </div>
-          <table>
-            <thead>
-              <tr>
-                {studentList?.length > 0 && <th>S.No</th>}
-                {studentList?.length > 0 ? Object.keys(studentList[0]).map((header, index) => (
-                  <th key={index}>{header}</th>
-                )) : null}
-              </tr>
-            </thead>
-            <tbody>
-              {studentList?.map((student, index) => (
-                <tr key={student.rollNumber}>
-                  <td>{index + 1}</td>
-                  {Object.values(student).map((value, i) => (<td key={i}>{value}</td>))}
-                </tr>
-              ))}
-            </tbody>
-          </table>
+          <TableContainer component={Paper}>
+            <Table>
+              <TableHead>
+                <TableRow>
+                  {studentList?.length > 0 && <TableCell>S.No</TableCell>}
+                  {studentList?.length > 0 ? Object.keys(studentList[0]).map((header, index) => (
+                    <TableCell key={index}>{header}</TableCell>
+                  )) : null}
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {filteredStudents
+                  .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                  .map((student, index) => (
+                    <TableRow key={student.rollNumber}>
+                      <TableCell>{page * rowsPerPage + index + 1}</TableCell>
+                      {Object.values(student).map((value, i) => (<TableCell key={i}>{value}</TableCell>))}
+                    </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
+          <TablePagination
+            rowsPerPageOptions={[5, 10, 25]}
+            component="div"
+            count={filteredStudents.length}
+            rowsPerPage={rowsPerPage}
+            page={page}
+            onPageChange={handleChangePage}
+            onRowsPerPageChange={handleChangeRowsPerPage}
+          />
         </div>
       )}
     </div>

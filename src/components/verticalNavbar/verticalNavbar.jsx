@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import DashboardRoundedIcon from '@mui/icons-material/DashboardRounded';
 import CollectionsBookmarkIcon from '@mui/icons-material/CollectionsBookmark';
 import School from '@mui/icons-material/School';
+import Groups3Icon from '@mui/icons-material/Groups3';
 import Description from '@mui/icons-material/Description';
 import SaveAsIcon from '@mui/icons-material/SaveAs';
 import LayersIcon from '@mui/icons-material/Layers'; // Import icon for Units
@@ -11,6 +12,7 @@ import LayersIcon from '@mui/icons-material/Layers'; // Import icon for Units
 function VerticalNavbar({ onClose }) {
   const [activeLink, setActiveLink] = useState(null);
   const [showSubMenu, setShowSubMenu] = useState(false);
+  const [showSemesterAllocationSubMenu, setSemesterAllocationSShowSubMenu] = useState(false);
   const [showFormsSubMenu, setShowFormsSubMenu] = useState(false);
 
   const handleLinkClick = (pathname) => {
@@ -22,6 +24,11 @@ function VerticalNavbar({ onClose }) {
     setShowSubMenu(!showSubMenu);
     handleLinkClick('/markentry');
   };
+
+  const handleSemesterAllocationClick = () => {
+    setSemesterAllocationSShowSubMenu(!showSemesterAllocationSubMenu);
+    handleLinkClick('/semesterAllocation')
+  }
 
   const handleFormsClick = () => {
     setShowFormsSubMenu(!showFormsSubMenu);
@@ -55,6 +62,24 @@ function VerticalNavbar({ onClose }) {
           </div>
         </div>
       )}
+      <div className={`menu-item ${activeLink === '/semesterAllocation' ? 'active' : ''}`} onClick={handleSemesterAllocationClick}>
+        <Link to="/semesterAllocation" className="link-style"><Groups3Icon className='nav-icons' />Semester Allocation</Link>
+      </div>
+      {showSemesterAllocationSubMenu && (
+        <div className="submenu">
+          <div className="submenu-item">
+            <Link to="/semesterAllocation/hod" className="submenu-link"><School />HOD Portal</Link>
+          </div>
+          <div className="submenu-item">
+            <Link to="/semesterAllocation/faculty" className="submenu-link"><Description />Faculty Portal</Link>
+          </div>
+          <div className="submenu-item">
+            <Link to="/semesterAllocation/coe" className="submenu-link"><Description />COE Portal</Link>
+          </div>
+
+        </div>
+      )}
+
       <div className={`menu-item ${activeLink === '/mainform' ? 'active' : ''}`} onClick={handleFormsClick}>
         <Link to="#" className="link-style"><DashboardRoundedIcon className='nav-icons' />Forms</Link>
       </div>
@@ -69,11 +94,11 @@ function VerticalNavbar({ onClose }) {
           <div className="forms-submenu-item">
             <Link to="/mainform/branchform" className="forms-submenu-link">Branch</Link>
           </div>
-          
+
           <div className="forms-submenu-item">
             <Link to="/mainform/courseform" className="forms-submenu-link">Curriculum Entry</Link>
           </div>
-         
+
           {/* <div className="forms-submenu-item">
             <Link to="/mainform/unitform" className="forms-submenu-link">Course Unit</Link>
           </div> */}
