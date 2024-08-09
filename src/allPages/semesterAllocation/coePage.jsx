@@ -79,12 +79,13 @@ function COEPage() {
   useEffect(() => {
     const fetchDepartments = async () => {
       try {
-        const response = await axios.get(`${apiHost}/departments`, {
+        const response = await axios.get(`${apiHost}/department`, {
           params: { regulation: selectedRegulation?.value } // Send selected regulation
         });
+        console.log(response.data)
         const options = response.data.map(dept => ({
           value: dept.id,
-          label: dept.name
+          label: dept.branch
         }));
         setDepartmentOptions(options);
       } catch (error) {
@@ -121,9 +122,8 @@ function COEPage() {
       try {
         const response = await axios.get(`${apiHost}/semesterFacultyAllocation`, {
           params: { 
-            semester: semester.value, 
-            branch, 
-            department: department?.value,
+            semester: semester.value,  
+            branch: department?.value,
             regulation: selectedRegulation?.value // Include selected regulation
           }
         });
@@ -150,8 +150,9 @@ function COEPage() {
         console.error('Error fetching semester data:', error);
       }
     };
-
+    if(semester&&department){
     fetchData();
+    }
   }, [semester, branch, department, selectedRegulation]); // Add selected regulation as a dependency
 
   const fetchReplacementRequestDetails = async (facultyIds) => {
@@ -277,6 +278,13 @@ function COEPage() {
             { value: 8, label: 'Semester 8' },
           ]}
         />
+           <InputLabel id="regulation-select" color="primary" sx={{ marginLeft: '10px', marginRight: '10px' }}>Select Regulation</InputLabel>
+        <Select
+          id="regulation-select"
+          value={selectedRegulation}
+          onChange={handleRegulationChange}
+          options={regulationOptions}
+        />
         <InputLabel id="department-select" color="primary" sx={{ marginLeft: '10px', marginRight: '10px' }}>Select Department</InputLabel>
         <Select
           id="department-select"
@@ -284,13 +292,7 @@ function COEPage() {
           onChange={handleDepartmentChange}
           options={departmentOptions}
         />
-        <InputLabel id="regulation-select" color="primary" sx={{ marginLeft: '10px', marginRight: '10px' }}>Select Regulation</InputLabel>
-        <Select
-          id="regulation-select"
-          value={selectedRegulation}
-          onChange={handleRegulationChange}
-          options={regulationOptions}
-        />
+     
         <Button onClick={downloadExcel} variant="contained" color="primary" sx={{ marginLeft: '10px' }}>
           Download Excel
         </Button>
@@ -326,7 +328,6 @@ function COEPage() {
                           <TableCell sx={{ fontSize: tableCellFontSize }} align="center">Department</TableCell>
                           <TableCell sx={{ fontSize: tableCellFontSize }} align="center">Faculty ID</TableCell>
                           <TableCell sx={{ fontSize: tableCellFontSize }} align="center">Status</TableCell>
-                          <TableCell sx={{ fontSize: tableCellFontSize }} align="center">Action</TableCell>
                         </TableRow>
                       </TableHead>
                       <TableBody>
@@ -341,24 +342,7 @@ function COEPage() {
                                 <span>{faculty.status}</span>
                               </div>
                             </TableCell>
-                            <TableCell sx={{ fontSize: "20px" }} align="center">
-                              {faculty.status !== "active" ? (
-                                <div onClick={() => handleOpenInfoModal(faculty.status, faculty.requests)}>
-                                  <ModalUnstyled
-                                    closeText={"close"}
-                                    icon={<InfoIcon />}
-                                    open={infoModalOpen}
-                                    modalContent={<InfoModal status={currentStatus} requestDetails={requestDetails} onClose={handleInfoModalClose} />}
-                                  />
-                                </div>
-                              ) : (
-                                <ModalUnstyled
-                                  closeText={"Cancel"}
-                                  icon={<RotateLeft />}
-                                  modalContent={<ReplaceFaculty courseId={data.courseId} currentFacultyId={faculty.id} />}
-                                />
-                              )}
-                            </TableCell>
+                           
                           </TableRow>
                         ))}
                       </TableBody>

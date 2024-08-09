@@ -7,12 +7,14 @@ import School from '@mui/icons-material/School';
 import Groups3Icon from '@mui/icons-material/Groups3';
 import Description from '@mui/icons-material/Description';
 import SaveAsIcon from '@mui/icons-material/SaveAs';
+import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
+import ArrowDropUpIcon from '@mui/icons-material/ArrowDropUp';
 import LayersIcon from '@mui/icons-material/Layers'; // Import icon for Units
 
 function VerticalNavbar({ onClose }) {
   const [activeLink, setActiveLink] = useState(null);
   const [showSubMenu, setShowSubMenu] = useState(false);
-  const [showSemesterAllocationSubMenu, setSemesterAllocationSShowSubMenu] = useState(false);
+  const [showSemesterAllocationSubMenu, setShowSemesterAllocationSubMenu] = useState(false);
   const [showFormsSubMenu, setShowFormsSubMenu] = useState(false);
 
   const handleLinkClick = (pathname) => {
@@ -22,17 +24,16 @@ function VerticalNavbar({ onClose }) {
 
   const handleMarkEntryClick = () => {
     setShowSubMenu(!showSubMenu);
-    handleLinkClick('/markentry');
+    setActiveLink('/markentry');
   };
 
   const handleSemesterAllocationClick = () => {
-    setSemesterAllocationSShowSubMenu(!showSemesterAllocationSubMenu);
-    handleLinkClick('/semesterAllocation')
-  }
+    setShowSemesterAllocationSubMenu(!showSemesterAllocationSubMenu);
+  };
 
   const handleFormsClick = () => {
     setShowFormsSubMenu(!showFormsSubMenu);
-    handleLinkClick('/mainform');
+    setActiveLink('/mainform');
   };
 
   return (
@@ -62,8 +63,15 @@ function VerticalNavbar({ onClose }) {
           </div>
         </div>
       )}
-      <div className={`menu-item ${activeLink === '/semesterAllocation' ? 'active' : ''}`} onClick={handleSemesterAllocationClick}>
-        <Link to="/semesterAllocation" className="link-style"><Groups3Icon className='nav-icons' />Semester Allocation</Link>
+      <div className={`menu-item ${showSemesterAllocationSubMenu ? 'active' : ''}`} onClick={handleSemesterAllocationClick}>
+        <div className="link-style">
+          <Groups3Icon className='nav-icons' />Semester Allocation
+          {showSemesterAllocationSubMenu ? (
+            <ArrowDropUpIcon className="dropdown-icon" />
+          ) : (
+            <ArrowDropDownIcon className="dropdown-icon" />
+          )}
+        </div>
       </div>
       {showSemesterAllocationSubMenu && (
         <div className="submenu">
@@ -76,7 +84,6 @@ function VerticalNavbar({ onClose }) {
           <div className="submenu-item">
             <Link to="/semesterAllocation/coe" className="submenu-link"><Description />COE Portal</Link>
           </div>
-
         </div>
       )}
 
@@ -94,34 +101,20 @@ function VerticalNavbar({ onClose }) {
           <div className="forms-submenu-item">
             <Link to="/mainform/branchform" className="forms-submenu-link">Branch</Link>
           </div>
-
           <div className="forms-submenu-item">
             <Link to="/mainform/courseform" className="forms-submenu-link">Curriculum Entry</Link>
           </div>
-
-          {/* <div className="forms-submenu-item">
-            <Link to="/mainform/unitform" className="forms-submenu-link">Course Unit</Link>
-          </div> */}
           <div className="forms-submenu-item">
             <Link to="/mainform/categoryform" className="forms-submenu-link">Course Category</Link>
           </div>
           <div className="forms-submenu-item">
             <Link to="/mainform/outcomeform" className="forms-submenu-link">Course Outcome</Link>
           </div>
-          {/* <div className="forms-submenu-item">
-            <Link to="/mainform/objectiveform" className="forms-submenu-link">Course Objective</Link>
-          </div> */}
-          {/* <div className="forms-submenu-item">
-            <Link to="/mainform/copomap" className="forms-submenu-link">Program Outcome</Link>
-          </div> */}
         </div>
       )}
       <div className={`menu-item ${activeLink === '/syllabusentry' ? 'active' : ''}`} onClick={() => handleLinkClick('/syllabusentry')}>
         <Link to="/syllabusentry" className="link-style"><DashboardRoundedIcon className='nav-icons' />Syllabus Entry</Link>
       </div>
-      {/* <div className={`menu-item ${activeLink === '/unit' ? 'active' : ''}`} onClick={() => handleLinkClick('/unit')}>
-        <Link to="/unit" className="link-style"><DashboardRoundedIcon className='nav-icons' />Syllabus</Link>
-      </div> */}
     </div>
   );
 }

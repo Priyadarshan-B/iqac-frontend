@@ -27,6 +27,7 @@ import CoPoMap from "../../allPages/forms/co_po_map";
 import Units from "../../allPages/Units/units";
 import HodSemesterPage from "../../allPages/semesterAllocation/hodSemester";
 import COEPage from "../../allPages/semesterAllocation/coePage";
+import FacultyPage from "../../allPages/semesterAllocation/facultyPage";
 function AppLayout() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
@@ -60,6 +61,7 @@ function AppLayout() {
                 <Route path="/logout" element={<Logout />} />
                 <Route path="/semesterAllocation/hod" element={<HodSemesterPage />} />
                 <Route path="/semesterAllocation/coe" element={<COEPage />} />
+                <Route path="/semesterAllocation/faculty" element={<FacultyPage/>} />
                 <Route path="/mainform" element={<MainForm />} />
                 <Route path="/syllabusentry" element={<SyllabusEntry />} />
                 <Route path="/markentry/attendance" element={<Attendance />} />
